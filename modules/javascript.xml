@@ -63,14 +63,17 @@
             <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/> 
         </artifact:dependencies>
         <copy todir="${salvador.js.rhiro.lib.dir}">
-            <fileset refid="salvador.js.yui.files"/>
+            <fileset refid="salvador.js.rhino.files"/>
             <mapper type="flatten"/>
         </copy>
     </target>
     
-    <target name="salvador.js.jsdoctoolkit.install" depends="salvador.base.maven.install">
+    <target name="salvador.js.jsdoctoolkit.install" depends="salvador.base.maven.install, salvador.base.ant.contrib.install">
         <artifact:dependencies pathId="salvador.js.jsdoctoolkit.classpath" filesetId="salvador.js.jsdoctoolkit.files">
-            <dependency groupId="org.jsdoctoolkit" artifactId="jsdoctoolkit-ant-task" version="${salvador.js.jsdoctoolkit.version}"/> 
+            <dependency groupId="org.jsdoctoolkit" artifactId="jsdoctoolkit-ant-task" version="${salvador.js.jsdoctoolkit.version}">
+                <!-- Ant Contrib is not available in the desired version, get it via classpath -->
+                <exclusion groupId="ant" artifactId="ant-contrib"/>
+            </dependency> 
         </artifact:dependencies>
         <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit" classpathref="salvador.js.jsdoctoolkit.classpath"/>
     </target>

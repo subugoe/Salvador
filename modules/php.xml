@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." name="SALVADOR.COMPASS" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project basedir=".." name="SALVADOR.PHP" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>PHP targets of the SUB Ant library</description>
     
     <!-- Import base lib -->
