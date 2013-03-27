@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.SCM" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>SCM targets of the SUB Ant library</description>
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+
+    <!-- JGit integration -->
+    <property name="salvador.scm.jgit.lib.dir" value="${salvador.base.lib.dir}/jgit"/>
+    <property name="salvador.scm.jgit.version" value="2.1.0.201209190230-r"/>
+
+    <!-- SVN Integration -->
+    <property name="salvador.scm.svn.lib.dir" value="${salvador.base.lib.dir}/svn"/>
+    <property name="salvador.scm.svn.url" value="http://www.svnkit.com/org.tmatesoft.svn_1.3.2.standalone.nojna.zip"/>
+
+    <target name="salvador.scm.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.scm.jgit.lib.dir}"/>
+        <mkdir dir="${salvador.scm.svn.lib.dir}"/>
+    </target>
+
+    <target name="salvador.scm.jgit.install" depends="salvador.scm.init, salvador.base.maven.install">
+        <artifact:dependencies pathId="salvador.scm.jgit.classpath">
+            <dependency groupId="org.eclipse.jgit" artifactId="org.eclipse.jgit.ant" version="${salvador.scm.jgit.version}"/>
+        </artifact:dependencies>
+        <taskdef resource="org/eclipse/jgit/ant/ant-tasks.properties" classpathref="salvador.scm.jgit.classpath"/>
+    </target>
+
+    <target name="salvador.scm.svn.download" depends="salvador.scm.init, salvador.base.maven.install">
+        <artifact:remoteRepository id="salvador.scm.svn.svn.repository" url="http://maven.svnkit.com/maven2"/>
+        <artifact:dependencies filesetId="salvador.scm.svn.files" pathId="salvador.scm.svn.classpath">
+            <dependency groupId="org.tmatesoft.svnkit" artifactId="svnkit" version="1.3.1" scope="test"/>
+            <remoteRepository refid="salvador.scm.svn.svn.repository"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.scm.svn.lib.dir}">
+            <fileset refid="salvador.scm.svn.files"/>
+            <mapper type="flatten"/>
+        </copy>
+
+        <!--
+            Reenable this if you don't want to use the maven stuff
+        <get src="${salvador.scm.svn.url}" dest="${file.svn}" usetimestamp="true"/>
+        <unzip src="${file.svn}" dest="${dir.build.svn}"/>
+        <copy todir="${salvador.scm.svn.lib.dir}">
+            <fileset dir="${dir.build.svn}">
+                <include name="**/svnkit*.jar"/>
+            </fileset>
+            <mapper type="flatten"/>
+        </copy>
+    -->
+    </target>
+
+    <target name="salvador.scm.svn.install" depends="salvador.scm.svn.download">
+        <macrodef name="svnco">
+            <attribute name="url"/>
+            <attribute name="todir"/>
+            <sequential>
+                <java classname="org.tmatesoft.svn.cli.SVN" dir="." fork="true" outputproperty="build.svn.status">
+                    <arg line="co @{url} @{todir}"/>
+                    <classpath refid="salvador.scm.svn.classpath"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+
+</project>

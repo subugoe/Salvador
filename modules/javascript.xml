@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.JS" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>JavaScript targets of the SUB Ant library</description>
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    
+    <!-- YUI -->
+    <property name="salvador.js.yui.lib.dir" value="${salvador.base.lib.dir}/yui"/>
+    <property name="salvador.js.yui.version" value="2.4.7"/>
+    <!-- Rhino -->
+    <property name="salvador.js.rhiro.lib.dir" value="${salvador.base.lib.dir}/rhrino"/>
+    <property name="salvador.js.rhiro.version" value="1.7R4"/>
+    
+    <target name="salvador.js.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.js.yui.lib.dir}"/>
+        <mkdir dir="${salvador.js.rhiro.lib.dir}"/>
+    </target>
+    
+    <target name="salvador.js.yui.download" depends="salvador.base.maven.install">
+        <artifact:dependencies pathId="salvador.js.yui.classpath" filesetId="salvador.js.yui.files">
+            <dependency groupId="com.yahoo.platform.yui" artifactId="yuicompressor" version="${salvador.js.yui.version}"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.js.yui.lib.dir}">
+            <fileset refid="salvador.js.yui.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+    
+    <target name="salvador.js.rhino.install" depends="salvador.base.maven.install">
+        <artifact:dependencies pathId="salvador.js.yui.classpath" filesetId="salvador.js.yui.files">
+            <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/> 
+        </artifact:dependencies>
+        <copy todir="${salvador.js.rhiro.lib.dir}">
+            <fileset refid="salvador.js.yui.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+    
+</project>
