@@ -42,10 +42,12 @@
 
     <!-- Version checks -->
     <!-- Check if required Java and Ant versions are present -->
-    <target name="salvador.base.versions.check" depends="salvador.base.java.version.warn, salvador.base.ant.version.warn">
+    <target name="salvador.base.versions.check" depends="salvador.base.java.version.warn, salvador.base.ant.version.warn" unless="salvador.base.versions.check.done">
         <!--
         <echo level="info" message="The Ant check is disabled currently, because there is a bug in Ant. :-("/>
         -->
+        <!-- Set this to avoid multiple checks -->
+        <property name="salvador.base.versions.check.done" value="true"/>
     </target>
 
     <!-- Warn if Java 5 isn't present -->
