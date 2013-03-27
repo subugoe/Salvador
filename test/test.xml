@@ -24,7 +24,10 @@
     <import file="../modules/compass.xml"/>
     <echo>Imported compass.xml</echo>
     
-    <target name="salvador.test" depends="salvador.test.base, salvador.test.scm, salvador.test.jetty, salvador.test.javascript, salvador.test.jruby">
+    <import file="../modules/php.xml"/>
+    <echo>Imported php.xml</echo>
+    
+    <target name="salvador.test" depends="salvador.test.base, salvador.test.scm, salvador.test.jetty, salvador.test.javascript, salvador.test.jruby, salvador.test.php">
         <echo>This should only be run by developers of the build system</echo>
     </target>
     <target name="salvador.test.base">
@@ -83,8 +86,20 @@
         <echo>Calling salvador.js.yui.download (YUI integration)</echo>
         <antcall target="salvador.js.yui.download"/>
         
+        <echo>Calling salvador.js.yui.install (YUI Tasks)</echo>
+        <antcall target="salvador.js.yui.install"/>
+        
         <echo>Calling salvador.js.rhino.install (Rhino integration)</echo>
         <antcall target="salvador.js.rhino.install"/>
+    </target>
+    
+    <target name="salvador.test.php">
+        <echo>Testing JavaScript module</echo>
+        <echo>Calling salvador.php.init (create directories)</echo>
+        <antcall target="salvador.php.init"/>
+        
+        <echo>Calling salvador.php.download (PHP interpreter)</echo>
+        <antcall target="salvador.php.download"/>
     </target>
 
 </project>

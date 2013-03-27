@@ -27,6 +27,35 @@
         </copy>
     </target>
     
+    <target name="salvador.js.yui.install" depends="salvador.js.yui.download">
+        <macrodef name="compressJS">
+            <attribute name="src"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <java classname="com.yahoo.platform.yui.compressor.YUICompressor" fork="true" dir="." classpathref="salvador.js.yui.classpath">
+                    <arg value="--type"/>
+                    <arg value="js"/>
+                    <arg value="@{src}"/>
+                    <arg value="-o"/>
+                    <arg value="@{destfile}"/>
+                </java>
+            </sequential>
+        </macrodef>
+        <macrodef name="compressCSS">
+            <attribute name="src"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <java classname="com.yahoo.platform.yui.compressor.YUICompressor" fork="true" dir="." classpathref="salvador.js.yui.classpath">
+                    <arg value="--type"/>
+                    <arg value="css"/>
+                    <arg value="@{src}"/>
+                    <arg value="-o"/>
+                    <arg value="@{destfile}"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    
     <target name="salvador.js.rhino.install" depends="salvador.base.maven.install">
         <artifact:dependencies pathId="salvador.js.yui.classpath" filesetId="salvador.js.yui.files">
             <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/> 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.COMPASS" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>PHP targets of the SUB Ant library</description>
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    
+    <property name="salvador.php.quercus.version" value="4.0.25"/>
+    <property name="salvador.php.lib.dir" value="${salvador.base.lib.dir}/quercus"/>
+    
+    <target name="salvador.php.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.php.lib.dir}"/>
+        
+    </target>
+    
+    <target name="salvador.php.download" depends="salvador.base.maven.install">
+        <artifact:dependencies pathId="salvador.php.classpath" filesetId="salvador.php.files">
+            <artifact:remoteRepository id="quercus" url="http://repository.threecrickets.com/maven/"/>
+            <dependency groupId="com.caucho" artifactId="quercus" version="${salvador.php.quercus.version}">
+                <exclusion groupId="javax" artifactId="javaee-api"/>
+            </dependency>
+        </artifact:dependencies>
+        <copy todir="${salvador.php.lib.dir}">
+            <fileset refid="salvador.php.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+    
+</project>
