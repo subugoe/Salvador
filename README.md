@@ -15,8 +15,30 @@ Lockated in the modules sub directory.
 * php.xml - Integrated PHP compiler
 
 #Usage
+##Basics
+To use the libraries import the desired module in your Ant project:
+
+'''xml
+ <import file="./build/modules/jetty.xml"/> 
+'''
+The use the dependency declarations of your Ant tasks to get the functionality of the required tools and libraries (for dependency related tasks) or use the ant call mechanism to use specific functionality
+
+##scm.xml
+
+##jetty.xml
+
+##javascript.xml
+
+##jruby.xml
+
+##compass.xml
+
+##sass.xml
+
+##php.xml
 
 #Development
 In the test directory is a test.xml which can by run by
 >ant -f test/test.xml
+
 It calls every target configured, if you add a module create a target for it in test.xml, to be sure that every target works without any arguments. 

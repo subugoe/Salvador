@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.TEST" default="salvador.test">
+    <description>This files calls all the enduser targets of Salvador. It can be used for debugging-</description>
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <echo>Imported base.xml</echo>
+
+    <import file="../modules/scm.xml"/>
+    <echo>Imported scm.xml</echo>
+    
+    <import file="../modules/jetty.xml"/>
+    <echo>Imported jetty.xml</echo>
+    
+    <import file="../modules/jruby.xml"/>
+    <echo>Imported jruby.xml</echo>
+    
+    <import file="../modules/javascript.xml"/>
+    <echo>Imported javascript.xml</echo>
+    
+    <import file="../modules/sass.xml"/>
+    <echo>Imported sass.xml</echo>
+    
+    <import file="../modules/compass.xml"/>
+    <echo>Imported compass.xml</echo>
+    
+    <target name="salvador.test" depends="salvador.test.base, salvador.test.scm, salvador.test.jetty, salvador.test.javascript, salvador.test.jruby">
+        <echo>This should only be run by developers of the build system</echo>
+    </target>
+    <target name="salvador.test.base">
+        <echo>Testing base</echo>
+        <echo>Calling salvador.base.init (version check and directories)</echo>
+        <antcall target="salvador.base.init"/>
+        
+        <echo>Calling salvador.base.maven.install (Download and install of Maven)</echo>
+        <antcall target="salvador.base.maven.install"/>
+        
+        <echo>Calling salvador.base.ant.httptask.install (Download and install of Ant HTTP Tasks)</echo>
+        <antcall target="salvador.base.ant.httptask.install"/>
+        
+        <echo>Calling salvador.base.ant.contrib.install (Download and install of Ant Contrib)</echo>
+        <antcall target="salvador.base.ant.contrib.install"/>
+    </target>
+    
+    <target name="salvador.test.scm">
+        <echo>Testing SCM module</echo>
+        <echo>Calling salvador.scm.init (create directories)</echo>
+        <antcall target="salvador.scm.init"/>
+        
+        <echo>Calling salvador.scm.jgit.install (Git integration)</echo>
+        <antcall target="salvador.scm.jgit.install"/>
+        
+        <echo>Calling salvador.scm.svn.install (Subversion integration)</echo>
+        <antcall target="salvador.scm.svn.install"/>
+    </target>
+    
+    <target name="salvador.test.jetty">
+        <echo>Testing Jetty module</echo>
+        <echo>Calling salvador.scm.init (create directories)</echo>
+        <antcall target="salvador.jetty.init"/>
+        
+        <echo>Calling salvador.jetty.install (Jetty Ant tasks)</echo>
+        <antcall target="salvador.jetty.install"/>
+    </target>
+    
+    <target name="salvador.test.jruby">
+        <echo>Testing JRuby module</echo>
+        <echo>Calling salvador.jruby.init (create directories)</echo>
+        <antcall target="salvador.jruby.init"/>
+        
+        <echo>Calling salvador.jruby.home (create ruby home - used for gems)</echo>
+        <antcall target="salvador.jruby.home"/>
+        
+        <echo>Calling salvador.jruby.download (get JRuby)</echo>
+        <antcall target="salvador.jruby.download"/>
+    </target>
+
+    <target name="salvador.test.javascript">
+        <echo>Testing JavaScript module</echo>
+        <echo>Calling salvador.js.init (create directories)</echo>
+        <antcall target="salvador.js.init"/>
+        
+        <echo>Calling salvador.js.yui.download (YUI integration)</echo>
+        <antcall target="salvador.js.yui.download"/>
+        
+        <echo>Calling salvador.js.rhino.install (Rhino integration)</echo>
+        <antcall target="salvador.js.rhino.install"/>
+    </target>
+
+</project>
