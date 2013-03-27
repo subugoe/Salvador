@@ -11,6 +11,8 @@
     <!-- Rhino -->
     <property name="salvador.js.rhiro.lib.dir" value="${salvador.base.lib.dir}/rhrino"/>
     <property name="salvador.js.rhiro.version" value="1.7R4"/>
+    <!-- JSDoc Toolkit -->
+    <property name="salvador.js.jsdoctoolkit.version" value="1.0"></property>
     
     <target name="salvador.js.init" depends="salvador.base.init">
         <mkdir dir="${salvador.js.yui.lib.dir}"/>
@@ -57,13 +59,20 @@
     </target>
     
     <target name="salvador.js.rhino.install" depends="salvador.base.maven.install">
-        <artifact:dependencies pathId="salvador.js.yui.classpath" filesetId="salvador.js.yui.files">
+        <artifact:dependencies pathId="salvador.js.rhino.classpath" filesetId="salvador.js.rhino.files">
             <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/> 
         </artifact:dependencies>
         <copy todir="${salvador.js.rhiro.lib.dir}">
             <fileset refid="salvador.js.yui.files"/>
             <mapper type="flatten"/>
         </copy>
+    </target>
+    
+    <target name="salvador.js.jsdoctoolkit.install" depends="salvador.base.maven.install">
+        <artifact:dependencies pathId="salvador.js.jsdoctoolkit.classpath" filesetId="salvador.js.jsdoctoolkit.files">
+            <dependency groupId="org.jsdoctoolkit" artifactId="jsdoctoolkit-ant-task" version="${salvador.js.jsdoctoolkit.version}"/> 
+        </artifact:dependencies>
+        <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit" classpathref="salvador.js.jsdoctoolkit.classpath"/>
     </target>
     
 </project>
