@@ -18,6 +18,7 @@
         <mkdir dir="${salvador.scm.svn.lib.dir}"/>
     </target>
 
+    <!-- see http://wiki.eclipse.org/JGit/User_Guide#Ant_Tasks -->
     <target name="salvador.scm.jgit.install" depends="salvador.scm.init, salvador.base.maven.install">
         <artifact:dependencies pathId="salvador.scm.jgit.classpath">
             <dependency groupId="org.eclipse.jgit" artifactId="org.eclipse.jgit.ant" version="${salvador.scm.jgit.version}"/>
