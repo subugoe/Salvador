@@ -68,6 +68,7 @@
         </copy>
     </target>
     
+    <!-- See http://www.kajabity.com/2012/02/automating-jsdoc-with-apache-ant/ -->
     <target name="salvador.js.jsdoctoolkit.install" depends="salvador.base.maven.install, salvador.base.ant.contrib.install">
         <artifact:dependencies pathId="salvador.js.jsdoctoolkit.classpath" filesetId="salvador.js.jsdoctoolkit.files">
             <dependency groupId="org.jsdoctoolkit" artifactId="jsdoctoolkit-ant-task" version="${salvador.js.jsdoctoolkit.version}">

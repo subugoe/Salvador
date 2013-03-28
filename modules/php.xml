@@ -12,7 +12,6 @@
     
     <target name="salvador.php.init" depends="salvador.base.init">
         <mkdir dir="${salvador.php.lib.dir}"/>
-        
     </target>
     
     <target name="salvador.php.download" depends="salvador.base.maven.install">
