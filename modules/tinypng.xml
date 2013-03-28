@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.TINYPNG">
+    <description>TinyPNG targets of the SUB Ant library</description>
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+
+    <property name="salvador.tinypng.url" value="http://api.tinypng.org/api/shrink"/>
+    <!-- Set your key here, add it to a property file, ore make sure this is set in the importing Ant file -->
+    <!--
+    <property name="salvador.tinypng.apikey" value=""/>
+    -->
+    <!-- import property file for key -->
+    <property file="${salvador.base.dir}/../tinypng.properties"/>
+
+    <target name="salvador.tinypng.init" depends="salvador.base.init">
+        <!-- check if there is a API Key, fail if not -->
+    </target>
+
+
+    <target name="salvador.tinypng.install" depends="salvador.base.ant.httptask.download">
+        <macrodef name="salvador.tinypng.compress">
+            <attribute name="src"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <!-- 
+                We have some documentation about our API at:
+                https://gist.github.com/1eef650dcfb1609931fc
+                
+                The key is valid for one year. There are no limits attached to the API. Feel free to use it to convert a large number of images but keep in mind the service is paid for entirely by donations.
+                -->
+                <http url="${salvador.tinypng.url}" method="POST" entityProperty="salvador.tinypng.json.result">
+                    <credentials username="api" password="${salvador.tinypng.apikey}"/>
+                    <entity file="@{src}" binary="true"/>
+                </http>
+                <!-- Now it get's really ugly - this will fail on Ant below 1.7 or if you are still on Java 5 or earlier -->
+                <!-- We use the embeded JS Runtime from newer Java versions to decode the JSON Snippet -->
+                <!-- Stolen from
+                      http://jeffreysambells.com/2012/02/20/using-javascript-to-parse-json-properties-with-ant
+                      http://ant.apache.org/manual/Tasks/script.html
+                -->
+                <script language="javascript">
+                    <![CDATA[
+                        resultJson = project.getProperty("salvador.tinypng.json.result");
+                        var struct = eval("(" + resultJson + ")");
+                        project.setProperty("salvador.tinypng.result.url", struct.output.url);
+                     ]]>
+                </script>
+                <echo message="Result is at ${salvador.tinypng.result.url}, will be saved as @{dest}"/>
+                <get src="${salvador.tinypng.result.url}" dest="@{dest}" usetimestamp="true"/>
+            </sequential>
+        </macrodef>
+    </target>
+</project>
