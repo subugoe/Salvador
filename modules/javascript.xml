@@ -30,7 +30,7 @@
     </target>
     
     <target name="salvador.js.yui.install" depends="salvador.js.yui.download">
-        <macrodef name="compressJS">
+        <macrodef name="salvador.js.yui.compress.js">
             <attribute name="src"/>
             <attribute name="destfile"/>
             <sequential>
@@ -43,7 +43,7 @@
                 </java>
             </sequential>
         </macrodef>
-        <macrodef name="compressCSS">
+        <macrodef name="salvador.js.yui.compress.css">
             <attribute name="src"/>
             <attribute name="destfile"/>
             <sequential>
