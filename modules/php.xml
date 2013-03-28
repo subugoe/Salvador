@@ -4,6 +4,8 @@
     
     <!-- Import base lib -->
     <import file="../build.xml"/>
+    <!-- Jetty is needed for Servlet API -->
+    <import file="./jetty.xml"/>
     
     <property name="salvador.php.quercus.version" value="4.0.25"/>
     <property name="salvador.php.lib.dir" value="${salvador.base.lib.dir}/quercus"/>
@@ -24,6 +26,26 @@
             <fileset refid="salvador.php.files"/>
             <mapper type="flatten"/>
         </copy>
+    </target>
+    
+    <target name="salvador.php.install" depends="salvador.php.download, salvador.jetty.download">
+        <macrodef name="salvador.php.compile">
+            <attribute name="src"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <!-- See http://marc.info/?l=ant-user&m=102519197329459 for multiple path entries -->
+                <!-- See http://wiki3.caucho.com/Quercus:_Command_Line_Interface_%28CLI%29 for Quercus CLI -->
+                <java classname="com.caucho.quercus.CliQuercus" classpathref="salvador.php.classpath" outputproperty="salvador.php.compiler.output">
+                    <classpath>
+                        <path refid="salvador.php.classpath"/>
+                        <path refid="salvador.jetty.classpath"/>
+                    </classpath>
+                    <arg value="-f"/>
+                    <arg value="@{src}"/>
+                </java>
+                <echo force="true" encoding="UTF-8" output="@{destfile}" append="false" message="${salvador.php.compiler.output}"/>
+            </sequential>
+        </macrodef>
     </target>
     
 </project>
