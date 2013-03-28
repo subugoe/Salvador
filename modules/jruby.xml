@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="SALVADOR.JRUBY" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>JRuby targets of the SUB Ant library</description>
-    
+
     <!-- Import base lib -->
     <import file="../build.xml"/>
-    
+
     <property name="salvador.jruby.lib.dir" value="${salvador.base.lib.dir}/jruby"/>
     <property name="salvador.jruby.version" value="1.6.8"/>
     <property name="salvador.jruby.home" value="${salvador.base.lib.dir}/jruby.home"/>
-    
+
     <target name="salvador.jruby.init" depends="salvador.base.init">
         <mkdir dir="${salvador.jruby.lib.dir}"/>
         <mkdir dir="${salvador.jruby.home}"/>
     </target>
-    
+
     <!-- Ruby Setup -->
-    <!-- This is need, since the class library of ruby isn't found, if started from jar file -->
+    <!-- This is needed, since the class library of ruby isn't found, if started from jar file -->
     <target name="salvador.jruby.home" depends="salvador.jruby.init">
         <!-- /META-INF/jruby.home/ -->
         <unzip dest="${salvador.jruby.home}">
@@ -29,8 +29,7 @@
             <cutdirsmapper dirs="2"/>
         </unzip>
     </target>
-    
-    
+
     <target name="salvador.jruby.download" depends="salvador.jruby.init, salvador.base.maven.install">
         <artifact:dependencies filesetId="salvador.jruby.files" pathId="salvador.jruby.classpath">
             <dependency groupId="org.jruby" artifactId="jruby-complete" version="${salvador.jruby.version}"/>
@@ -39,7 +38,39 @@
             <fileset refid="salvador.jruby.files"/>
             <mapper type="flatten"/>
         </copy>
-
     </target>
-    
+
+    <target name="salvador.jruby.gems" depends="salvador.jruby.home">
+        <!-- Process returns 0 if sass is installed, 1 otherwise -->
+        <macrodef name="salvador.jruby.gem.check">
+            <attribute name="gem"/>
+            <sequential>
+                <java classname="org.jruby.Main" fork="true" dir="." failonerror="false" resultproperty="compass.check.gem.return.code">
+                    <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
+                    <classpath path="salvador.jruby.classpath"/>
+                    <arg value="-e"/>
+                    <arg value="require 'rubygems'"/>
+                    <arg value="-e"/>
+                    <arg value="Gem::Specification.find_by_name('@{gem}').nil? ? abort : exit"/>
+                    <arg value=""/>
+                </java>
+            </sequential>
+        </macrodef>
+        <macrodef name="salvador.jruby.gem.install">
+            <attribute name="gem"/>
+            <sequential>
+                <!-- See http://sass-lang.com/tutorial.html -->
+                <!-- See http://kenai.com/projects/jruby/pages/GettingStarted#How_Do_I_Run_rake,_gem,_etc? -->
+                <java classname="org.jruby.Main" fork="true" dir=".">
+                    <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
+                    <classpath path="salvador.jruby.classpath"/>
+                    <arg value="-S"/>
+                    <arg value="gem"/>
+                    <arg value="install"/>
+                    <arg value="@{gem}"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+
 </project>
