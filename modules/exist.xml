@@ -36,8 +36,18 @@
             message="INSTALL_PATH=${salvador.exist.lib.dir}${line.separator}dataDir=webapp/WEB-INF/data${line.separator}MAX_MEMORY=256${line.separator}cacheSize=256${line.separator}"/>
     </target>
 
+    <target name="salvador.exist.install.unpacked">
+        <condition property="salvador.exist.unpacked">
+            <and>
+                <available file="${salvador.exist.lib.dir}/exist.jar" type="file"/>
+                <available file="${salvador.exist.lib.dir}/exist-optional.jar" type="file"/>
+                <available file="${salvador.exist.lib.dir}/lib/core" type="dir"/>
+            </and>
+        </condition>
+    </target>
+
     <!-- See http://www.exist-db.org/exist/apps/doc/ant-tasks.xml -->
-    <target name="salvador.exist.download" depends="salvador.exist.install.options">
+    <target name="salvador.exist.download" depends="salvador.exist.install.options, salvador.exist.install.unpacked" unless="salvador.exist.unpacked">
         <echo>This will downlaod and unpack exist, it might take some time and diskspace.</echo>
         <get src="${salvador.exist.download.url}" dest="${salvador.exist.download.filename}" usetimestamp="true" verbose="on"/>
         <java dir="${salvador.exist.lib.dir}" jar="${salvador.exist.download.filename}" fork="true" failonerror="true" maxmemory="128m">
