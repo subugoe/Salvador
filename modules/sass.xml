@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.SASS" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>SASS targets of the SUB Ant library</description>
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <!-- SASS depends on JRuby -->
+    <import file="./jruby.xml"/>
+    <!-- Git is needed to get the sources -->
+    <import file="./scm.xml"/>
+
+    <property name="salvador.sass.lib.dir" value="${salvador.base.lib.dir}/sass"/>
+    <property name="salvador.sass.downlad.git.url" value="https://github.com/nex3/sass.git"/>
+    
+    <!-- Un comment this to use sass from the Git repository -->
+    <!--
+    <property name="salvador.sass.git" value="true"></property>
+    -->
+
+    <!-- SASS Stuff, we have two methods, via Git or Ruby Gem, the first one was easier to set up, the last one has more features.
+       Git based integration isn't used anymore, just still here for reference.
+    -->
+
+    <!-- Ugly hack to check if Sass is alredy there, otherwise Git will fail -->
+    <!-- See http://stackoverflow.com/questions/1163998/do-i-have-any-way-to-check-the-existence-of-a-directory-in-ant-not-a-file -->
+
+    <target name="salvador.sass.lib.dir.check">
+        <condition property="salvador.sass.lib.dir.exists">
+            <available file="${salvador.sass.lib.dir}" type="dir"/>
+        </condition>
+    </target>
+
+    <target name="salvador.sass.download" depends="salvador.sass.git.download, salvador.sass.gem.download"/>
+
+    <target name="salvador.sass.git.download" depends="salvador.sass.lib.dir.check, salvador.scm.jgit.install" unless="${salvador.sass.lib.dir.exists}">
+        <!-- see http://wiki.eclipse.org/JGit/User_Guide#Ant_Tasks -->
+        <git-clone uri="${sass.downlad.git.url}" dest="${salvador.sass.lib.dir}"/>
+    </target>
+
+    <target name="salvador.sass.gem.check" depends="salvador.jruby.gems">
+        <!-- Process returns 0 if sass is installed, 1 otherwise -->
+        <java classname="org.jruby.Main" fork="true" dir="." failonerror="false" resultproperty="sass.check.gem.return.code">
+            <sysproperty key="jruby.home" value="${jruby.home}"/>
+            <classpath>
+                <fileset dir="${lib.jruby.dir}" includes="*.jar"/>
+            </classpath>
+            <arg value="-e"/>
+            <arg value="require 'rubygems'"/>
+            <arg value="-e"/>
+            <arg value="Gem::Specification.find_by_name('sass').nil? ? abort : exit"/>
+            <arg value=""/>
+        </java>
+    </target>
+
+    <target name="sass.check.gem.return" depends="salvador.sass.gem.check">
+        <condition property="sass.gem.exists">
+            <equals arg1="${sass.check.gem.return.code}" arg2="0"/>
+        </condition>
+    </target>
+
+    <target name="salvador.sass.gem.download" depends="salvador.jruby.gems" unless="sass.gem.exists">
+        <!-- See http://sass-lang.com/tutorial.html -->
+        <!-- See http://kenai.com/projects/jruby/pages/GettingStarted#How_Do_I_Run_rake,_gem,_etc? -->
+        <java classname="org.jruby.Main" fork="true" dir=".">
+            <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
+            <classpath>
+                <fileset dir="${lib.jruby.dir}" includes="*.jar"/>
+            </classpath>
+            <arg value="-S"/>
+            <arg value="gem"/>
+            <arg value="install"/>
+            <arg value="sass"/>
+        </java>
+    </target>
+
+    <target name="salvador.sass.compile" depends="salvador.sass.gem.download">
+        <macrodef name="salvador.sass.compile.watch">
+            <attribute name="src"/>
+            <attribute name="dest"/>
+            <sequential>
+                <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
+                <java classname="org.jruby.Main" fork="true" dir="." spawn="true">
+                    <sysproperty key="jruby.home" value="${jruby.home}"/>
+                    <classpath>
+                        <fileset dir="${lib.jruby.dir}" includes="*.jar"/>
+                    </classpath>
+                    <arg value="-S"/>
+                    <arg value="sass"/>
+                    <arg value="--watch"/>
+                    <arg value="--poll"/>
+                    <arg value="--debug-info"/>
+                    <arg value="@{src}:@{dest}"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="salvador.sass.install" depends="salvador.sass.compile"/>
+
+</project>
