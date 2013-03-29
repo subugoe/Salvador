@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.JEKYLL">
+    <description>Jekyll targets of the SUB Ant library</description>
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <!-- Jekyll depends on JRuby -->
+    <import file="./jruby.xml"/>
+
+    <property name="salvador.jekyll.lib.dir" value="${salvador.base.lib.dir}/jekyll"/>
+
+    <target name="salvador.jekyll.gem.check" depends="salvador.jruby.gems">
+        <salvador.jruby.gem.check gem="jekyll"/>
+    </target>
+
+    <target name="salvador.jekyll.gem.check.return" depends="salvador.jekyll.gem.check">
+        <condition property="compass.gem.exists">
+            <equals arg1="${salvador.jruby.gem.check.return.code}" arg2="0"/>
+        </condition>
+    </target>
+
+    <target name="salvador.jekyll.gem.download" depends="salvador.jekyll.gem.check.return" unless="salvador.compass.gem.exists">
+        <salvador.jruby.gem.install gem="jekyll"/>
+    </target>
+
+    <target name="salvador.jekyll.serve" depends="salvador.jekyll.gem.download">
+        <macrodef name="salvador.jekyll.serve">
+            <sequential>
+                <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
+                <java classname="org.jruby.Main" fork="true" dir="." spawn="true">
+                    <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
+                    <classpath>
+                        <fileset dir="${lib.jruby.dir}" includes="*.jar"/>
+                    </classpath>
+                    <arg value="-S"/>
+                    <arg value="jekyll"/>
+                    <arg value="--server"/>
+                    <arg value="--auto"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="salvador.jekyll.install" depends="salvador.jekyll.serve"/>
+
+</project>
