@@ -36,7 +36,6 @@
             <fileset refid="salvador.scm.svn.files"/>
             <mapper type="flatten"/>
         </copy>
-
         <!--
             Reenable this if you don't want to use the maven stuff
         <get src="${salvador.scm.svn.url}" dest="${file.svn}" usetimestamp="true"/>
@@ -47,7 +46,7 @@
             </fileset>
             <mapper type="flatten"/>
         </copy>
-    -->
+        -->
     </target>
 
     <target name="salvador.scm.svn.install" depends="salvador.scm.svn.download">

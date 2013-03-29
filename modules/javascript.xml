@@ -58,7 +58,7 @@
         </macrodef>
     </target>
     
-    <target name="salvador.js.rhino.install" depends="salvador.base.maven.install">
+    <target name="salvador.js.rhino.download" depends="salvador.base.maven.install">
         <artifact:dependencies pathId="salvador.js.rhino.classpath" filesetId="salvador.js.rhino.files">
             <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/> 
         </artifact:dependencies>
