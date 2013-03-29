@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.ENVJS">
+    <description>EnvJS targets of the SUB Ant library</description>
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <!-- Import JavaScript lib -->
+    <import file="../javascript.xml"/>
+
+    <property name="salvador.envjs.filename" value="env.rhino.1.2.js"/>
+    <property name="salvador.envjs.download.url" value="http://www.envjs.com/dist/${salvador.envjs.filename}"/>
+    <property name="salvador.envjs.git.url" value="https://github.com/envjs/env-js.git"/>
+    <property name="salvador.envjs.lib.dir" value="${salvador.base.lib.dir}/envjs"/>
+
+    <!-- Computed properties -->
+    <property name="salvador.envjs.filename.local" value="${salvador.envjs.lib.dir}/${salvador.envjs.filename}"/>
+
+    <fail message="This module isn't finished yet"/>
+
+    <target name="salvador.envjs.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.envjs.lib.dir}"/>
+    </target>
+
+    <!-- TODO: This should be done via Git -->
+    <target name="salvador.envjs.download" unless="skip.download" depends="salvador.envjs.init">
+        <get src="${salvador.envjs.download.url}" dest="${salvador.envjs.filename.local}" usetimestamp="true"/>
+    </target>
+
+    <!-- Java Script compiler -->
+    <!-- See https://developer.mozilla.org/en-US/docs/Rhino/Shell -->
+    <!-- See http://www.envjs.com/doc/guides -->
+    <target name="js.compile" depends="salvador.js.rhino.download, salvador.envjs.download">
+        <java classname="org.mozilla.javascript.tools.shell.Main" classpathref="salvador.js.rhino.classpath" outputproperty="compiler.output" fork="true">
+            <!-- See http://www.coderanch.com/t/108033/tools/xms-xmx-arguments-ant-don -->
+            <jvmarg value="-Xmx512M"/>
+            <arg value="-opt"/>
+            <arg value="-1"/>
+            <arg value="-e"/>
+            <arg value="load('${salvador.envjs.filename.local}')"/>
+            <arg value="-e"/>
+            <arg value="window.location = '${html.dir}/handschriften.html';"/>
+        </java>
+        <!-- TODO
+            * Parse HTML and get a DOM after the script executes
+            * Walk the document nodes for event attributes (on* like onclick)
+            ** Create a id of the node
+            ** Wrap node in <a> tag with special style, mybe the one of the node itself
+            ** add a href attribute containing the id to the a tag
+            * Walk <a>'s witch href Attribustes start with javascript
+            ** Create a id of the node
+            ** change the href attribute containing the id to the a tag
+        -->
+    </target>
+
+</project>
