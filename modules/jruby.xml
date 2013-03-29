@@ -81,7 +81,7 @@
                     <arg value="install"/>
                     <arg value="@{gem}"/>
                 </java>
-                <fail>
+                <fail message="Installation of Ruby Gem returned error code!">
                     <condition>
                         <not>
                             <equals arg1="${salvador.jruby.gem.install.return.code}" arg2="0"/>
