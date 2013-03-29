@@ -25,7 +25,7 @@
             </and>
         </condition>
     </target>
-    
+
     <!-- This is needed, since the class library of ruby isn't found, if started from jar file -->
     <target name="salvador.jruby.home" depends="salvador.jruby.download, salvador.jruby.home.unpacked" unless="salvador.jruby.home.unpacked">
         <!-- /META-INF/jruby.home/ -->
@@ -61,9 +61,6 @@
             <sequential>
                 <java classname="org.jruby.Main" fork="true" dir="." failonerror="false" resultproperty="salvador.jruby.gem.check.return.code" classpathref="salvador.jruby.classpath">
                     <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
-                    <!--
-                    <classpath path="salvador.jruby.classpath"/>
-                    -->
                     <arg value="-e"/>
                     <arg value="require 'rubygems'"/>
                     <arg value="-e"/>
@@ -77,15 +74,24 @@
             <sequential>
                 <!-- See http://sass-lang.com/tutorial.html -->
                 <!-- See http://kenai.com/projects/jruby/pages/GettingStarted#How_Do_I_Run_rake,_gem,_etc? -->
-                <java classname="org.jruby.Main" fork="true" dir="." classpathref="salvador.jruby.classpath">
+                <java classname="org.jruby.Main" fork="true" dir="." classpathref="salvador.jruby.classpath" resultproperty="salvador.jruby.gem.install.return.code" failonerror="true">
                     <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
                     <arg value="-S"/>
                     <arg value="gem"/>
                     <arg value="install"/>
                     <arg value="@{gem}"/>
                 </java>
+                <fail>
+                    <condition>
+                        <not>
+                            <equals arg1="${salvador.jruby.gem.install.return.code}" arg2="0"/>
+                        </not>
+                    </condition>
+                </fail>
             </sequential>
         </macrodef>
     </target>
+
+    <target name="salvador.jruby.install" depends="salvador.jruby.gems"/>
 
 </project>
