@@ -28,6 +28,11 @@
     <target name="salvador.jetty.install" depends="salvador.jetty.download">
         <taskdef classpathref="salvador.jetty.classpath" resource="tasks.properties" loaderref="jetty.loader"/>
         <typedef name="selectChannelConnector" classname="org.eclipse.jetty.server.nio.SelectChannelConnector" classpathref="salvador.jetty.plugin.classpath" loaderref="jetty.loader"/>
+        <!-- 
+        See http://docs.codehaus.org/display/JETTY/Ant+Jetty+Plugin for configuration
+        For newer Versions
+        http://www.eclipse.org/jetty/documentation/current/jetty-ant.html
+        -->
         <macrodef name="salvador.jetty.run">
             <attribute name="path"/>
             <attribute name="webxml"/>

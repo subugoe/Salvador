@@ -30,6 +30,8 @@
 
     <!-- Override Properties by the ones of implict configuration file -->
     <property file="${salvador.base.dir}/salvador.properties"/>
+    <!-- load configuration of parrent if present -->
+    <property file="${salvador.base.dir}/../build.properties"/>
 
     <!-- check Versions first -->
     <target name="salvador.base.init" depends="salvador.base.versions.check" description="Creates directories for downloaded libraries">
