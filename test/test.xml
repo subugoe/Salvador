@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." name="SALVADOR.TEST" default="salvador.test">
+<project basedir=".." name="SALVADOR.TEST" default="salvador.test.run">
     <description>This files calls all the enduser targets of Salvador. It can be used for debugging-</description>
 
     <!-- Import base lib -->
@@ -8,98 +8,118 @@
 
     <import file="../modules/scm.xml"/>
     <echo>Imported scm.xml</echo>
-    
+
     <import file="../modules/jetty.xml"/>
     <echo>Imported jetty.xml</echo>
-    
+
     <import file="../modules/jruby.xml"/>
     <echo>Imported jruby.xml</echo>
-    
+
     <import file="../modules/javascript.xml"/>
     <echo>Imported javascript.xml</echo>
-    
+
     <import file="../modules/sass.xml"/>
     <echo>Imported sass.xml</echo>
-    
+
     <import file="../modules/compass.xml"/>
     <echo>Imported compass.xml</echo>
-    
+
     <import file="../modules/php.xml"/>
     <echo>Imported php.xml</echo>
-    
-    <target name="salvador.test" depends="salvador.test.base, salvador.test.scm, salvador.test.jetty, salvador.test.javascript, salvador.test.jruby, salvador.test.php">
+
+    <import file="../modules/tinypng.xml"/>
+    <echo>Imported tinypng.xml</echo>
+
+    <import file="../modules/exist.xml"/>
+    <echo>Imported exist.xml</echo>
+
+    <!--
+    <import file="../modules/jekyll.xml"/>
+    <echo>Imported jekyll.xml</echo>
+    -->
+
+    <target name="salvador.test.init">
         <echo>This should only be run by developers of the build system</echo>
-    </target>
-    <target name="salvador.test.base">
-        <echo>Testing base</echo>
-        <echo>Calling salvador.base.init (version check and directories)</echo>
-        <antcall target="salvador.base.init"/>
-        
-        <echo>Calling salvador.base.maven.install (Download and install of Maven)</echo>
-        <antcall target="salvador.base.maven.install"/>
-        
-        <echo>Calling salvador.base.ant.httptask.install (Download and install of Ant HTTP Tasks)</echo>
-        <antcall target="salvador.base.ant.httptask.install"/>
-        
-        <echo>Calling salvador.base.ant.contrib.install (Download and install of Ant Contrib)</echo>
-        <antcall target="salvador.base.ant.contrib.install"/>
-    </target>
-    
-    <target name="salvador.test.scm">
-        <echo>Testing SCM module</echo>
-        <echo>Calling salvador.scm.init (create directories)</echo>
-        <antcall target="salvador.scm.init"/>
-        
-        <echo>Calling salvador.scm.jgit.install (Git integration)</echo>
-        <antcall target="salvador.scm.jgit.install"/>
-        
-        <echo>Calling salvador.scm.svn.install (Subversion integration)</echo>
-        <antcall target="salvador.scm.svn.install"/>
-    </target>
-    
-    <target name="salvador.test.jetty">
-        <echo>Testing Jetty module</echo>
-        <echo>Calling salvador.scm.init (create directories)</echo>
-        <antcall target="salvador.jetty.init"/>
-        
-        <echo>Calling salvador.jetty.install (Jetty Ant tasks)</echo>
-        <antcall target="salvador.jetty.install"/>
-    </target>
-    
-    <target name="salvador.test.jruby">
-        <echo>Testing JRuby module</echo>
-        <echo>Calling salvador.jruby.init (create directories)</echo>
-        <antcall target="salvador.jruby.init"/>
-        
-        <echo>Calling salvador.jruby.home (create ruby home - used for gems)</echo>
-        <antcall target="salvador.jruby.home"/>
-        
-        <echo>Calling salvador.jruby.download (get JRuby)</echo>
-        <antcall target="salvador.jruby.download"/>
+        <echo>Avoid using the antcall Task since it starts recursively every dependent task, which might take some time</echo>
     </target>
 
-    <target name="salvador.test.javascript">
-        <echo>Testing JavaScript module</echo>
-        <echo>Calling salvador.js.init (create directories)</echo>
-        <antcall target="salvador.js.init"/>
-        
-        <echo>Calling salvador.js.yui.download (YUI integration)</echo>
-        <antcall target="salvador.js.yui.download"/>
-        
-        <echo>Calling salvador.js.yui.install (YUI Tasks)</echo>
-        <antcall target="salvador.js.yui.install"/>
-        
-        <echo>Calling salvador.js.rhino.install (Rhino integration)</echo>
-        <antcall target="salvador.js.rhino.install"/>
-    </target>
-    
-    <target name="salvador.test.php">
-        <echo>Testing JavaScript module</echo>
-        <echo>Calling salvador.php.init (create directories)</echo>
-        <antcall target="salvador.php.init"/>
-        
-        <echo>Calling salvador.php.download (PHP interpreter)</echo>
-        <antcall target="salvador.php.download"/>
+    <target name="salvador.test.run"
+        depends="salvador.test.init, salvador.test.base, salvador.test.scm, salvador.test.jetty, salvador.test.javascript, salvador.test.jruby, salvador.test.php, salvador.test.sass, salvador.test.compass, salvador.test.tinypng, salvador.test.exist"/>
+
+    <target name="salvador.test.base" depends="salvador.base.maven.install, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
+        <echo>Tested base</echo>
+        <echo>Target salvador.base.init (version check and directories) got called recursivly</echo>
+        <echo>Called target salvador.base.maven.install (Download and install of Maven)</echo>
+        <echo>Called target salvador.base.ant.httptask.install (Download and install of Ant HTTP Tasks)</echo>
+        <echo>Called target salvador.base.ant.contrib.install (Download and install of Ant Contrib)</echo>
     </target>
 
+    <target name="salvador.test.scm" depends="salvador.scm.jgit.install, salvador.scm.svn.install">
+        <echo>Tested SCM module</echo>
+        <echo>Target salvador.scm.init (create directories) got called recursivly</echo>
+        <echo>Called target salvador.scm.jgit.install (Git integration)</echo>
+        <echo>Called target salvador.scm.svn.install (Subversion integration)</echo>
+    </target>
+
+    <target name="salvador.test.jetty" depends="salvador.jetty.install">
+        <echo>Tested Jetty module</echo>
+        <echo>Target salvador.scm.init (create directories) got called recursivly</echo>
+        <echo>Called target salvador.jetty.install (Jetty Ant tasks)</echo>
+    </target>
+
+    <target name="salvador.test.jruby" depends="salvador.jruby.home, salvador.jruby.download, salvador.jruby.install">
+        <echo>Tested JRuby module</echo>
+        <echo>Target salvador.jruby.init (create directories) got called recursivly</echo>
+        <echo>Called target salvador.jruby.home (create ruby home - used for gems)</echo>
+        <echo>Called target salvador.jruby.download (get JRuby)</echo>
+        <echo>Called target salvador.jruby.install (macro definitions)</echo>
+    </target>
+
+    <target name="salvador.test.javascript" depends="salvador.js.yui.download, salvador.js.yui.install, salvador.js.rhino.download, salvador.js.jsdoctoolkit.install">
+        <echo>Tested JavaScript module</echo>
+        <echo>Target salvador.js.init (create directories) got called recursivly</echo>
+        <echo>Called target salvador.js.yui.download (YUI integration)</echo>
+        <echo>Called target salvador.js.yui.install (YUI Tasks)</echo>
+        <echo>Called target salvador.js.rhino.download (Rhino integration)</echo>
+        <echo>Called target salvador.js.jsdoctoolkit.download (JSDoc integration)</echo>
+    </target>
+
+    <target name="salvador.test.php" depends="salvador.php.download, salvador.php.install">
+        <echo>Tested JavaScript module</echo>
+        <echo>Target salvador.php.init (create directories) got called recursivly</echo>
+        <echo>Called target salvador.php.download (PHP interpreter download)</echo>
+        <echo>Called target salvador.php.install (PHP interpreter task definition)</echo>
+    </target>
+
+    <target name="salvador.test.sass" depends="salvador.sass.download, salvador.sass.install">
+        <echo>Testing SASS module</echo>
+        <echo>Called target salvador.sass.download (SASS Gem)</echo>
+        <echo>Called target salvador.sass.install (SASS task)</echo>
+    </target>
+
+    <target name="salvador.test.compass" depends="salvador.compass.download, salvador.compass.install">
+        <echo>Tested compass module</echo>
+        <echo>Called target salvador.compass.download (Compass Source)</echo>
+        <echo>Called target salvador.compass.install (Compass Gem)</echo>
+    </target>
+
+    <!-- Thtis is currently broken
+    <target name="salvador.test.jekyll" depends="salvador.jekyll.download, salvador.jekyll.install">
+        <echo>Tested jekyll module</echo>
+        <echo>Called salvador.jekyll.download (download)</echo>
+        <echo>Called salvador.jekyll.install (task definition)</echo>
+    </target>
+    -->
+    
+    <target name="salvador.test.tinypng" depends="salvador.tinypng.install">
+        <echo>Tested tinypng module</echo>
+        <echo>Called salvador.tinypng.install (test task definition)</echo>
+    </target>
+
+    <target name="salvador.test.exist" depends="salvador.exist.download, salvador.exist.install">
+        <echo>Testing exist module</echo>
+        <echo>Calling salvador.exist.init (create directorx)</echo>
+        <echo>Callied salvador.exist.download (download)</echo>
+        <echo>Callied salvador.exist.install (task definition)</echo>
+    </target>
 </project>
