@@ -9,6 +9,8 @@
     <dirname property="salvador.base.dir" file="${ant.file.SALVADOR}"/>
     <!-- directory for downloaded libraries (dependencies of the build system) -->
     <property name="salvador.base.lib.dir" value="${salvador.base.dir}/lib"/>
+    <!-- Temp dir -->
+    <property name="salvador.base.dir.tmp" value="${salvador.base.dir}/tmp"/>
 
     <!-- Maven stuff -->
     <property name="salvador.base.maven.lib.dir" value="${salvador.base.lib.dir}/maven"/>
@@ -38,6 +40,7 @@
         <mkdir dir="${salvador.base.lib.dir}"/>
         <mkdir dir="${salvador.base.ant.lib.dir}"/>
         <mkdir dir="${salvador.base.maven.lib.dir}"/>
+        <mkdir dir="${salvador.base.dir.tmp}"/>
     </target>
 
     <!-- Version checks -->
@@ -95,7 +98,7 @@
         <echo message="Downloading and installing Maven..."/>
         <get src="${salvador.base.maven.download.url}" dest="${salvador.base.maven.jar.file}" usetimestamp="true"/>
         <path id="salvador.base.maven.classpath">
-            <fileset dir="${salvador.base.lib.dir}" includes="*.jar"/>
+            <fileset dir="${salvador.base.maven.lib.dir}" includes="*.jar"/>
         </path>
     </target>
 
@@ -134,6 +137,7 @@
     <!-- Depend on this on your own clean target -->
     <target name="salvador.base.clean">
         <delete dir="${salvador.base.lib.dir}"/>
+        <delete dir="${salvador.base.dir.tmp}"/>
     </target>
 
 </project>
