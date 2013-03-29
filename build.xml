@@ -28,9 +28,6 @@
     <property name="salvador.base.ant.httptask.url" value="http://missing-link.googlecode.com/files/${salvador.base.ant.httptask.filename}"/>
     <property name="salvador.base.ant.httptask.file" value="${salvador.base.ant.lib.dir}/${salvador.base.ant.httptask.filename}"/>
 
-    <!-- Should Versions be checked? -->
-    <property name="salvador.base.check.versions" value="yes"/>
-
     <!-- Override Properties by the ones of implict configuration file -->
     <property file="${salvador.base.dir}/salvador.properties"/>
 
@@ -54,12 +51,12 @@
     </target>
 
     <!-- Warn if Java 5 isn't present -->
-    <target name="salvador.base.java.version.warn" depends="salvador.base.java.version.check" if="jsalvador.base.java.version.warn">
+    <target name="salvador.base.java.version.warn" depends="salvador.base.java.version.check" if="salvador.base.java.version.warn">
         <fail message="Your Java runtime is to old!"/>
     </target>
 
     <!-- Check if Java 5 is present -->
-    <target name="salvador.base.java.version.check" if="salvador.base.check.versions">
+    <target name="salvador.base.java.version.check" unless="salvador.base.versions.check.done">
         <echo message="checking for Java 1.5 or later"/>
         <echo level="info" message="Java version: ${java.version}"/>
         <condition property="salvador.base.java.version.warn">
@@ -81,7 +78,7 @@
     </target>
 
     <!-- Check if Ant 1.7 is present -->
-    <target name="salvador.base.ant.version.check" if="salvador.base.check.versions">
+    <target name="salvador.base.ant.version.check" unless="salvador.base.versions.check.done">
         <echo message="checking for Ant 1.7 or later"/>
         <echo level="info" message="If this task fails, your ant is too old!"/>
         <echo level="info"
