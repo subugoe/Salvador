@@ -101,6 +101,7 @@
         </path>
     </target>
 
+    <!-- See http://maven.apache.org/ant-tasks/ -->
     <target name="salvador.base.maven.install" depends="salvador.base.maven.download">
         <taskdef uri="antlib:org.apache.maven.artifact.ant" resource="org/apache/maven/artifact/ant/antlib.xml" classpathref="salvador.base.maven.classpath"/>
     </target>
@@ -120,6 +121,7 @@
         </path>
     </target>
 
+    <!-- See http://code.google.com/p/missing-link/ -->
     <target name="salvador.base.ant.httptask.install" depends="salvador.base.ant.httptask.download">
         <taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask">
             <classpath refid="salvador.base.ant.httptask.classpath"/>
