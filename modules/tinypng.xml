@@ -14,11 +14,19 @@
     <property file="${salvador.base.dir}/../tinypng.properties"/>
 
     <target name="salvador.tinypng.init" depends="salvador.base.init">
-        <!-- check if there is a API Key, fail if not -->
+        <fail message="TinyPNG API key not set!">
+            <condition>
+                <or>
+                    <equals arg1="${salvador.tinypng.apikey}" arg2=""/>
+                    <not>
+                        <isset property="salvador.tinypng.apikey"/>
+                    </not>
+                </or>
+            </condition>
+        </fail>
     </target>
 
-
-    <target name="salvador.tinypng.install" depends="salvador.base.ant.httptask.download">
+    <target name="salvador.tinypng.install" depends="salvador.tinypng.init, salvador.base.ant.httptask.download">
         <macrodef name="salvador.tinypng.compress">
             <attribute name="src"/>
             <attribute name="destfile"/>

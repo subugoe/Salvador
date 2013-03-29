@@ -37,6 +37,9 @@
     <import file="../modules/jekyll.xml"/>
     <echo>Imported jekyll.xml</echo>
     -->
+    
+    <!-- This needs to beset to pass the tinyPNG Test -->
+    <property name="salvador.tinypng.apikey" value="1234"/>
 
     <target name="salvador.test.init">
         <echo>This should only be run by developers of the build system</echo>
