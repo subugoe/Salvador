@@ -7,7 +7,11 @@
     <!-- Jekyll depends on JRuby -->
     <import file="./jruby.xml"/>
 
+    <fail message="Jekyll support doesn't work!"/>
+
+    <!-- This is not needed since we are relying on the Gem
     <property name="salvador.jekyll.lib.dir" value="${salvador.base.lib.dir}/jekyll"/>
+    -->
 
     <target name="salvador.jekyll.gem.check" depends="salvador.jruby.gems">
         <salvador.jruby.gem.check gem="jekyll"/>
@@ -23,7 +27,9 @@
         <salvador.jruby.gem.install gem="jekyll"/>
     </target>
 
-    <target name="salvador.jekyll.serve" depends="salvador.jekyll.gem.download">
+    <target name="salvador.jekyll.download" depends="salvador.jekyll.gem.download"/>
+
+    <target name="salvador.jekyll.serve" depends="salvador.jekyll.download">
         <macrodef name="salvador.jekyll.serve">
             <sequential>
                 <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
