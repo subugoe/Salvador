@@ -6,19 +6,19 @@ This is a Library of [Apache Ant](http://ant.apache.org/) Tasks that might be us
 
 #Modules
 Lockated in the modules sub directory.
-* scm.xml - Tasks for Subversion and Git
-* jetty.xml - Tasks for Jetty
-* javascript.xml - Several Dependencies for JavaScript related development
-* jruby.xml - JRuby mainly used by sass.xml and compass.xml
-* compass.xml - Compass CSS tools
-* sass.xml - SASS CSS tools
-* php.xml - Integrated PHP compiler
-* exist.xml - integration of eXist related tasks
-* tinypng.xml - itegration of the TinyPNG webservice (you need a API key to use this)
+* scm.xml - Tasks for [Subversion](http://subversion.tigris.org/) and [Git](http://git-scm.com/)
+* jetty.xml - Tasks for [Jetty](http://jetty.codehaus.org/jetty/)
+* javascript.xml - Several dependencies for JavaScript related development
+* jruby.xml - [JRuby](http://jruby.org/) mainly used by sass.xml and compass.xml
+* compass.xml - [Compass](http://compass-style.org/) CSS tools
+* sass.xml - [SASS](http://sass-lang.com/) CSS tools
+* php.xml - Integrated [PHP](http://quercus.caucho.com/) compiler
+* exist.xml - integration of [eXist]() related tasks
+* tinypng.xml - integration of the [TinyPNG](http://tinypng.org/) web service (you need a API key to use this)
 
 ##Unfinished modules
-* envjs.xml - EnvJS integration
-* jekyll.xml - Jekyll integration
+* envjs.xml - [EnvJS](https://github.com/envjs/env-js) integration (not finished)
+* jekyll.xml - [Jekyll](https://github.com/mojombo/jekyll) integration (doesn't work since stupid Jekyll relies on native crap)
 
 #Usage
 ##Basics
@@ -52,12 +52,16 @@ This file provides Git and Subversion integration.
 ##jetty.xml
 This file provides Jetty integration.
 ###Additional Tasks
+* The target **salvador.jetty.install** provides the [Jetty Ant Tasks](http://docs.codehaus.org/display/JETTY/Ant+Jetty+Plugin)
+
 ###Macros
+* The target **salvador.jetty.install** also provides the macro **salvador.jetty.run**: It takes the attributes 'path', 'webxml' (might be empty), 'port' (default: 8080), 'contextpath' (default: /ant) and 'name' (default: ant). This is a wrapper around the &lt;jetty&gt; task.
 
 ##javascript.xml
 This file provides several JavaScript tools.
 ###Additional Tasks
 * The target **salvador.js.jsdoctoolkit.install** provides the [JSDoc Ant Tasks](https://github.com/ironsidevsquincy/jsdoc-toolkit-ant-task)
+
 ###Macros
 The target **salvador.js.yui.install** provides the following [YUI](http://yuilibrary.com/) tasks: 
 * **salvador.js.yui.compress.js**: Takes a 'src' and 'destfile' attribute and compress a JS file.
@@ -77,8 +81,8 @@ This file provides Compass related tasks.
 
 ##sass.xml
 This file provides SASS related tasks.
-###Additional Tasks
 ###Macros
+* The target **salvador.sass.install** provides the macro **salvador.sass.compile.watch**. It takes two attributes 'src' and 'dest'. It watches the 'src' directory and writes changes to the 'dest' directory using the poll method. 
 
 ##php.xml
 This file provides an PHP compiler.
@@ -92,6 +96,14 @@ This file provides an PHP compiler.
 ##tinypng.xml
 ###Additional Tasks
 * The target **salvador.tinypng.install** provides the macro **salvador.tinypng.compress**: It takes a 'src' and 'destfile' attribute, sends the provided image to TinyPNG and saves the result. Make sure you set the property **salvador.tinypng.apikey**, containing your API key.
+
+#Examples
+This section provides some examples.
+## Running a web application with Jetty and Compass
+Make sure you import the required modules:
+>&lt;import file=&quot;./build/modules/jetty.xml&quot;/&gt;
+
+>&lt;import file=&quot;./build/modules/compass.xml&quot;/&gt;
 
 #Development
 In the test directory is a test.xml which can by run by
