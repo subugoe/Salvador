@@ -12,6 +12,10 @@
     <property name="salvador.sass.lib.dir" value="${salvador.base.lib.dir}/sass"/>
     <property name="salvador.sass.downlad.git.url" value="https://github.com/nex3/sass.git"/>
 
+    <!-- Default properties, overide them in including file if you need to -->
+    <property name="salvador.sass.compile.watch.src" value="./css"/>
+    <property name="salvador.sass.compile.watch.dest" value="./css"/>
+
     <!-- Uncomment this to use sass from the Git repository -->
     <!--
     <property name="salvador.sass.git" value="true"/>
@@ -50,8 +54,12 @@
 
     <target name="salvador.sass.download" depends="salvador.sass.gem.download"/>
 
+    <target name="salvador.sass.compile.watch" depends="salvador.sass.macros">
+        <!-- To use this override the properties salvador.sass.compile.watch.src and salvador.sass.compile.watch.dest -->
+        <salvador.sass.compile.watch src="${salvador.sass.compile.watch.src}" dest="${salvador.sass.compile.watch.dest}"/>
+    </target>
 
-    <target name="salvador.sass.compile" depends="salvador.sass.gem.download">
+    <target name="salvador.sass.macros" depends="salvador.sass.gem.download">
         <macrodef name="salvador.sass.compile.watch">
             <attribute name="src"/>
             <attribute name="dest"/>
@@ -72,7 +80,10 @@
             </sequential>
         </macrodef>
     </target>
+    
+    <!-- Another approach: http://stackoverflow.com/questions/7262342/sass-to-css-via-an-ant-task-directory-creation -->
+    
 
-    <target name="salvador.sass.install" depends="salvador.sass.compile"/>
+    <target name="salvador.sass.install" depends="salvador.sass.macros"/>
 
 </project>

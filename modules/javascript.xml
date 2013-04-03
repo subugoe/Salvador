@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="SALVADOR.JS" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>JavaScript targets of the SUB Ant library</description>
-    
+
     <!-- Import base lib -->
     <import file="../build.xml"/>
-    
+
     <!-- YUI -->
     <property name="salvador.js.yui.lib.dir" value="${salvador.base.lib.dir}/yui"/>
     <property name="salvador.js.yui.version" value="2.4.7"/>
@@ -12,13 +12,13 @@
     <property name="salvador.js.rhiro.lib.dir" value="${salvador.base.lib.dir}/rhrino"/>
     <property name="salvador.js.rhiro.version" value="1.7R4"/>
     <!-- JSDoc Toolkit -->
-    <property name="salvador.js.jsdoctoolkit.version" value="1.0"></property>
-    
+    <property name="salvador.js.jsdoctoolkit.version" value="1.0"/>
+
     <target name="salvador.js.init" depends="salvador.base.init">
         <mkdir dir="${salvador.js.yui.lib.dir}"/>
         <mkdir dir="${salvador.js.rhiro.lib.dir}"/>
     </target>
-    
+
     <target name="salvador.js.yui.download" depends="salvador.base.maven.install">
         <artifact:dependencies pathId="salvador.js.yui.classpath" filesetId="salvador.js.yui.files">
             <dependency groupId="com.yahoo.platform.yui" artifactId="yuicompressor" version="${salvador.js.yui.version}"/>
@@ -28,8 +28,8 @@
             <mapper type="flatten"/>
         </copy>
     </target>
-    
-    <!-- See http://yuilibrary.com/ -->    
+
+    <!-- See http://yuilibrary.com/ -->
     <target name="salvador.js.yui.install" depends="salvador.js.yui.download">
         <macrodef name="salvador.js.yui.compress.js">
             <attribute name="src"/>
@@ -58,17 +58,17 @@
             </sequential>
         </macrodef>
     </target>
-    
+
     <target name="salvador.js.rhino.download" depends="salvador.base.maven.install">
         <artifact:dependencies pathId="salvador.js.rhino.classpath" filesetId="salvador.js.rhino.files">
-            <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/> 
+            <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/>
         </artifact:dependencies>
         <copy todir="${salvador.js.rhiro.lib.dir}">
             <fileset refid="salvador.js.rhino.files"/>
             <mapper type="flatten"/>
         </copy>
     </target>
-    
+
     <!-- See http://www.kajabity.com/2012/02/automating-jsdoc-with-apache-ant/ -->
     <!-- See https://github.com/ironsidevsquincy/jsdoc-toolkit-ant-task -->
     <target name="salvador.js.jsdoctoolkit.install" depends="salvador.base.maven.install, salvador.base.ant.contrib.install">
@@ -76,9 +76,23 @@
             <dependency groupId="org.jsdoctoolkit" artifactId="jsdoctoolkit-ant-task" version="${salvador.js.jsdoctoolkit.version}">
                 <!-- Ant Contrib is not available in the desired version, get it via classpath -->
                 <exclusion groupId="ant" artifactId="ant-contrib"/>
-            </dependency> 
+            </dependency>
         </artifact:dependencies>
         <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit" classpathref="salvador.js.jsdoctoolkit.classpath"/>
     </target>
-    
+
+    <!-- See http://www.samaxes.com/2009/05/combine-and-minimize-javascript-and-css-files-for-faster-loading/ -->
+    <!-- See also https://github.com/yui/yuicompressor/blob/master/build.xml -->
+    <target name="salvador.js.tasks.concat">
+        <taskdef name="salvador.js.concat">
+            <attribute name="refid"/>
+            <attribute name="dest"/>
+            <sequential>
+                <concat destfile="${dest}">
+                    <fileset refid="${refid}"/>
+                </concat>
+            </sequential>
+        </taskdef>
+    </target>
+
 </project>

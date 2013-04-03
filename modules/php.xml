@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="SALVADOR.PHP" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>PHP targets of the SUB Ant library</description>
-    
+
     <!-- Import base lib -->
     <import file="../build.xml"/>
     <!-- Jetty is needed for Servlet API -->
     <import file="./jetty.xml"/>
-    
+
     <property name="salvador.php.quercus.version" value="4.0.25"/>
     <property name="salvador.php.lib.dir" value="${salvador.base.lib.dir}/quercus"/>
-    
+
     <target name="salvador.php.init" depends="salvador.base.init">
         <mkdir dir="${salvador.php.lib.dir}"/>
     </target>
-    
+
     <target name="salvador.php.download" depends="salvador.base.maven.install">
         <artifact:dependencies pathId="salvador.php.classpath" filesetId="salvador.php.files">
             <artifact:remoteRepository id="quercus" url="http://repository.threecrickets.com/maven/"/>
@@ -26,8 +26,8 @@
             <mapper type="flatten"/>
         </copy>
     </target>
-    
-    <target name="salvador.php.install" depends="salvador.php.download, salvador.jetty.download">
+
+    <target name="salvador.php.tasks" depends="salvador.php.download, salvador.jetty.download">
         <macrodef name="salvador.php.compile">
             <attribute name="src"/>
             <attribute name="destfile"/>
@@ -45,6 +45,23 @@
                 <echo force="true" encoding="UTF-8" output="@{destfile}" append="false" message="${salvador.php.compiler.output}"/>
             </sequential>
         </macrodef>
+        <macrodef name="salvador.php.compile.dir">
+            <attribute name="pathref"/>
+            <attribute name="todir"/>
+            <attribute name="suffix" value=".html"/>
+            <sequential>
+                <for param="php.file">
+                    <path pathref="pathref"/>
+                    <sequential>
+                        <echo>Compile PHP @{file}</echo>
+                        <propertyregex property="php.out" input="${php.file}" regexp="(.*)[\\/](.*)\.php" select="\2" casesensitive="false"/>
+                        <salvador.php.compile src="${php.file}" sestfile="${todir}/${php.out}${suffix}"/>
+                    </sequential>
+                </for>
+            </sequential>
+        </macrodef>
     </target>
-    
+
+    <target name="salvador.php.install" depends="salvador.php.tasks"/>
+
 </project>
