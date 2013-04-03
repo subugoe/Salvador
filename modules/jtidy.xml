@@ -6,9 +6,9 @@
     <import file="../build.xml"/>
 
     <!-- Jetty coordinates, since there are so many versions -->
-    <property name="salvador.jtidy.group.id" value="org.mortbay.jetty"/>
-    <property name="salvador.jtidy.artifact.id" value="jetty-ant"/>
-    <property name="salvador.jtidy.version" value="7.6.0.v20120127"/>
+    <property name="salvador.jtidy.group.id" value="net.sf.jtidy"/>
+    <property name="salvador.jtidy.artifact.id" value="jtidy"/>
+    <property name="salvador.jtidy.version" value="r938"/>
     <property name="salvador.jtidy.lib.dir" value="${salvador.base.lib.dir}/jtidy"/>
 
     <target name="salvador.jtidy.init" depends="salvador.base.init">
