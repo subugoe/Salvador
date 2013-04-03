@@ -133,6 +133,8 @@
             <dependency groupId="ant-contrib" artifactId="ant-contrib" version="${salvador.base.ant.contrib.version}"/>
         </artifact:dependencies>
         <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="salvador.base.ant.contrib.classpath"/>
+        <!-- This is a known bug, see: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=592182 -->
+        <typedef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="salvador.base.ant.contrib.classpath"/>
     </target>
     
     <!-- Depend on this on your own clean target -->
