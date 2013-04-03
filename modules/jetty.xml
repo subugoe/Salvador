@@ -11,11 +11,15 @@
     <property name="salvador.jetty.version" value="7.6.0.v20120127"/>
     <property name="salvador.jetty.lib.dir" value="${salvador.base.lib.dir}/jetty"/>
 
+    <!-- 
+    TODO: Add tmp dir.
+    -->
+
     <target name="salvador.jetty.init" depends="salvador.base.init">
         <mkdir dir="${salvador.jetty.lib.dir}"/>
     </target>
 
-    <target name="salvador.jetty.download" depends="salvador.base.maven.install">
+    <target name="salvador.jetty.download" depends="salvador.jetty.init, salvador.base.maven.install">
         <artifact:dependencies filesetId="salvador.jetty.files" pathId="salvador.jetty.classpath">
             <dependency groupId="${salvador.jetty.group.id}" artifactId="${salvador.jetty.artifact.id}" version="${salvador.jetty.version}"/>
         </artifact:dependencies>

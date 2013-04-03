@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="SALVADOR.EXIST" xmlns:xdb="http://exist-db.org/ant">
-    <description>exist targets of the SUB Ant library</description>
+    <description>eXist targets of the SUB Ant library</description>
 
     <!-- Import base lib -->
     <import file="../build.xml"/>

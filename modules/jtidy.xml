@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.JTidy" xmlns:xdb="http://exist-db.org/ant">
+    <description>JTidy targets of the SUB Ant library</description>
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+
+    <!-- Jetty coordinates, since there are so many versions -->
+    <property name="salvador.jtidy.group.id" value="org.mortbay.jetty"/>
+    <property name="salvador.jtidy.artifact.id" value="jetty-ant"/>
+    <property name="salvador.jtidy.version" value="7.6.0.v20120127"/>
+    <property name="salvador.jtidy.lib.dir" value="${salvador.base.lib.dir}/jtidy"/>
+
+    <target name="salvador.jtidy.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.jtidy.lib.dir}"/>
+    </target>
+
+    <target name="salvador.jtidy.download" depends="salvador.jtidy.init, salvador.base.maven.install">
+        <artifact:dependencies filesetId="salvador.jtidy.files" pathId="salvador.jtidy.classpath">
+            <dependency groupId="${salvador.jtidy.group.id}" artifactId="${salvador.jtidy.artifact.id}" version="${salvador.jtidy.version}"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.jtidy.lib.dir}">
+            <fileset refid="salvador.jtidy.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+
+    <target name="salvador.jtidy.install" depends="salvador.jtidy.download">
+        <taskdef name="tidy" classname="org.w3c.tidy.ant.JTidyTask" classpathref="salvador.jtidy.classpath"/>
+    </target>
+
+</project>
