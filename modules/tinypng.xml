@@ -67,9 +67,11 @@
                         <fileset refid="@{refid}"/>
                     </path>
                     <sequential>
-                        <echo>Compressing PNG @{png.file}</echo>
+                        
                         <propertyregex property="png.out" input="@{png.file}" regexp="(.*)[\\/](.*\.png)" select="\2" casesensitive="false"/>
-                        <salvador.tinypng.compress src="@{png.file}" destfile="@{todir}/${png.out}"/>
+                        <property name="png.file.out" value="@{todir}/${png.out}"/>
+                        <echo>Compressing PNG @{png.file} to ${png.file.out}</echo>
+                        <salvador.tinypng.compress src="@{png.file}" destfile="${png.file.out}"/>
                     </sequential>
                 </for>
             </sequential>

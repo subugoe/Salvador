@@ -37,7 +37,7 @@
             <sequential>
                 <!-- See http://marc.info/?l=ant-user&m=102519197329459 for multiple path entries -->
                 <!-- See http://wiki3.caucho.com/Quercus:_Command_Line_Interface_%28CLI%29 for Quercus CLI -->
-                <java classname="com.caucho.quercus.CliQuercus" classpathref="salvador.php.classpath" outputproperty="salvador.php.compiler.output">
+                <java classname="com.caucho.quercus.CliQuercus" classpathref="salvador.php.classpath" outputproperty="salvador.php.compiler.output" failonerror="true">
                     <classpath>
                         <path refid="salvador.php.classpath"/>
                         <path refid="salvador.jetty.classpath"/>
@@ -58,9 +58,11 @@
                         <fileset refid="@{refid}"/>
                     </path>
                     <sequential>
-                        <echo>Compile PHP @{php.file}</echo>
-                        <propertyregex property="php.out" input="${php.file}" regexp="(.*)[\\/](.*)\.php" select="\2" casesensitive="false"/>
-                        <salvador.php.compile src="${php.file}" sestfile="${todir}/${php.out}${suffix}"/>
+                        
+                        <propertyregex property="php.out" input="@{php.file}" regexp="(.*)[\\/](.*)\.php" select="\2" casesensitive="false"/>
+                        <property name="php.file.out" value="@{todir}/${php.out}@{suffix}"/>
+                        <echo>Compile PHP @{php.file} to ${php.file.out}</echo>
+                        <salvador.php.compile src="@{php.file}" destfile="${php.file.out}"/>
                     </sequential>
                 </for>
             </sequential>
