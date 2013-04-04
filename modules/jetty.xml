@@ -10,13 +10,16 @@
     <property name="salvador.jetty.artifact.id" value="jetty-ant"/>
     <property name="salvador.jetty.version" value="7.6.0.v20120127"/>
     <property name="salvador.jetty.lib.dir" value="${salvador.base.lib.dir}/jetty"/>
-
-    <!-- 
-    TODO: Add tmp dir.
-    -->
+    <property name="salvador.jetty.tmp.dir" value="${salvador.base.dir.tmp}/jetty"/>
 
     <target name="salvador.jetty.init" depends="salvador.base.init">
         <mkdir dir="${salvador.jetty.lib.dir}"/>
+        <mkdir dir="${salvador.jetty.tmp.dir}"/>
+    </target>
+
+    <target name="salvador.jetty.clean">
+        <delete dir="${salvador.jetty.lib.dir}"/>
+        <delete dir="${salvador.jetty.tmp.dir}"/>
     </target>
 
     <target name="salvador.jetty.download" depends="salvador.jetty.init, salvador.base.maven.install">
@@ -45,7 +48,7 @@
             <attribute name="name" default="ant"/>
             <sequential>
                 <echo>starting Jetty...</echo>
-                <jetty tempDirectory="${salvador.base.dir.tmp}">
+                <jetty tempDirectory="${salvador.jetty.tmp.dir}">
                     <connectors>
                         <selectChannelConnector port="@{port}"/>
                     </connectors>
