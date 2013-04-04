@@ -72,10 +72,42 @@
                     <arg value="sass"/>
                     <arg value="--watch"/>
                     <arg value="--poll"/>
+                    <arg value="--debug-info"/> 
                     <arg value="@{src}:@{dest}"/>
                 </java>
             </sequential>
         </macrodef>
+        <macrodef name="salvador.sass.compile">
+            <attribute name="src"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
+                <java classname="org.jruby.Main" fork="true" dir="." spawn="true">
+                    <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
+                    <classpath refid="salvador.jruby.classpath"/>
+                    <arg value="-S"/>
+                    <arg value="sass"/>
+                    <arg value="@{src}"/>
+                    <arg value="@{dest}"/>
+                </java>
+            </sequential>
+        </macrodef>
+        <macrodef name="salvador.sass.compile.dir">
+            <attribute name="refid"/>
+            <attribute name="todir"/>
+            <sequential>
+                <for param="sccs.file">
+                    <path>
+                        <fileset refid="@{refid}"/>
+                    </path>
+                    <sequential>
+                        <propertyregex property="css.out" input="@{png.file}" regexp="(.*)[\\/](.*)\.scss" select="\2" casesensitive="false"/>
+                        <property name="css.file.out" value="@{todir}/${css.out}.css"/>
+                        <echo>"Converting SCSS @{scss.file} to ${css.file.out}</echo>
+                        <salvador.sass.compile src="@{scss.file}" destfile="${css.file.out}"/>
+                    </sequential>
+                </for>
+            </sequential>
     </target>
     
     <!-- Another approach: http://stackoverflow.com/questions/7262342/sass-to-css-via-an-ant-task-directory-creation -->

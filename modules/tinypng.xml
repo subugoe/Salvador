@@ -67,7 +67,6 @@
                         <fileset refid="@{refid}"/>
                     </path>
                     <sequential>
-                        
                         <propertyregex property="png.out" input="@{png.file}" regexp="(.*)[\\/](.*\.png)" select="\2" casesensitive="false"/>
                         <property name="png.file.out" value="@{todir}/${png.out}"/>
                         <echo>Compressing PNG @{png.file} to ${png.file.out}</echo>
