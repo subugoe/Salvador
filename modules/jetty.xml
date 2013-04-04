@@ -11,6 +11,7 @@
     <property name="salvador.jetty.version" value="7.6.0.v20120127"/>
     <property name="salvador.jetty.lib.dir" value="${salvador.base.lib.dir}/jetty"/>
     <property name="salvador.jetty.tmp.dir" value="${salvador.base.dir.tmp}/jetty"/>
+    <property name="salvador.jetty.port" value="8080"/>
 
     <target name="salvador.jetty.init" depends="salvador.base.init">
         <mkdir dir="${salvador.jetty.lib.dir}"/>
@@ -43,7 +44,7 @@
         <macrodef name="salvador.jetty.run">
             <attribute name="path"/>
             <attribute name="webxml"/>
-            <attribute name="port" default="8080"/>
+            <attribute name="port" default="${salvador.jetty.port}"/>
             <attribute name="contextpath" default="/ant"/>
             <attribute name="name" default="ant"/>
             <sequential>
