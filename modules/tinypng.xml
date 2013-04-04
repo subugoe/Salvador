@@ -69,7 +69,7 @@
                     <sequential>
                         <echo>Compressing PNG @{png.file}</echo>
                         <propertyregex property="png.out" input="@{png.file}" regexp="(.*)[\\/](.*\.png)" select="\2" casesensitive="false"/>
-                        <salvador.tinypng.compress src="@{png.file}" destfile="${todir}/${png.out}"/>
+                        <salvador.tinypng.compress src="@{png.file}" destfile="@{todir}/${png.out}"/>
                     </sequential>
                 </for>
             </sequential>
