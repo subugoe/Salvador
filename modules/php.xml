@@ -7,7 +7,10 @@
     <!-- Jetty is needed for Servlet API -->
     <import file="./jetty.xml"/>
 
+    <property name="salvador.php.quercus.group.id" value="com.caucho"/>
+    <property name="salvador.php.quercus.artifact.id" value="quercus"/>
     <property name="salvador.php.quercus.version" value="4.0.25"/>
+    <property name="salvador.php.quercus.repository.url" value="http://repository.threecrickets.com/maven/"/>
     <property name="salvador.php.lib.dir" value="${salvador.base.lib.dir}/quercus"/>
 
     <target name="salvador.php.init" depends="salvador.base.init">
@@ -16,8 +19,8 @@
 
     <target name="salvador.php.download" depends="salvador.base.maven.install">
         <artifact:dependencies pathId="salvador.php.classpath" filesetId="salvador.php.files">
-            <artifact:remoteRepository id="quercus" url="http://repository.threecrickets.com/maven/"/>
-            <dependency groupId="com.caucho" artifactId="quercus" version="${salvador.php.quercus.version}">
+            <artifact:remoteRepository id="quercus" url="${salvador.php.quercus.repository.url}"/>
+            <dependency groupId="${salvador.php.quercus.group.id}" artifactId="${salvador.php.quercus.artifact.id}" version="${salvador.php.quercus.version}">
                 <exclusion groupId="javax" artifactId="javaee-api"/>
             </dependency>
         </artifact:dependencies>
@@ -27,7 +30,7 @@
         </copy>
     </target>
 
-    <target name="salvador.php.tasks" depends="salvador.php.download, salvador.jetty.download">
+    <target name="salvador.php.tasks" depends="salvador.php.download, salvador.jetty.download, salvador.base.ant.contrib.install">
         <macrodef name="salvador.php.compile">
             <attribute name="src"/>
             <attribute name="destfile"/>
@@ -46,12 +49,14 @@
             </sequential>
         </macrodef>
         <macrodef name="salvador.php.compile.dir">
-            <attribute name="pathref"/>
+            <attribute name="refid"/>
             <attribute name="todir"/>
-            <attribute name="suffix" value=".html"/>
+            <attribute name="suffix" default=".html"/>
             <sequential>
                 <for param="php.file">
-                    <path pathref="pathref"/>
+                    <path>
+                        <fileset refid="${ant.refid:refid}"/>
+                    </path>
                     <sequential>
                         <echo>Compile PHP @{file}</echo>
                         <propertyregex property="php.out" input="${php.file}" regexp="(.*)[\\/](.*)\.php" select="\2" casesensitive="false"/>
