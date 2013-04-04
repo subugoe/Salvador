@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.WEBJAR" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>Web Jar targets of the SUB Ant library</description>
+    
+    <!-- http://www.webjars.org/ -->
+    <!-- TODO: See if this can be moved to Salvador
+  <target name="war.js.dependencies" depends="salvador.base.maven.install, war.structure">
+    <property name="war.dir.js.dir.lib" value="${war.dir.js.dir}/libs"/>
+    <artifact:dependencies filesetId="war.js.files">
+      <dependency groupId="org.webjars" artifactId="jquery" version="1.8.3"/>
+    </artifact:dependencies>
+    
+    
+  </target>
+-->
+    <fail message="This module isn't finished yet"/>
+    
+</project>
