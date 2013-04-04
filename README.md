@@ -16,10 +16,12 @@ Lockated in the 'modules' sub directory.
 * exist.xml - integration of [eXist](http://www.exist-db.org/exist/apps/homepage/index.html) related tasks
 * tinypng.xml - integration of the [TinyPNG](http://tinypng.org/) web service (you need a API key to use this)
 * jtidy.xml - integration of [JTidy](http://jtidy.sourceforge.net/)
+* groovy.xml - integration of [Groovy](http://groovy.codehaus.org/)
 
 ##Unfinished modules
-* envjs.xml - [EnvJS](https://github.com/envjs/env-js) integration (not finished)
+* envjs.xml - [EnvJS](https://github.com/envjs/env-js) integration (not finished).
 * jekyll.xml - [Jekyll](https://github.com/mojombo/jekyll) integration (doesn't work since stupid Jekyll relies on native crap)
+* webjar.xml - [Webjar](http://www.webjars.org/) integration (not finished).
 
 #Usage
 ##Basics
@@ -106,7 +108,7 @@ This file provides integration of [eXist](http://www.exist-db.org/exist/apps/hom
 This file provides integration of the [TinyPNG](http://tinypng.org/) web service.
 
 **Note**: You need a API key to use this
-###Additional Tasks
+###Macros
 * The target **salvador.tinypng.macros** provides the macros:
 * **salvador.tinypng.compress**: It takes a '*src*' and '*destfile*' attribute, sends the provided image to TinyPNG and saves the result. Make sure you set the property **salvador.tinypng.apikey**, containing your API key.
 * **salvador.tinypng.compress.dir**: It takes two attributes '*refid*' and '*todir*'. It converts the fileSet given by the reference '*refid*' file and writes the result to '*todir*' using **salvador.tinypng.compress**.
@@ -115,6 +117,11 @@ This file provides integration of the [TinyPNG](http://tinypng.org/) web service
 This file provides integration of [JTidy](http://jtidy.sourceforge.net/).
 ###Additional Tasks
 * The target **salvador.jtidy.install** provides the [JTidy Ant Tasks](http://jtidy.sourceforge.net/apidocs/org/w3c/tidy/ant/JTidyTask.html).
+
+##groovy.xml
+This file provides integration of of [Groovy](http://groovy.codehaus.org/).
+###Additional Tasks
+* The target **salvador.groovy.install** provides the [Groovy Ant Tasks](http://groovy.codehaus.org/The+groovy+Ant+Task) 
 
 #Examples
 This section provides some examples.
