@@ -30,7 +30,7 @@
         </copy>
     </target>
 
-    <target name="salvador.php.tasks" depends="salvador.php.download, salvador.jetty.download, salvador.base.ant.contrib.install">
+    <target name="salvador.php.tasks" depends="salvador.php.download, salvador.jetty.download, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
         <macrodef name="salvador.php.compile">
             <attribute name="src"/>
             <attribute name="destfile"/>
@@ -55,10 +55,10 @@
             <sequential>
                 <for param="php.file">
                     <path>
-                        <fileset refid="${ant.refid:refid}"/>
+                        <fileset refid="@{refid}"/>
                     </path>
                     <sequential>
-                        <echo>Compile PHP @{file}</echo>
+                        <echo>Compile PHP @{php.file}</echo>
                         <propertyregex property="php.out" input="${php.file}" regexp="(.*)[\\/](.*)\.php" select="\2" casesensitive="false"/>
                         <salvador.php.compile src="${php.file}" sestfile="${todir}/${php.out}${suffix}"/>
                     </sequential>
