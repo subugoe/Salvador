@@ -72,7 +72,6 @@
                     <arg value="sass"/>
                     <arg value="--watch"/>
                     <arg value="--poll"/>
-                    <arg value="--debug-info"/>
                     <arg value="@{src}:@{dest}"/>
                 </java>
             </sequential>
