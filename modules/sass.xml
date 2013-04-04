@@ -54,9 +54,9 @@
 
     <target name="salvador.sass.download" depends="salvador.sass.gem.download"/>
 
-    <target name="salvador.sass.compile.watch" depends="salvador.sass.macros">
+    <target name="salvador.sass.convert.watch" depends="salvador.sass.macros">
         <!-- To use this override the properties salvador.sass.compile.watch.src and salvador.sass.compile.watch.dest -->
-        <salvador.sass.compile.watch src="${salvador.sass.compile.watch.src}" dest="${salvador.sass.compile.watch.dest}"/>
+        <salvador.sass.convert.watch src="${salvador.sass.compile.watch.src}" dest="${salvador.sass.compile.watch.dest}"/>
     </target>
 
     <target name="salvador.sass.macros" depends="salvador.sass.gem.download">
