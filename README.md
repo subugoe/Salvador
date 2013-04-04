@@ -83,12 +83,17 @@ This file provides [Compass](http://compass-style.org/) related tasks.
 ##sass.xml
 This file provides [SASS](http://sass-lang.com/) related tasks.
 ###Macros
-* The target **salvador.sass.install** provides the macro **salvador.sass.compile.watch**. It takes two attributes '*src*' and '*dest*'. It watches the '*src*' directory and writes changes to the '*dest*' directory using the poll method. 
+The target **salvador.sass.macros** provides the following macros:
+* **salvador.sass.convert.watch**: It takes two attributes '*src*' and '*dest*'. It watches the '*src*' directory and writes changes to the '*dest*' directory using the poll method.
+* **salvador.sass.convert**: It takes two attributes '*src*' and '*destfile*'. It converts the '*src*' file and writes the result to '*destfile*'.
+* **salvador.sass.convert.dir**: It takes two attributes '*refid*' and '*todir*'. It converts the fileSet given by the reference '*refid*' file and writes the result to '*todir*' using **salvador.sass.convert**.
 
 ##php.xml
 This file provides an [PHP](http://php.net/) [compiler](http://quercus.caucho.com/).
 ###Macros
+* The target **salvador.tinypng.macros** provides the macros:
 * **salvador.php.compile**: Takes a '*src*' and '*destfile*' attribute, compiles PHP files to static HTML (or whatever the PHP file emits)
+* **salvador.php.compile.dir**: It takes three attributes '*refid*', '*todir*' and suffix (default ".html"). It converts the fileSet given by the reference '*refid*' file and writes the result to '*todir*' using **salvador.php.compile**, use another '*suffix*' if the results shouldn't end with html.
 
 ##exist.xml
 This file provides integration of [eXist](http://www.exist-db.org/exist/apps/homepage/index.html).
@@ -102,7 +107,9 @@ This file provides integration of the [TinyPNG](http://tinypng.org/) web service
 
 **Note**: You need a API key to use this
 ###Additional Tasks
-* The target **salvador.tinypng.install** provides the macro **salvador.tinypng.compress**: It takes a '*src*' and '*destfile*' attribute, sends the provided image to TinyPNG and saves the result. Make sure you set the property **salvador.tinypng.apikey**, containing your API key.
+* The target **salvador.tinypng.macros** provides the macros:
+* **salvador.tinypng.compress**: It takes a '*src*' and '*destfile*' attribute, sends the provided image to TinyPNG and saves the result. Make sure you set the property **salvador.tinypng.apikey**, containing your API key.
+* **salvador.tinypng.compress.dir**: It takes two attributes '*refid*' and '*todir*'. It converts the fileSet given by the reference '*refid*' file and writes the result to '*todir*' using **salvador.tinypng.compress**.
 
 ##jtidy.xml
 This file provides integration of [JTidy](http://jtidy.sourceforge.net/).

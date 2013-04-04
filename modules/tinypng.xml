@@ -26,7 +26,9 @@
         </fail>
     </target>
 
-    <target name="salvador.tinypng.install" depends="salvador.tinypng.init, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
+    <target name="salvador.tinypng.install" depends="salvador.tinypng.macros"/>
+    
+    <target name="salvador.tinypng.macros" depends="salvador.tinypng.init, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
         <macrodef name="salvador.tinypng.compress">
             <attribute name="src"/>
             <attribute name="destfile"/>

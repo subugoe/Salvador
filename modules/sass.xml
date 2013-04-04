@@ -60,7 +60,7 @@
     </target>
 
     <target name="salvador.sass.macros" depends="salvador.sass.gem.download">
-        <macrodef name="salvador.sass.compile.watch">
+        <macrodef name="salvador.sass.convert.watch">
             <attribute name="src"/>
             <attribute name="dest"/>
             <sequential>
@@ -77,7 +77,7 @@
                 </java>
             </sequential>
         </macrodef>
-        <macrodef name="salvador.sass.compile">
+        <macrodef name="salvador.sass.convert">
             <attribute name="src"/>
             <attribute name="destfile"/>
             <sequential>
@@ -88,11 +88,11 @@
                     <arg value="-S"/>
                     <arg value="sass"/>
                     <arg value="@{src}"/>
-                    <arg value="@{dest}"/>
+                    <arg value="@{destfile}"/>
                 </java>
             </sequential>
         </macrodef>
-        <macrodef name="salvador.sass.compile.dir">
+        <macrodef name="salvador.sass.convert.dir">
             <attribute name="refid"/>
             <attribute name="todir"/>
             <sequential>

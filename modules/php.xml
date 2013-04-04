@@ -30,7 +30,7 @@
         </copy>
     </target>
 
-    <target name="salvador.php.tasks" depends="salvador.php.download, salvador.jetty.download, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
+    <target name="salvador.php.macros" depends="salvador.php.download, salvador.jetty.download, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
         <macrodef name="salvador.php.compile">
             <attribute name="src"/>
             <attribute name="destfile"/>
