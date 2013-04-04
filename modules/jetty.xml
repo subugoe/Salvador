@@ -12,15 +12,22 @@
     <property name="salvador.jetty.lib.dir" value="${salvador.base.lib.dir}/jetty"/>
     <property name="salvador.jetty.tmp.dir" value="${salvador.base.dir.tmp}/jetty"/>
     <property name="salvador.jetty.port" value="8080"/>
+    <!-- URL Rewrite Filter -->
+    <property name="salvador.urlrewritefilter.group.id" value="org.tuckey"/>
+    <property name="salvador.urlrewritefilter.artifact.id" value="urlrewritefilter"/>
+    <property name="salvador.urlrewritefilter.version" value="4.0.3"/>
+    <property name="salvador.urlrewritefilter.lib.dir" value="${salvador.base.lib.dir}/urlrewritefilter"/>
 
     <target name="salvador.jetty.init" depends="salvador.base.init">
         <mkdir dir="${salvador.jetty.lib.dir}"/>
         <mkdir dir="${salvador.jetty.tmp.dir}"/>
+        <mkdir dir="${salvador.urlrewritefilter.lib.dir}"/>
     </target>
 
     <target name="salvador.jetty.clean">
         <delete dir="${salvador.jetty.lib.dir}"/>
         <delete dir="${salvador.jetty.tmp.dir}"/>
+        <delete dir="${salvador.urlrewritefilter.lib.dir}"/>
     </target>
 
     <target name="salvador.jetty.download" depends="salvador.jetty.init, salvador.base.maven.install">
@@ -32,10 +39,23 @@
             <mapper type="flatten"/>
         </copy>
     </target>
+    
+    <target name="salvador.urlrewritefilter.download" depends="salvador.jetty.init, salvador.base.maven.install">
+        <artifact:dependencies filesetId="salvador.urlrewritefilter.files" pathId="salvador.urlrewritefilter.classpath">
+            <dependency groupId="${salvador.urlrewritefilter.group.id}" artifactId="${salvador.urlrewritefilter.artifact.id}" version="${salvador.urlrewritefilter.version}"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.urlrewritefilter.lib.dir}">
+            <fileset refid="salvador.urlrewritefilter.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
 
     <target name="salvador.jetty.install" depends="salvador.jetty.download">
         <taskdef classpathref="salvador.jetty.classpath" resource="tasks.properties" loaderref="jetty.loader"/>
         <typedef name="selectChannelConnector" classname="org.eclipse.jetty.server.nio.SelectChannelConnector" classpathref="salvador.jetty.plugin.classpath" loaderref="jetty.loader"/>
+        <!-- enable this if you require JDBC, make sure that the required Dependencies are on the class path
+        <typedef name="jdbcRealm" classname="org.mortbay.jetty.security.HashUserRealm" classpathref="salvador.jetty.plugin.classpath" loaderref="jetty.loader" />
+        -->
         <!-- 
         See http://docs.codehaus.org/display/JETTY/Ant+Jetty+Plugin for configuration
         For newer Versions
@@ -53,7 +73,7 @@
                     <connectors>
                         <selectChannelConnector port="@{port}"/>
                     </connectors>
-                    <webApp webXmlFile="@{webxml}" name="@{name}" warfile="@{path}" contextpath="@{contextpath}"/>
+                    <webApp webXmlFile="@{webxml}" name="@{name}" warfile="@{path}" contextpath="@{contextpath}" scanIntervalSeconds="5"/>
                 </jetty>
             </sequential>
         </macrodef>
