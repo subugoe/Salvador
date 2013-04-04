@@ -58,8 +58,11 @@
                         <fileset refid="@{refid}"/>
                     </path>
                     <sequential>
-                        
+                        <!-- we need to use the var task to reset the variables after the first run of the loop -->
+                        <!-- See: http://ant-contrib.sourceforge.net/tasks/tasks/variable_task.html -->
+                        <var name="php.out" unset="true"/>
                         <propertyregex property="php.out" input="@{php.file}" regexp="(.*)[\\/](.*)\.php" select="\2" casesensitive="false"/>
+                        <var name="php.file.out" unset="true"/>
                         <property name="php.file.out" value="@{todir}/${php.out}@{suffix}"/>
                         <echo>Compile PHP @{php.file} to ${php.file.out}</echo>
                         <salvador.php.compile src="@{php.file}" destfile="${php.file.out}"/>
@@ -69,6 +72,6 @@
         </macrodef>
     </target>
 
-    <target name="salvador.php.install" depends="salvador.php.tasks"/>
+    <target name="salvador.php.install" depends="salvador.php.macros"/>
 
 </project>

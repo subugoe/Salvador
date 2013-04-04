@@ -101,13 +101,18 @@
                         <fileset refid="@{refid}"/>
                     </path>
                     <sequential>
+                        <!-- we need to use the var task to reset the variables after the first run of the loop -->
+                        <!-- See: http://ant-contrib.sourceforge.net/tasks/tasks/variable_task.html -->
+                        <var name="css.out" unset="true"/>
                         <propertyregex property="css.out" input="@{png.file}" regexp="(.*)[\\/](.*)\.scss" select="\2" casesensitive="false"/>
+                        <var name="css.file..out" unset="true"/>
                         <property name="css.file.out" value="@{todir}/${css.out}.css"/>
                         <echo>"Converting SCSS @{scss.file} to ${css.file.out}</echo>
                         <salvador.sass.compile src="@{scss.file}" destfile="${css.file.out}"/>
                     </sequential>
                 </for>
             </sequential>
+        </macrodef>
     </target>
     
     <!-- Another approach: http://stackoverflow.com/questions/7262342/sass-to-css-via-an-ant-task-directory-creation -->

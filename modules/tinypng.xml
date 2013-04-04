@@ -69,7 +69,11 @@
                         <fileset refid="@{refid}"/>
                     </path>
                     <sequential>
+                        <!-- we need to use the var task to reset the variables after the first run of the loop -->
+                        <!-- See: http://ant-contrib.sourceforge.net/tasks/tasks/variable_task.html -->
+                        <var name="png.out" unset="true"/>
                         <propertyregex property="png.out" input="@{png.file}" regexp="(.*)[\\/](.*\.png)" select="\2" casesensitive="false"/>
+                        <var name="png.file.out" unset="true"/>
                         <property name="png.file.out" value="@{todir}/${png.out}"/>
                         <echo>Compressing PNG @{png.file} to ${png.file.out}</echo>
                         <salvador.tinypng.compress src="@{png.file}" destfile="${png.file.out}"/>
