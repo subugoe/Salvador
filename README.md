@@ -15,6 +15,7 @@ Lockated in the 'modules' sub directory.
 * php.xml - Integrated [PHP](http://quercus.caucho.com/) compiler
 * exist.xml - integration of [eXist](http://www.exist-db.org/exist/apps/homepage/index.html) related tasks
 * tinypng.xml - integration of the [TinyPNG](http://tinypng.org/) web service (you need a API key to use this)
+* jtidy.xml - integration of [JTidy](http://jtidy.sourceforge.net/)
 
 ##Unfinished modules
 * envjs.xml - [EnvJS](https://github.com/envjs/env-js) integration (not finished)
@@ -102,6 +103,11 @@ This file provides integration of the [TinyPNG](http://tinypng.org/) web service
 **Note**: You need a API key to use this
 ###Additional Tasks
 * The target **salvador.tinypng.install** provides the macro **salvador.tinypng.compress**: It takes a '*src*' and '*destfile*' attribute, sends the provided image to TinyPNG and saves the result. Make sure you set the property **salvador.tinypng.apikey**, containing your API key.
+
+##jtidy.xml
+This file provides integration of [JTidy](http://jtidy.sourceforge.net/).
+###Additional Tasks
+* The target **salvador.jtidy.install** provides the [JTidy Ant Tasks](http://jtidy.sourceforge.net/apidocs/org/w3c/tidy/ant/JTidyTask.html).
 
 #Examples
 This section provides some examples.
