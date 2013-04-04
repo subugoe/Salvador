@@ -16,7 +16,8 @@
     <property name="salvador.base.maven.lib.dir" value="${salvador.base.lib.dir}/maven"/>
     <property name="salvador.base.maven.install.version" value="2.1.3"/>
     <property name="salvador.base.maven.jar.file" value="${salvador.base.maven.lib.dir}/maven-ant-tasks-${salvador.base.maven.install.version}.jar"/>
-    <property name="salvador.base.maven.download.url" value="http://repo1.maven.org/maven2/org/apache/maven/maven-ant-tasks/${salvador.base.maven.install.version}/maven-ant-tasks-${salvador.base.maven.install.version}.jar"/>
+    <property name="salvador.base.maven.download.url"
+        value="http://repo1.maven.org/maven2/org/apache/maven/maven-ant-tasks/${salvador.base.maven.install.version}/maven-ant-tasks-${salvador.base.maven.install.version}.jar"/>
 
     <!-- Ant stuff -->
     <property name="salvador.base.ant.lib.dir" value="${salvador.base.lib.dir}/ant"/>
@@ -136,7 +137,48 @@
         <!-- This is a known bug, see: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=592182 -->
         <typedef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="salvador.base.ant.contrib.classpath"/>
     </target>
-    
+
+    <!-- Easter egg stuff -->
+    <target name="salvador.base.splash.screen" depends="salvador.base.maven.install">
+        <artifact:dependencies pathId="salvador.base.batik.classpath">
+            <dependency groupId="org.apache.xmlgraphics" artifactId="batik-rasterizer" version="1.7"/>
+            <dependency groupId="org.apache.xmlgraphics" artifactId="batik-codec" version="1.7"/>
+        </artifact:dependencies>
+        <!-- 
+        See : http://xmlgraphics.apache.org/batik/tools/rasterizer.html#taskExamples
+        -->
+        <!--
+        <taskdef name="rasterize" classname="org.apache.tools.ant.taskdefs.optional.RasterizerTask" classpathref="salvador.base.batik.classpath"/>
+        <rasterize result="image/png" src="salvador.svg" dest="salvador.png"/>
+        -->
+        <!-- First create a policy file -->
+        <echo file="${salvador.base.dir.tmp}/batik.policy">
+            grant { 
+                permission java.util.PropertyPermission "*", "read";
+                permission java.io.FilePermission "&lt;&lt;ALL FILES&gt;&gt;", "read";
+                permission java.io.FilePermission "${salvador.base.dir}/-", "write";
+                permission java.lang.RuntimePermission "getProtectionDomain";
+                permission java.lang.RuntimePermission "setSecurityManager";
+            };
+        </echo>
+        
+        <java classname="org.apache.batik.apps.rasterizer.Main" dir="." failonerror="false" fork="true" classpathref="salvador.base.batik.classpath">
+            <!-- This doesn't work since there is also a security manager installed by Ant, if started in the same process
+            <permissions>
+                <grant class="java.util.PropertyPermission"/>
+                <grant class="java.io.FilePermission" name="&lt;&lt;ALL FILES&gt;&gt;" actions="read"/>
+                <grant class="java.lang.RuntimePermission" name="getProtectionDomain"/>
+                <grant class="java.lang.RuntimePermission" name="setSecurityManager"/>
+                <revoke class="java.lang.RuntimePermission" name="exitVM"/>               
+            </permissions>
+            -->
+            <sysproperty key="java.security.policy" value="${salvador.base.dir.tmp}/batik.policy"/>
+            <arg value="-d"/>
+            <arg value="${salvador.base.dir.tmp}"/>
+            <arg value="${salvador.base.dir}/salvador.svg"/>
+        </java>
+    </target>
+
     <!-- Depend on this on your own clean target -->
     <target name="salvador.base.clean">
         <delete dir="${salvador.base.lib.dir}"/>
