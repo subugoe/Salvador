@@ -68,6 +68,8 @@
         </path>
         <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
             <classpath refid="salvador.exist.classpath"/>
+            <!-- Add log4j.xml to the class path -->
+            <classpath path="${salvador.base.lib.dir}/exist"/>
         </typedef>
     </target>
 </project>
