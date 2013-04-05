@@ -33,6 +33,9 @@
     <import file="../modules/exist.xml"/>
     <echo>Imported exist.xml</echo>
 
+    <import file="../modules/groovy.xml"/>
+    <echo>Imported groovy.xml</echo>
+
     <!--
     <import file="../modules/jekyll.xml"/>
     <echo>Imported jekyll.xml</echo>
@@ -47,7 +50,7 @@
     </target>
 
     <target name="salvador.test.run"
-        depends="salvador.test.init, salvador.test.base, salvador.test.scm, salvador.test.jetty, salvador.test.javascript, salvador.test.jruby, salvador.test.php, salvador.test.sass, salvador.test.compass, salvador.test.tinypng, salvador.test.exist"/>
+        depends="salvador.test.init, salvador.test.base, salvador.test.scm, salvador.test.jetty, salvador.test.javascript, salvador.test.jruby, salvador.test.php, salvador.test.sass, salvador.test.compass, salvador.test.tinypng, salvador.test.exist, salvador.test.groovy"/>
 
     <target name="salvador.test.base" depends="salvador.base.maven.install, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
         <echo>Tested base</echo>
@@ -64,10 +67,11 @@
         <echo>Called target salvador.scm.svn.install (Subversion integration)</echo>
     </target>
 
-    <target name="salvador.test.jetty" depends="salvador.jetty.install">
+    <target name="salvador.test.jetty" depends="salvador.jetty.install, salvador.urlrewritefilter.download">
         <echo>Tested Jetty module</echo>
         <echo>Target salvador.scm.init (create directories) got called recursivly</echo>
         <echo>Called target salvador.jetty.install (Jetty Ant tasks)</echo>
+        <echo>Called target salvador.urlrewritefilter.download (mod_rewrite alternative)</echo>
     </target>
 
     <target name="salvador.test.jruby" depends="salvador.jruby.home, salvador.jruby.download, salvador.jruby.install">
@@ -124,5 +128,10 @@
         <echo>Calling salvador.exist.init (create directorx)</echo>
         <echo>Callied salvador.exist.download (download)</echo>
         <echo>Callied salvador.exist.install (task definition)</echo>
+    </target>
+    
+    <target name="salvador.test.groovy" depends="salvador.groovy.install">
+        <echo>Tested tinypng module</echo>
+        <echo>Called ssalvador.groovy.install (test task definition)</echo>
     </target>
 </project>
