@@ -30,7 +30,7 @@
     <target name="salvador.tinypng.install" depends="salvador.tinypng.macros"/>
     
     <target name="salvador.tinypng.macros" depends="salvador.tinypng.init, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
-        <echo>Installing TinyPNF Macros</echo>
+        <echo>Installing TinyPNG macros</echo>
         <macrodef name="salvador.tinypng.compress">
             <attribute name="src"/>
             <attribute name="destfile"/>
