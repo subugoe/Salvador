@@ -28,6 +28,7 @@
 
     <!-- This is needed, since the class library of ruby isn't found, if started from jar file -->
     <target name="salvador.jruby.home" depends="salvador.jruby.download, salvador.jruby.home.unpacked" unless="salvador.jruby.home.unpacked">
+        <echo>Setting up jruby.home environment for Gems</echo>
         <!-- /META-INF/jruby.home/ -->
         <unzip dest="${salvador.jruby.home}">
             <patternset>
@@ -42,6 +43,7 @@
     </target>
 
     <target name="salvador.jruby.download" depends="salvador.jruby.init, salvador.base.maven.install">
+        <echo>Getting JRuby</echo>
         <artifact:dependencies filesetId="salvador.jruby.files" pathId="salvador.jruby.classpath">
             <dependency groupId="org.jruby" artifactId="jruby-complete" version="${salvador.jruby.version}"/>
         </artifact:dependencies>
@@ -52,6 +54,7 @@
     </target>
 
     <target name="salvador.jruby.gems" depends="salvador.jruby.home">
+        <echo>Installing macros for handling of Ruby Gems</echo>
         <!-- 
             Process returns 0 if sass is installed, 1 otherwise
             The return value is stored in the property salvador.jruby.gem.check.return.code

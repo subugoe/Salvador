@@ -49,6 +49,7 @@
     </target>
 
     <target name="salvador.sass.gem.download" depends="salvador.sass.check.gem.return" unless="salvador.sass.gem.exists">
+        <echo>Getting SASS Ruby Gem</echo>
         <salvador.jruby.gem.install gem="sass"/>
     </target>
 
@@ -60,6 +61,7 @@
     </target>
 
     <target name="salvador.sass.macros" depends="salvador.sass.gem.download">
+        <echo>Installing SASS macros</echo>
         <macrodef name="salvador.sass.convert.watch">
             <attribute name="src"/>
             <attribute name="dest"/>
