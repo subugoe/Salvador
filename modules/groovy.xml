@@ -17,6 +17,7 @@
     </target>
     
     <target name="salvador.groovy.download" depends="salvador.groovy.init, salvador.base.maven.install">
+        <echo>Getting Groovy</echo>
         <artifact:dependencies filesetId="salvador.groovy.files" pathId="salvador.groovy.classpath">
             <dependency groupId="${salvador.groovy.group.id}" artifactId="${salvador.groovy.artifact.id}" version="${salvador.groovy.version}"/>
         </artifact:dependencies>
@@ -30,6 +31,7 @@
     See: http://groovy.codehaus.org/The+groovy+Ant+Task
     -->
     <target name="salvador.groovy.install" depends="salvador.groovy.download">
+        <echo>Installing Groovy tasks</echo>
         <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="salvador.groovy.classpath"/>
     </target>
 

@@ -18,6 +18,7 @@
     </target>
 
     <target name="salvador.php.download" depends="salvador.base.maven.install">
+        <echo>Getting PHP interpreter (Quercus)</echo>
         <artifact:dependencies pathId="salvador.php.classpath" filesetId="salvador.php.files">
             <artifact:remoteRepository id="quercus" url="${salvador.php.quercus.repository.url}"/>
             <dependency groupId="${salvador.php.quercus.group.id}" artifactId="${salvador.php.quercus.artifact.id}" version="${salvador.php.quercus.version}">
@@ -31,6 +32,7 @@
     </target>
 
     <target name="salvador.php.macros" depends="salvador.php.download, salvador.jetty.download, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
+        <echo>Installing PHP interpreter (Quercus) macros</echo>
         <macrodef name="salvador.php.compile">
             <attribute name="src"/>
             <attribute name="destfile"/>

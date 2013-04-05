@@ -14,6 +14,7 @@
     <property file="${salvador.base.dir}/../tinypng.properties"/>
 
     <target name="salvador.tinypng.init" depends="salvador.base.init">
+        <echo>Checking TinyPNG API Key</echo>
         <fail message="TinyPNG API key not set!">
             <condition>
                 <or>
@@ -29,6 +30,7 @@
     <target name="salvador.tinypng.install" depends="salvador.tinypng.macros"/>
     
     <target name="salvador.tinypng.macros" depends="salvador.tinypng.init, salvador.base.ant.httptask.install, salvador.base.ant.contrib.install">
+        <echo>Installing TinyPNF Macros</echo>
         <macrodef name="salvador.tinypng.compress">
             <attribute name="src"/>
             <attribute name="destfile"/>

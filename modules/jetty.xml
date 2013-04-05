@@ -31,6 +31,7 @@
     </target>
 
     <target name="salvador.jetty.download" depends="salvador.jetty.init, salvador.base.maven.install">
+        <echo>Getting Jetty</echo>
         <artifact:dependencies filesetId="salvador.jetty.files" pathId="salvador.jetty.classpath">
             <dependency groupId="${salvador.jetty.group.id}" artifactId="${salvador.jetty.artifact.id}" version="${salvador.jetty.version}"/>
         </artifact:dependencies>
@@ -41,6 +42,7 @@
     </target>
     
     <target name="salvador.urlrewritefilter.download" depends="salvador.jetty.init, salvador.base.maven.install">
+        <echo>Getting URLRewriteFilter</echo>
         <artifact:dependencies filesetId="salvador.urlrewritefilter.files" pathId="salvador.urlrewritefilter.classpath">
             <dependency groupId="${salvador.urlrewritefilter.group.id}" artifactId="${salvador.urlrewritefilter.artifact.id}" version="${salvador.urlrewritefilter.version}"/>
         </artifact:dependencies>
@@ -51,6 +53,7 @@
     </target>
 
     <target name="salvador.jetty.install" depends="salvador.jetty.download">
+        <echo>Installing Jetty and macros</echo>
         <taskdef classpathref="salvador.jetty.classpath" resource="tasks.properties" loaderref="jetty.loader"/>
         <typedef name="selectChannelConnector" classname="org.eclipse.jetty.server.nio.SelectChannelConnector" classpathref="salvador.jetty.plugin.classpath" loaderref="jetty.loader"/>
         <!-- enable this if you require JDBC, make sure that the required Dependencies are on the class path

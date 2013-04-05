@@ -46,6 +46,7 @@
     <!-- Version checks -->
     <!-- Check if required Java and Ant versions are present -->
     <target name="salvador.base.versions.check" depends="salvador.base.java.version.warn, salvador.base.ant.version.warn" unless="salvador.base.versions.check.done">
+        <echo>Checking required versions</echo>
         <!--
         <echo level="info" message="The Ant check is disabled currently, because there is a bug in Ant. :-("/>
         -->
@@ -95,7 +96,7 @@
 
     <!-- Dependecies of the build system -->
     <target name="salvador.base.maven.download" unless="skip.download" depends="salvador.base.init">
-        <echo message="Downloading and installing Maven..."/>
+        <echo>Getting Maven</echo>
         <get src="${salvador.base.maven.download.url}" dest="${salvador.base.maven.jar.file}" usetimestamp="true"/>
         <path id="salvador.base.maven.classpath">
             <fileset dir="${salvador.base.maven.lib.dir}" includes="*.jar"/>
@@ -104,11 +105,12 @@
 
     <!-- See http://maven.apache.org/ant-tasks/ -->
     <target name="salvador.base.maven.install" depends="salvador.base.maven.download">
+        <echo>Installing Maven</echo>
         <taskdef uri="antlib:org.apache.maven.artifact.ant" resource="org/apache/maven/artifact/ant/antlib.xml" classpathref="salvador.base.maven.classpath"/>
     </target>
 
     <target name="salvador.base.ant.httptask.download" unless="skip.download" depends="salvador.base.init">
-        <echo message="Downloading and installing Ant HTTP Tasks..."/>
+        <echo>Getting Ant HTTP Tasks</echo>
         <get src="${salvador.base.ant.httptask.url}" dest="${salvador.base.ant.httptask.file}" usetimestamp="true"/>
         <unzip src="${salvador.base.ant.httptask.file}" dest="${salvador.base.ant.lib.dir}">
             <patternset>
@@ -124,12 +126,14 @@
 
     <!-- See http://code.google.com/p/missing-link/ -->
     <target name="salvador.base.ant.httptask.install" depends="salvador.base.ant.httptask.download">
+        <echo>Installing Ant HTTP Tasks</echo>
         <taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask">
             <classpath refid="salvador.base.ant.httptask.classpath"/>
         </taskdef>
     </target>
 
     <target name="salvador.base.ant.contrib.install" depends="salvador.base.maven.install">
+        <echo>Getting and installing Ant Contrib Tasks</echo>
         <artifact:dependencies pathId="salvador.base.ant.contrib.classpath">
             <dependency groupId="ant-contrib" artifactId="ant-contrib" version="${salvador.base.ant.contrib.version}"/>
         </artifact:dependencies>
@@ -140,6 +144,7 @@
 
     <!-- Easter egg stuff -->
     <target name="salvador.base.splash.screen" depends="salvador.base.maven.install">
+        <echo>Generating logo</echo>
         <artifact:dependencies pathId="salvador.base.batik.classpath">
             <dependency groupId="org.apache.xmlgraphics" artifactId="batik-rasterizer" version="1.7"/>
             <dependency groupId="org.apache.xmlgraphics" artifactId="batik-codec" version="1.7"/>

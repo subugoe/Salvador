@@ -20,6 +20,7 @@
 
     <!-- see http://wiki.eclipse.org/JGit/User_Guide#Ant_Tasks -->
     <target name="salvador.scm.jgit.install" depends="salvador.scm.init, salvador.base.maven.install">
+        <echo>Getting and installing Git tasks</echo>
         <artifact:dependencies pathId="salvador.scm.jgit.classpath">
             <dependency groupId="org.eclipse.jgit" artifactId="org.eclipse.jgit.ant" version="${salvador.scm.jgit.version}"/>
         </artifact:dependencies>
@@ -27,6 +28,7 @@
     </target>
 
     <target name="salvador.scm.svn.download" depends="salvador.scm.init, salvador.base.maven.install">
+        <echo>Getting Subversion</echo>
         <artifact:remoteRepository id="salvador.scm.svn.svn.repository" url="http://maven.svnkit.com/maven2"/>
         <artifact:dependencies filesetId="salvador.scm.svn.files" pathId="salvador.scm.svn.classpath">
             <dependency groupId="org.tmatesoft.svnkit" artifactId="svnkit" version="1.3.1" scope="test"/>
@@ -48,8 +50,11 @@
         </copy>
         -->
     </target>
+    
+    <target name="salvador.scm.svn.install" depends="salvador.scm.svn.macros"/>
 
-    <target name="salvador.scm.svn.install" depends="salvador.scm.svn.download">
+    <target name="salvador.scm.svn.macros" depends="salvador.scm.svn.download">
+        <echo>Installing Subversions macro</echo>
         <macrodef name="salvador.scm.svn.co">
             <attribute name="url"/>
             <attribute name="todir"/>

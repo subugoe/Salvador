@@ -20,6 +20,7 @@
     </target>
 
     <target name="salvador.js.yui.download" depends="salvador.base.maven.install">
+        <echo>Getting YUI</echo>
         <artifact:dependencies pathId="salvador.js.yui.classpath" filesetId="salvador.js.yui.files">
             <dependency groupId="com.yahoo.platform.yui" artifactId="yuicompressor" version="${salvador.js.yui.version}"/>
         </artifact:dependencies>
@@ -31,6 +32,7 @@
 
     <!-- See http://yuilibrary.com/ -->
     <target name="salvador.js.yui.install" depends="salvador.js.yui.download">
+        <echo>Installing YUI macros</echo>
         <macrodef name="salvador.js.yui.compress.js">
             <attribute name="src"/>
             <attribute name="destfile"/>
@@ -60,6 +62,7 @@
     </target>
 
     <target name="salvador.js.rhino.download" depends="salvador.base.maven.install">
+        <echo>Getting JavaScript interpreter (Rhino)</echo>
         <artifact:dependencies pathId="salvador.js.rhino.classpath" filesetId="salvador.js.rhino.files">
             <dependency groupId="org.mozilla" artifactId="rhino" version="${salvador.js.rhiro.version}"/>
         </artifact:dependencies>
@@ -72,6 +75,7 @@
     <!-- See http://www.kajabity.com/2012/02/automating-jsdoc-with-apache-ant/ -->
     <!-- See https://github.com/ironsidevsquincy/jsdoc-toolkit-ant-task -->
     <target name="salvador.js.jsdoctoolkit.install" depends="salvador.base.maven.install, salvador.base.ant.contrib.install">
+        <echo>Getting and installing JSDoc Task</echo>
         <artifact:dependencies pathId="salvador.js.jsdoctoolkit.classpath" filesetId="salvador.js.jsdoctoolkit.files">
             <dependency groupId="org.jsdoctoolkit" artifactId="jsdoctoolkit-ant-task" version="${salvador.js.jsdoctoolkit.version}">
                 <!-- Ant Contrib is not available in the desired version, get it via classpath -->
@@ -84,6 +88,7 @@
     <!-- See http://www.samaxes.com/2009/05/combine-and-minimize-javascript-and-css-files-for-faster-loading/ -->
     <!-- See also https://github.com/yui/yuicompressor/blob/master/build.xml -->
     <target name="salvador.js.tasks.concat">
+        <echo>Installing concat macro (salvador.js.concat)</echo>
         <taskdef name="salvador.js.concat">
             <attribute name="refid"/>
             <attribute name="dest"/>

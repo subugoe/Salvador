@@ -48,6 +48,7 @@
 
     <!-- See http://www.exist-db.org/exist/apps/doc/ant-tasks.xml -->
     <target name="salvador.exist.download" depends="salvador.exist.install.options" unless="salvador.exist.unpacked">
+        <echo>Getting eXist</echo>
         <echo>This will downlaod and unpack exist, it might take some time and diskspace.</echo>
         <get src="${salvador.exist.download.url}" dest="${salvador.exist.download.filename}" usetimestamp="true" verbose="on"/>
         <java dir="${salvador.exist.lib.dir}" jar="${salvador.exist.download.filename}" fork="true" failonerror="true" maxmemory="128m">
@@ -57,6 +58,7 @@
     </target>
 
     <target name="salvador.exist.install" depends="salvador.exist.download">
+        <echo>Installing eXist Tasks</echo>
         <path id="salvador.exist.classpath">
             <fileset dir="${salvador.exist.lib.dir}/lib/core">
                 <include name="*.jar"/>

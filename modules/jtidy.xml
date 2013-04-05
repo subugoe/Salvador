@@ -19,6 +19,7 @@
     See http://jtidy.sourceforge.net/apidocs/org/w3c/tidy/ant/JTidyTask.html
     -->
     <target name="salvador.jtidy.download" depends="salvador.jtidy.init, salvador.base.maven.install">
+        <echo>Getting JTidy</echo>
         <artifact:dependencies filesetId="salvador.jtidy.files" pathId="salvador.jtidy.classpath">
             <dependency groupId="${salvador.jtidy.group.id}" artifactId="${salvador.jtidy.artifact.id}" version="${salvador.jtidy.version}"/>
         </artifact:dependencies>
@@ -29,6 +30,7 @@
     </target>
 
     <target name="salvador.jtidy.install" depends="salvador.jtidy.download">
+        <echo>Installing JTidy</echo>
         <taskdef name="tidy" classname="org.w3c.tidy.ant.JTidyTask" classpathref="salvador.jtidy.classpath"/>
     </target>
 
