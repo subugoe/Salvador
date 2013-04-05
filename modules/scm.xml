@@ -26,6 +26,18 @@
         </artifact:dependencies>
         <taskdef resource="org/eclipse/jgit/ant/ant-tasks.properties" classpathref="salvador.scm.jgit.classpath"/>
     </target>
+    
+    <target name="salvador.scm.git.macros">
+        <echo>Installing Git macro</echo>
+        <macrodef name="salvador.scm.git.structure">
+            <attribute name="dir"/>
+            <sequential>
+                <mkdir dir="@{dir}/src"/>
+                <touch file="@{dir}/.gitignore"/>
+                <echo file="@{dir}/README.md">#Project desription</echo>
+            </sequential>
+        </macrodef>
+    </target>
 
     <target name="salvador.scm.svn.download" depends="salvador.scm.init, salvador.base.maven.install">
         <echo>Getting Subversion</echo>
@@ -51,7 +63,7 @@
         -->
     </target>
     
-    <target name="salvador.scm.svn.install" depends="salvador.scm.svn.macros"/>
+    <target name="salvador.scm.svn.install" depends="salvador.scm.svn.macros, salvador.scm.git.macros"/>
 
     <target name="salvador.scm.svn.macros" depends="salvador.scm.svn.download">
         <echo>Installing Subversions macro</echo>
