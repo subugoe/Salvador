@@ -29,6 +29,7 @@
     
     <!-- 
     See: http://groovy.codehaus.org/The+groovy+Ant+Task
+    See: http://groovy.codehaus.org/Ant+Task+Troubleshooting
     -->
     <target name="salvador.groovy.install" depends="salvador.groovy.download">
         <echo>Installing Groovy tasks</echo>
