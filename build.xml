@@ -34,6 +34,9 @@
     <!-- load configuration of parrent if present -->
     <property file="${salvador.base.dir}/../build.properties"/>
 
+    <!-- Imports -->
+    <import file="./modules/groovy.xml"/>
+    
     <!-- check Versions first -->
     <target name="salvador.base.init" depends="salvador.base.versions.check" description="Creates directories for downloaded libraries">
         <!-- Create Dicretories -->
@@ -143,7 +146,8 @@
     </target>
 
     <!-- Easter egg stuff -->
-    <target name="salvador.base.splash.screen" depends="salvador.base.maven.install">
+    <property name="salvador.base.splash.screen.width" value="490"/>
+    <target name="salvador.base.splash.image" depends="salvador.base.maven.install">
         <echo>Generating logo</echo>
         <artifact:dependencies pathId="salvador.base.batik.classpath">
             <dependency groupId="org.apache.xmlgraphics" artifactId="batik-rasterizer" version="1.7"/>
@@ -166,7 +170,7 @@
                 permission java.lang.RuntimePermission "setSecurityManager";
             };
         </echo>
-        
+
         <java classname="org.apache.batik.apps.rasterizer.Main" dir="." failonerror="false" fork="true" classpathref="salvador.base.batik.classpath">
             <!-- This doesn't work since there is also a security manager installed by Ant, if started in the same process
             <permissions>
@@ -178,12 +182,68 @@
             </permissions>
             -->
             <sysproperty key="java.security.policy" value="${salvador.base.dir.tmp}/batik.policy"/>
+            <sysproperty key="java.awt.headless" value="true"/>
+            <!-- See: http://xmlgraphics.apache.org/batik/tools/rasterizer.html -->
+            <arg value="-w"/>
+            <arg value="${salvador.base.splash.screen.width}"/>
             <arg value="-d"/>
             <arg value="${salvador.base.dir.tmp}"/>
+            <!-- use this for other file formats -->
+            <arg value="-m"/>
+            <arg value="image/jpeg"/>
             <arg value="${salvador.base.dir}/salvador.svg"/>
         </java>
     </target>
+    
+    <target name="salvador.base.splash.ascii" depends="salvador.base.ant.contrib.install, salvador.groovy.install">
+        <!-- The AsciArt Stuff doesn work doesn't work with PNG since it doesn't handle transparency, use JPEG instead -->
+        <property name="salvador.base.splash.ascii.url" value="https://gist.github.com/enricod/838892/raw/9068d4f439c7173034bd6343bf33fd4bea191b23/AsciiArt.groovy"/>
+        <property name="salvador.base.splash.ascii.script" value="${salvador.base.dir.tmp}/AsciiArt.groovy"/>
+        <!-- See also https://github.com/sourcerebels/gist.groovy -->
+        <get src="${salvador.base.splash.ascii.url}" dest="${salvador.base.splash.ascii.script}" usetimestamp="true"/>
+        <!-- Reset width -->
+        <var name="salvador.base.splash.screen.width" unset="true"/>
+        <property name="salvador.base.splash.screen.width" value="80"/>
+        <antcall target="salvador.base.splash.image"/>
 
+        <!-- This isn't as easy as its seems: http://jira.codehaus.org/browse/GROOVY-3396 -->
+        <!-- Parameters that don't work:
+             fork="true" useGroovyShell="true" src="${salvador.base.splash.ascii.script}" outputproperty="salvador.base.splash.ascii.result"
+        -->
+        <!-- Loading the Script from within groovy works better -->
+        <groovy useGroovyShell="true">
+            <!-- Used Imports -->
+            import groovy.ui.SystemOutputInterceptor
+            <!-- Get the needed proerties from Ant and wrap them as File objects -->
+            def script = new File(properties["salvador.base.splash.ascii.script"])
+            def salvador = new File(properties["salvador.base.dir.tmp"] + '/salvador.jpg')
+            <!--
+                This is quite evil, Groovy Ant has some serious class loading issues,
+                it seems to work only for scripts, not classes with main methods
+                See: groovy.codehaus.org/Embedding+Groovy#EmbeddingGroovy-DynamicallyloadingandrunningGroovycodeinsideJava
+            -->
+            ClassLoader parent = getClass().getClassLoader()
+            GroovyClassLoader loader = new GroovyClassLoader(parent)
+            Class groovyClass = loader.parseClass(script)
+            <!-- We now have something we can create an instance of -->
+            def asciiart = groovyClass.newInstance(salvador)
+            <!--
+                The Groovy Task doesnt support the outputproperty attribute, so we are doing this in Groovy :-(
+                See: http://mszalbach.blogspot.de/2011/01/intercepting-output-with-groovy.html
+            -->
+            def outputproperty = ''
+            def interceptor = new SystemOutputInterceptor({ outputproperty += it; false})
+            interceptor.start()
+            <!-- Start the converter -->
+            asciiart.start()
+            interceptor.stop()
+            <!-- Set the output property -->
+            properties["salvador.base.splash.ascii.result"] = outputproperty
+        </groovy>
+        <echo force="true" encoding="UTF-8" output="${salvador.base.dir.tmp}/salvador.txt" append="false" message="${salvador.base.splash.ascii.result}"/>
+        <echo message="${salvador.base.splash.ascii.result}"/> 
+    </target>
+    
     <!-- Depend on this on your own clean target -->
     <target name="salvador.base.clean">
         <delete dir="${salvador.base.lib.dir}"/>
