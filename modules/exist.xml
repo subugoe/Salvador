@@ -85,7 +85,7 @@
         <echo file="${salvador.exist.logging.config}" append="false" encoding="UTF-8" force="true" message="${salvador.exist.logging.config.existing}"/>
     </target>
 
-    <target name="salvador.exist.install" depends="salvador.exist.download">
+    <target name="salvador.exist.install" depends="salvador.exist.logging, salvador.exist.download">
         <echo>Installing eXist Tasks</echo>
         <path id="salvador.exist.classpath">
             <fileset dir="${salvador.exist.lib.dir}/lib/core">
