@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.BASEX" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>BaseX targets of the SUB Ant library</description>
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    
+    <!-- Jetty coordinates, since there are so many versions -->
+    <property name="salvador.basex.group.id" value="org.basex"/>
+    <property name="salvador.basex.artifact.id" value="basex"/>
+    <property name="salvador.basex.version" value="7.6"/>
+    <property name="salvador.basex.repository.url" value="http://files.basex.org/maven/"/>
+    <property name="salvador.basex.lib.dir" value="${salvador.base.lib.dir}/basex"/>
+    
+    <target name="salvador.basex.download" depends="salvador.base.maven.install">
+        <echo>Getting BaseX</echo>
+        <artifact:dependencies filesetId="salvador.basex.files" pathId="salvador.basex.classpath">
+            <artifact:remoteRepository id="basex" url="${salvador.basex.repository.url}"/>
+            <dependency groupId="${salvador.basex.group.id}" artifactId="${salvador.basex.artifact.id}" version="${salvador.basex.version}"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.basex.lib.dir}">
+            <fileset refid="salvador.basex.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+    
+</project>
