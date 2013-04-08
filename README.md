@@ -55,10 +55,10 @@ This file provides [Git](http://git-scm.com/) and [Subversion](http://subversion
 ##jetty.xml
 This file provides [Jetty](http://jetty.codehaus.org/jetty/) integration.
 ###Additional Tasks
-* The target **salvador.jetty.install** provides the [Jetty Ant Tasks](http://docs.codehaus.org/display/JETTY/Ant+Jetty+Plugin)
+* The target **salvador.jetty.install** provides the [Jetty 9 Ant Tasks](http://www.eclipse.org/jetty/documentation/current/jetty-ant.html)
 
 ###Macros
-* The target **salvador.jetty.install** also provides the macro **salvador.jetty.run**: It takes the attributes '*path*', '*webxml*' (might be empty), '*port*' (default: 8080), '*contextpath*' (default: /ant) and '*name*' (default: ant). This is a wrapper around the &lt;jetty&gt; task.
+* The target **salvador.jetty.install** also provides the macro **salvador.jetty.run**: It takes the attributes '*path*', '*webxml*' (might be empty), '*port*' (default: 8080) and '*contextpath*' (default: /ant). This is a wrapper around the &lt;jetty&gt; task, it will scan for changes ever 5 seconds.
 
 ##javascript.xml
 This file provides several JavaScript tools.
