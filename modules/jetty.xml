@@ -17,6 +17,10 @@
     <property name="salvador.urlrewritefilter.artifact.id" value="urlrewritefilter"/>
     <property name="salvador.urlrewritefilter.version" value="4.0.3"/>
     <property name="salvador.urlrewritefilter.lib.dir" value="${salvador.base.lib.dir}/urlrewritefilter"/>
+    <!-- Apache Commons HTTP cleint is a dependency of URLRewriteFilter -->
+    <property name="salvador.httpclient.group.id" value="commons-httpclient"/>
+    <property name="salvador.httpclient.artifact.id" value="commons-httpclient"/>
+    <property name="salvador.httpclient.version" value="3.1"/>
 
     <target name="salvador.jetty.init" depends="salvador.base.init">
         <mkdir dir="${salvador.jetty.lib.dir}"/>
@@ -45,6 +49,7 @@
         <echo>Getting URLRewriteFilter</echo>
         <artifact:dependencies filesetId="salvador.urlrewritefilter.files" pathId="salvador.urlrewritefilter.classpath">
             <dependency groupId="${salvador.urlrewritefilter.group.id}" artifactId="${salvador.urlrewritefilter.artifact.id}" version="${salvador.urlrewritefilter.version}"/>
+            <dependency groupId="${salvador.httpclient.group.id}" artifactId="${salvador.httpclient.artifact.id}" version="${salvador.httpclient.version}"/>
         </artifact:dependencies>
         <copy todir="${salvador.urlrewritefilter.lib.dir}">
             <fileset refid="salvador.urlrewritefilter.files"/>
