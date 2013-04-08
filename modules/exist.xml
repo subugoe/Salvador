@@ -56,6 +56,31 @@
             <arg value="${salvador.exist.install.filename}"/>
         </java>
     </target>
+    
+    <!-- Do this to prevent overwriting of our backup -->
+    <target name="salvador.exist.logging.backup.exists">
+        <property name="salvador.exist.logging.config" value="${salvador.exist.lib.dir}/log4j.xml"/>
+        <property name="salvador.exist.logging.config.backup" value="${salvador.exist.logging.config}.bak"/>
+        <available property="salvador.exist.logging.backup.exists" file="${salvador.exist.logging.config.backup}"/>
+    </target>
+  
+    <target name="salvador.exist.logging.backup" unless="salvador.exist.logging.backup.exists" depends="salvador.exist.logging.backup.exists">
+        <copy file="${salvador.exist.logging.config}" tofile="${salvador.exist.logging.config.backup}"/>
+    </target>  
+
+    <target name="salvador.exist.logging" depends="salvador.exist.logging.backup, salvador.exist.download, salvador.base.ant.contrib.install">
+        <echo>Setting up eXist logging</echo>
+        <mkdir dir="${salvador.base.dir.tmp}/logs"/>
+        <loadfile property="salvador.exist.logging.config.existing" srcfile="${salvador.exist.logging.config}">
+            <filterchain>
+                <tokenfilter>
+                    <containsregex pattern="^.*$" byline="true"/>
+                    <replaceregex pattern="^(.*value=&quot;)(\$\{exist.home\}/webapp/WEB-INF)(/logs.*)$" replace="\1${salvador.base.dir.tmp}\3"  byline="true"/>
+                </tokenfilter> 
+            </filterchain>
+        </loadfile>
+        <echo file="${salvador.exist.logging.config}" append="false" encoding="UTF-8" force="true" message="${salvador.exist.logging.config.existing}"/>
+    </target>
 
     <target name="salvador.exist.install" depends="salvador.exist.download">
         <echo>Installing eXist Tasks</echo>
@@ -69,7 +94,7 @@
         <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
             <classpath refid="salvador.exist.classpath"/>
             <!-- Add log4j.xml to the class path -->
-            <classpath path="${salvador.base.lib.dir}/exist"/>
+            <classpath path="${salvador.exist.lib.dir}"/>
         </typedef>
     </target>
 </project>

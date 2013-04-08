@@ -232,7 +232,7 @@
                 See: http://mszalbach.blogspot.de/2011/01/intercepting-output-with-groovy.html
             -->
             def outputproperty = ''
-            def interceptor = new SystemOutputInterceptor({ outputproperty += it; false})
+            def interceptor = new SystemOutputInterceptor({outputproperty += it; false})
             interceptor.start()
             <!-- Start the converter -->
             asciiart.start()
