@@ -249,5 +249,8 @@
         <delete dir="${salvador.base.lib.dir}"/>
         <delete dir="${salvador.base.dir.tmp}"/>
     </target>
+    
+    <!-- Alias, gets overwriten if imported -->
+    <target name="clean" depends="salvador.base.clean"/>
 
 </project>
