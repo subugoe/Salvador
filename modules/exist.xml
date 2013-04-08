@@ -72,6 +72,9 @@
         <echo>Setting up eXist logging</echo>
         <mkdir dir="${salvador.base.dir.tmp}/logs"/>
         <loadfile property="salvador.exist.logging.config.existing" srcfile="${salvador.exist.logging.config}">
+            <!-- 
+            See: http://ant.apache.org/manual/Types/filterchain.html#replaceregex
+            -->
             <filterchain>
                 <tokenfilter>
                     <containsregex pattern="^.*$" byline="true"/>
