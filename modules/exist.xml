@@ -4,11 +4,18 @@
 
     <!-- Import base lib -->
     <import file="../build.xml"/>
+    <!-- Import Jetty to run eXist -->
+    <import file="./jetty.xml"/>
 
     <property name="salvador.exist.lib.dir" value="${salvador.base.lib.dir}/exist"/>
     <property name="salvador.exist.filename" value="eXist-db-setup-2.0-rev18252.jar"/>
     <property name="salvador.exist.download.url" value="http://downloads.sourceforge.net/project/exist/Stable/2.0/${salvador.exist.filename}"/>
     <property name="salvador.exist.install.args" value="install_args"/>
+
+    <!-- Properties of local eXist database -->
+    <property name="salvador.exist.local.url" value=""/>
+    <property name="salvador.exist.local.user" value="admin"/>
+    <property name="salvador.exist.local.pass" value="salvador"/>
 
     <!-- Computed properties -->
     <property name="salvador.exist.download.filename" value="${salvador.exist.lib.dir}/${salvador.exist.filename}"/>
@@ -21,6 +28,7 @@
     <target name="salvador.exist.install.options" depends="salvador.exist.init, salvador.exist.install.unpacked" unless="salvador.exist.unpacked">
         <!-- Get the installer and use an automated installation -->
         <!-- 
+        See: http://exist.2174344.n4.nabble.com/automatic-install-with-console-td4659148.html
         Create a file e.g. "install_args".
         install_args contains four lines [with examples]:
         
@@ -100,4 +108,44 @@
             <classpath path="${salvador.exist.lib.dir}"/>
         </typedef>
     </target>
+    
+    <target name="salvador.exist.config.local" depends="salvador.exist.logging">
+        <copy file="${salvador.exist.lib.dir}/conf.xml" todir="${salvador.exist.lib.dir}/webapp/WEB-INF"/>
+        <copy file="${salvador.exist.logging.config}" todir="${salvador.exist.lib.dir}/webapp/WEB-INF"/>
+    </target>
+    
+    <target name="salvador.exist.run" depends="salvador.exist.config.local, salvador.exist.install, salvador.jetty.install">
+        <!-- Create security configuration -->
+        <property name="salvador.exist.security.properties" value="${salvador.base.dir.tmp}/realm.properties"/>
+        <echo file="${salvador.exist.security.properties}" append="false" force="true" message="guest: guest,read-only"/>
+        <echo>starting eXist...</echo>
+        <jetty.run tempDirectory="${salvador.jetty.tmp.dir}" scanIntervalSeconds="5">
+            <loginServices>
+                <hashLoginService name="JAASLoginService" config="${salvador.exist.security.properties}"/>
+            </loginServices>
+            <connectors>
+                <selectChannelConnector port="${salvador.jetty.port}"/>
+            </connectors>
+            <systemProperties>
+                <systemProperty name="log4j.configuration" value="${salvador.exist.logging.config}"/>
+            </systemProperties>
+            <webApp descriptor="${salvador.exist.lib.dir}/webapp/WEB-INF/web.xml" war="${salvador.exist.lib.dir}/webapp" contextpath="exist">
+                <lib dir="${salvador.exist.lib.dir}/lib">
+                    <include name="**/*.jar"/>
+                    <exclude name="user/**"/>
+                    <exclude name="test/**"/>
+                </lib>
+                <lib dir="${salvador.exist.lib.dir}/extensions">
+                    <include name="**/*.jar"/>
+                </lib>
+                <lib file="${salvador.exist.lib.dir}/start.jar"/>
+                <lib file="${salvador.exist.lib.dir}/exist-optional.jar"/>
+                <lib file="${salvador.exist.lib.dir}/exist.jar"/>
+                <attributes>
+                    <attribute name="configuration" value="${salvador.exist.lib.dir}/conf.xml"/>
+                </attributes>
+            </webApp>
+        </jetty.run>
+    </target>
+    
 </project>
