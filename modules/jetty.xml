@@ -34,7 +34,7 @@
         <mkdir dir="${salvador.urlrewritefilter.lib.dir}"/>
     </target>
 
-    <target name="salvador.jetty.clean">
+    <target name="salvador.jetty.clean" depends="salvador.base.clean">
         <delete dir="${salvador.jetty.lib.dir}"/>
         <delete dir="${salvador.jetty.tmp.dir}"/>
         <delete dir="${salvador.urlrewritefilter.lib.dir}"/>
