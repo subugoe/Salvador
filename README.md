@@ -17,6 +17,7 @@ Lockated in the 'modules' sub directory.
 * tinypng.xml - integration of the [TinyPNG](http://tinypng.org/) web service (you need a API key to use this)
 * jtidy.xml - integration of [JTidy](http://jtidy.sourceforge.net/)
 * groovy.xml - integration of [Groovy](http://groovy.codehaus.org/)
+* basex.xml - integration of [BaseX](http://basex.org/)
 
 ##Unfinished modules
 * envjs.xml - [EnvJS](https://github.com/envjs/env-js) integration (not finished).
@@ -122,6 +123,11 @@ This file provides integration of [JTidy](http://jtidy.sourceforge.net/).
 This file provides integration of of [Groovy](http://groovy.codehaus.org/).
 ###Additional Tasks
 * The target **salvador.groovy.install** provides the [Groovy Ant Tasks](http://groovy.codehaus.org/The+groovy+Ant+Task) 
+
+##basex.xml
+This file provides integration of [BaseX](http://basex.org/).
+###Macros
+* The macro **salvador.basex.download** downloads BaseX and sets a classpath for integration.
 
 #Examples
 This section provides some examples.
