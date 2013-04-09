@@ -24,6 +24,10 @@
     <target name="salvador.exist.init" depends="salvador.base.init">
         <mkdir dir="${salvador.exist.lib.dir}"/>
     </target>
+    
+    <target name="salvador.exist.clean" depends="salvador.jetty.clean">
+        <delete dir="${salvador.exist.lib.dir}"/>
+    </target>
 
     <target name="salvador.exist.install.options" depends="salvador.exist.init, salvador.exist.install.unpacked" unless="salvador.exist.unpacked">
         <!-- Get the installer and use an automated installation -->
