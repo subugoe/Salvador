@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.HTTP" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>HTTP targets of the SUB Ant library</description>
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <!-- Import Groovy -->
+    <import file="./groovy.xml"/>
+    
+    <target name="salvador.http.macros" depends="salvador.groovy.install">
+        <macrodef name="salvador.http.postfile">
+            <attribute name="url"/>
+            <attribute name="file"/>
+            <attribute name="name"/>
+            <sequential>
+                <groovy useGroovyShell="true">
+                    /* Needed imports */
+                    @Grapes([
+                    @Grab(group='org.apache.httpcomponents', module='httpclient', version='4.0.1')
+                    @Grab(group='org.apache.httpcomponents', module='httpmime', version='4.0.1')
+                    ])
+                    
+                    /* Get variable from ant */
+                    def filePath = new File(properties['file'])
+                    def fileName = properties['name]
+                    def url = new URL(properties['url'])
+                    
+                    /* See http://stackoverflow.com/questions/1378920/how-can-i-make-a-multipart-form-data-post-request-using-java */
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost(url);
+                    
+                    FileBody bin = new FileBody(new File(filePath));
+                    StringBody comment = new StringBody("Filename: " + fileName);
+                    
+                    MultipartEntity reqEntity = new MultipartEntity();
+                    reqEntity.addPart("bin", bin);
+                    reqEntity.addPart("comment", comment);
+                    httppost.setEntity(reqEntity);
+                    
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity resEntity = response.getEntity();
+                    
+                    client.getConnectionManager().shutdown();
+                </groovy>
+            </sequential>
+            
+        </macrodef>
+    </target>
+    
+</project>
