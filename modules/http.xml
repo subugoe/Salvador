@@ -37,7 +37,7 @@
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPost httppost = new HttpPost(url);
                     
-                    FileBody bin = new FileBody(new File(filePath));
+                    FileBody bin = new FileBody(filePath);
                     StringBody comment = new StringBody("Filename: " + fileName);
                     
                     MultipartEntity reqEntity = new MultipartEntity();
@@ -48,7 +48,7 @@
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity resEntity = response.getEntity();
                     
-                    client.getConnectionManager().shutdown();
+                    httpclient.getConnectionManager().shutdown();
                 </groovy>
             </sequential>
             
