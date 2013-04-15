@@ -12,7 +12,7 @@
             <attribute name="url"/>
             <attribute name="file"/>
             <attribute name="name"/>
-            <attribute name="param.name" value="file"/>
+            <attribute name="param.name" default="file"/>
             <sequential>
                 <!-- This is a ugly hack, see:
                      http://groovy.329449.n5.nabble.com/Accessing-Ant-macrodef-parameters-in-groovy-Ant-task-td358094.html
