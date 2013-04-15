@@ -7,12 +7,19 @@
     <!-- Import Groovy -->
     <import file="./groovy.xml"/>
     
-    <target name="salvador.http.macros" depends="salvador.groovy.install">
+    <target name="salvador.http.macros" depends="salvador.groovy.install, salvador.base.ant.contrib.install">
         <macrodef name="salvador.http.postfile">
             <attribute name="url"/>
             <attribute name="file"/>
             <attribute name="name"/>
             <sequential>
+                <!-- This is a ugly hack, see:
+                     http://groovy.329449.n5.nabble.com/Accessing-Ant-macrodef-parameters-in-groovy-Ant-task-td358094.html
+                -->
+                <var name="urlProp" value="@{url}"/>
+                <var name="fileProp" value="@{file}" />  
+                <var name="nameProp" value="@{name}" />  
+                
                 <groovy useGroovyShell="true">
                     /* Needed dependencies */
                     @Grapes([
@@ -29,9 +36,9 @@
                     import org.apache.http.client.methods.*
                     
                     /* Get variable from ant */
-                    def filePath = new File(properties['file'])
-                    def fileName = properties['name']
-                    def url = new URL(properties['url'])
+                    def filePath = new File(properties['fileProp'])
+                    def fileName = properties['nameProp']
+                    def url = new URL(properties['urlProp'])
                     
                     /* See http://stackoverflow.com/questions/1378920/how-can-i-make-a-multipart-form-data-post-request-using-java */
                     HttpClient httpclient = new DefaultHttpClient();
