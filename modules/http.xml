@@ -12,13 +12,15 @@
             <attribute name="url"/>
             <attribute name="file"/>
             <attribute name="name"/>
+            <attribute name="param.name" value="file"/>
             <sequential>
                 <!-- This is a ugly hack, see:
                      http://groovy.329449.n5.nabble.com/Accessing-Ant-macrodef-parameters-in-groovy-Ant-task-td358094.html
                 -->
                 <var name="urlProp" value="@{url}"/>
                 <var name="fileProp" value="@{file}" />  
-                <var name="nameProp" value="@{name}" />  
+                <var name="nameProp" value="@{name}" />
+                <var name="param.nameProp" value="@{param.name}" />  
                 
                 <groovy useGroovyShell="true">
                     /* Needed dependencies */
@@ -39,6 +41,7 @@
                     def filePath = new File(properties['fileProp'])
                     def fileName = properties['nameProp']
                     def url = new URL(properties['urlProp'])
+                    def paramName = properties['param.nameProp']
                     
                     /* See http://stackoverflow.com/questions/1378920/how-can-i-make-a-multipart-form-data-post-request-using-java */
                     HttpClient httpclient = new DefaultHttpClient();
@@ -48,7 +51,7 @@
                     StringBody comment = new StringBody("Filename: " + fileName);
                     
                     MultipartEntity reqEntity = new MultipartEntity();
-                    reqEntity.addPart("bin", bin);
+                    reqEntity.addPart(paramName, bin);
                     reqEntity.addPart("comment", comment);
                     httppost.setEntity(reqEntity);
                     
