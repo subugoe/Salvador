@@ -35,7 +35,7 @@
                     
                     /* See http://stackoverflow.com/questions/1378920/how-can-i-make-a-multipart-form-data-post-request-using-java */
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost(url);
+                    HttpPost httppost = new HttpPost(url.toURI());
                     
                     FileBody bin = new FileBody(filePath);
                     StringBody comment = new StringBody("Filename: " + fileName);
