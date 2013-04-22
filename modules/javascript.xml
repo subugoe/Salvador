@@ -37,6 +37,7 @@
             <attribute name="src"/>
             <attribute name="destfile"/>
             <sequential>
+                <echo>Compressing JavaScript file @{src} to @{destfile}</echo>
                 <java classname="com.yahoo.platform.yui.compressor.YUICompressor" fork="true" dir="." classpathref="salvador.js.yui.classpath">
                     <arg value="--type"/>
                     <arg value="js"/>
@@ -50,6 +51,7 @@
             <attribute name="src"/>
             <attribute name="destfile"/>
             <sequential>
+                <echo>Compressing CSS file @{src} to @{destfile}</echo>
                 <java classname="com.yahoo.platform.yui.compressor.YUICompressor" fork="true" dir="." classpathref="salvador.js.yui.classpath">
                     <arg value="--type"/>
                     <arg value="css"/>
