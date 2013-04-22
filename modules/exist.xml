@@ -152,4 +152,8 @@
         </jetty.run>
     </target>
     
+    <!-- TODO:
+         Add this: http://en.wikibooks.org/wiki/Apache_Ant/Creating_a_.xar_file
+    -->
+    
 </project>
