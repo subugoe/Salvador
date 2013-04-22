@@ -36,7 +36,7 @@
 
     <!-- Imports -->
     <import file="./modules/groovy.xml"/>
-    
+
     <!-- check Versions first -->
     <target name="salvador.base.init" depends="salvador.base.versions.check" description="Creates directories for downloaded libraries">
         <!-- Create Dicretories -->
@@ -161,7 +161,8 @@
         <rasterize result="image/png" src="salvador.svg" dest="salvador.png"/>
         -->
         <!-- First create a policy file -->
-        <echo file="${salvador.base.dir.tmp}/batik.policy">
+        <echo file="${salvador.base.dir.tmp}/batik.policy"
+            >
             grant { 
                 permission java.util.PropertyPermission "*", "read";
                 permission java.io.FilePermission "&lt;&lt;ALL FILES&gt;&gt;", "read";
@@ -194,7 +195,7 @@
             <arg value="${salvador.base.dir}/salvador.svg"/>
         </java>
     </target>
-    
+
     <target name="salvador.base.splash.ascii" depends="salvador.base.ant.contrib.install, salvador.groovy.install">
         <!-- The AsciArt Stuff doesn work doesn't work with PNG since it doesn't handle transparency, use JPEG instead -->
         <property name="salvador.base.splash.ascii.url" value="https://gist.github.com/enricod/838892/raw/9068d4f439c7173034bd6343bf33fd4bea191b23/AsciiArt.groovy"/>
@@ -241,16 +242,22 @@
             properties["salvador.base.splash.ascii.result"] = outputproperty
         </groovy>
         <echo force="true" encoding="UTF-8" output="${salvador.base.dir.tmp}/salvador.txt" append="false" message="${salvador.base.splash.ascii.result}"/>
-        <echo message="${salvador.base.splash.ascii.result}"/> 
+        <echo message="${salvador.base.splash.ascii.result}"/>
     </target>
-    
+
     <!-- Depend on this on your own clean target -->
     <target name="salvador.base.clean">
         <delete dir="${salvador.base.lib.dir}"/>
         <delete dir="${salvador.base.dir.tmp}"/>
     </target>
-    
+
     <!-- Alias, gets overwriten if imported -->
     <target name="clean" depends="salvador.base.clean"/>
+
+    <!-- Output a little explaination -->
+    <target name="help">
+        <echo>This ist the main build file for Salvador, a task library for Ant.</echo>
+        <echo>See https://github.com/subugoe/Salvador</echo>
+    </target>
 
 </project>
