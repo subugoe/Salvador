@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.SAXON" xmlns:xdb="http://exist-db.org/ant">
+    <description>Saxon targets of the SUB Ant library</description>
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    
+    <!-- Saxon coordinates, since there are so many versions -->
+    <property name="salvador.saxon.group.id" value="net.sf.saxon"/>
+    <property name="salvador.saxon.artifact.id" value="Saxon-HE"/>
+    <property name="salvador.saxon.version" value="9.4.0.7"/>
+    
+    <!-- Directories -->
+    <property name="salvador.saxon.lib.dir" value="${salvador.base.lib.dir}/saxon"/>
+    
+    
+    <target name="salvador.saxon.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.jetty.lib.dir}"/>
+    </target>
+    
+    <target name="salvador.saxon.clean" depends="salvador.base.clean">
+        <delete dir="${salvador.saxon.lib.dir}"/>
+    </target>
+    
+    <target name="salvador.saxon.download" depends="salvador.saxon.init, salvador.base.maven.install">
+        <echo>Getting Saxon</echo>
+        <artifact:dependencies filesetId="salvador.saxon.files" pathId="salvador.saxon.classpath">
+            <dependency groupId="${salvador.saxon.group.id}" artifactId="${salvador.saxon.artifact.id}" version="${salvador.saxon.version}"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.saxon.lib.dir}">
+            <fileset refid="salvador.saxon.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+    
+    <target name="salvador.saxon.install" depends="salvador.saxon.download">
+        <macrodef name="salvador.saxon.xquery">
+            <attribute name="query"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <java classname="net.sf.saxon.Query" classpathref="salvador.saxon.classpath">
+                    <arg value="@{query}"/>
+                    <arg value="-o"/>
+                    <arg value="@{destfile}"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+</project>
