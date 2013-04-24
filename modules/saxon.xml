@@ -39,8 +39,7 @@
             <sequential>
                 <echo>Executing XQuery @{query}, sesult will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Query" classpathref="salvador.saxon.classpath" failonerror="true">
-                    <arg value="-o"/>
-                    <arg value="@{destfile}"/>
+                    <arg value="-o:@{destfile}"/>
                     <arg value="@{query}"/>
                 </java>
             </sequential>
