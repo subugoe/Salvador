@@ -44,5 +44,18 @@
                 </java>
             </sequential>
         </macrodef>
+        <macrodef name="salvador.saxon.xslt">
+            <attribute name="in"/>
+            <attribute name="style"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <echo>Executing XQuery @{query}, sesult will be safed in @{destfile}</echo>
+                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
+                    <arg value="-o:@{destfile}"/>
+                    <arg value="@{in}"/>
+                    <arg value="@{style}"/>
+                </java>
+            </sequential>
+        </macrodef>
     </target>
 </project>
