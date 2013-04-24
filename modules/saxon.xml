@@ -38,7 +38,7 @@
             <attribute name="query"/>
             <attribute name="destfile"/>
             <sequential>
-                <java classname="net.sf.saxon.Query" classpathref="salvador.saxon.classpath">
+                <java classname="net.sf.saxon.Query" classpathref="salvador.saxon.classpath" failonerror="true">
                     <arg value="@{query}"/>
                     <arg value="-o"/>
                     <arg value="@{destfile}"/>

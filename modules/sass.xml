@@ -67,7 +67,7 @@
             <attribute name="dest"/>
             <sequential>
                 <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
-                <java classname="org.jruby.Main" fork="true" dir="." spawn="true">
+                <java classname="org.jruby.Main" fork="true" dir="." spawn="true" failonerror="true">
                     <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
                     <classpath refid="salvador.jruby.classpath"/>
                     <arg value="-S"/>
@@ -85,7 +85,7 @@
             <sequential>
                 <echo>Processing SCSS file @{src} to @{destfile}</echo>
                 <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
-                <java classname="org.jruby.Main" fork="true" dir="." spawn="true">
+                <java classname="org.jruby.Main" fork="true" dir="." spawn="true" failonerror="true">
                     <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
                     <classpath refid="salvador.jruby.classpath"/>
                     <arg value="-S"/>
