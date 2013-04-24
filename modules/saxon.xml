@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." name="SALVADOR.SAXON" xmlns:xdb="http://exist-db.org/ant">
+<project basedir=".." name="SALVADOR.SAXON"  xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>Saxon targets of the SUB Ant library</description>
     
     <!-- Import base lib -->

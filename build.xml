@@ -161,8 +161,7 @@
         <rasterize result="image/png" src="salvador.svg" dest="salvador.png"/>
         -->
         <!-- First create a policy file -->
-        <echo file="${salvador.base.dir.tmp}/batik.policy"
-            >
+        <echo file="${salvador.base.dir.tmp}/batik.policy">
             grant { 
                 permission java.util.PropertyPermission "*", "read";
                 permission java.io.FilePermission "&lt;&lt;ALL FILES&gt;&gt;", "read";
