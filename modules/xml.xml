@@ -43,7 +43,7 @@
                         <!-- See: http://ant-contrib.sourceforge.net/tasks/tasks/variable_task.html -->
                         <var name="xml.out" unset="true"/>
                         <propertyregex property="xml.out" input="@{xml.file}" regexp="(.*)[\\/](.*)" select="\2" casesensitive="false"/>
-                        <var name="php.file.out" unset="true"/>
+                        <var name="xml.file.out" unset="true"/>
                         <property name="xml.file.out" value="@{todir}/${xml.out}"/>
                         <echo>Prettyprint XML @{xml.file} to ${xml.file.out}</echo>
                         <salvador.xml.prettyprint src="@{xml.file}" destfile="${xml.file.out}"/>
