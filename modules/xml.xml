@@ -5,7 +5,7 @@
     <!-- Import base lib -->
     <import file="../build.xml"/>
     
-    <target name="salvador.exist.install" depends="salvador.base.init, salvador.xml.macros"/>
+    <target name="salvador.xml.install" depends="salvador.base.init, salvador.xml.macros"/>
     
     <target name="salvador.xml.macros" depends="salvador.base.ant.contrib.install">
         <macrodef name="salvador.xml.prettyprint">
