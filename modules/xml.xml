@@ -4,15 +4,21 @@
     
     <!-- Import base lib -->
     <import file="../build.xml"/>
+    <import file="./saxon.xml"/>
     
     <target name="salvador.xml.install" depends="salvador.base.init, salvador.xml.macros"/>
     
-    <target name="salvador.xml.macros" depends="salvador.base.ant.contrib.install">
+    <!-- Ant uses Xalan by default which can be considerer broken, the ident level is zero (0),
+         see: http://stackoverflow.com/questions/8588498/how-can-i-get-xslt-to-indent-xml-from-ant   
+    -->
+    
+    <target name="salvador.xml.macros" depends="salvador.base.ant.contrib.install, salvador.saxon.install">
         <macrodef name="salvador.xml.prettyprint">
             <attribute name="src"/>
             <attribute name="destfile"/>
             <sequential>
-                <xslt in="@{src}" out="@{destfile}">
+                <xslt in="@{src}" out="@{destfile}" classpathref="salvador.saxon.classpath">
+                    <factory name="net.sf.saxon.TransformerFactoryImpl" />
                     <style>
                         <!-- This inline stylesheet removes all references to URL rewriting -->
                         <!-- See https://issues.apache.org/bugzilla/show_bug.cgi?id=32461 -->
