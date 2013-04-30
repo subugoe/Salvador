@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.XML" xmlns:xdb="http://exist-db.org/ant">
+    <description>XML targets of the SUB Ant library</description>
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    
+    <target name="salvador.exist.install" depends="salvador.base.init, salvador.xml.macros"/>
+    
+    <target name="salvador.xml.macros" depends="salvador.base.ant.contrib.install">
+        <macrodef name="salvador.xml.prettyprint">
+            <attribute name="src"/>
+            <attribute name="destfile"/>
+            <sequential>
+                <xslt in="@{src}" out="@{destfile}">
+                    <style>
+                        <!-- This inline stylesheet removes all references to URL rewriting -->
+                        <!-- See https://issues.apache.org/bugzilla/show_bug.cgi?id=32461 -->
+                        <string><![CDATA[
+                            <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                                <xsl:output method="xml" indent="yes"/>
+                                <xsl:template match="node()|@*">
+                                    <xsl:copy>
+                                        <xsl:apply-templates select="node()|@*"/>
+                                    </xsl:copy>
+                                </xsl:template>
+                            </xsl:stylesheet>
+                        ]]></string>
+                    </style>
+                </xslt>
+            </sequential>
+        </macrodef>
+        <macrodef name="salvador.xml.prettyprint.dir">
+            <attribute name="refid"/>
+            <attribute name="todir"/>
+            <sequential>
+                <for param="xml.file">
+                    <path>
+                        <fileset refid="@{refid}"/>
+                    </path>
+                    <sequential>
+                        <!-- we need to use the var task to reset the variables after the first run of the loop -->
+                        <!-- See: http://ant-contrib.sourceforge.net/tasks/tasks/variable_task.html -->
+                        <var name="xml.out" unset="true"/>
+                        <propertyregex property="xml.out" input="@{xml.file}" regexp="(.*)[\\/](.*)" select="\2" casesensitive="false"/>
+                        <var name="php.file.out" unset="true"/>
+                        <property name="xml.file.out" value="@{todir}/${xml.out}"/>
+                        <echo>Prettyprint XML @{xml.file} to ${xml.file.out}</echo>
+                        <salvador.xml.prettyprint src="@{xml.file}" destfile="${xml.file.out}"/>
+                    </sequential>
+                </for>
+            </sequential>
+        </macrodef>
+    </target>
+</project>
