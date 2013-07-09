@@ -67,7 +67,13 @@
             <attribute name="dest"/>
             <sequential>
                 <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
-                <java classname="org.jruby.Main" fork="true" dir="." spawn="true" failonerror="true">
+                <!-- 
+                failonerror="true" only works with spawn="true" in Ant 1.9 or higher, see:
+                http://stackoverflow.com/questions/8086480/ant-to-spin-up-background-process-for-junit-tests
+                -->
+                <!-- TODO: Reenable failonerror="true" -->
+                <echo>Note that this will not fail the build if there is an error!</echo>
+                <java classname="org.jruby.Main" fork="true" dir="." spawn="true">
                     <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
                     <classpath refid="salvador.jruby.classpath"/>
                     <arg value="-S"/>
@@ -85,7 +91,12 @@
             <sequential>
                 <echo>Processing SCSS file @{src} to @{destfile}</echo>
                 <!-- JRuby Commandline: http://kenai.com/projects/jruby/pages/JRubyCommandLineParameters -->
-                <java classname="org.jruby.Main" fork="true" dir="." spawn="true" failonerror="true">
+                <!-- 
+                failonerror="true" only works with spawn="true" in Ant 1.9 or higher, see:
+                http://stackoverflow.com/questions/8086480/ant-to-spin-up-background-process-for-junit-tests
+                -->
+                <!-- TODO: Reenable failonerror="true" -->
+                <java classname="org.jruby.Main" fork="true" dir="." spawn="true">
                     <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
                     <classpath refid="salvador.jruby.classpath"/>
                     <arg value="-S"/>
