@@ -76,7 +76,7 @@
         <available property="salvador.exist.logging.backup.exists" file="${salvador.exist.logging.config.backup}"/>
     </target>
   
-    <target name="salvador.exist.logging.backup" unless="salvador.exist.logging.backup.exists" depends="salvador.exist.logging.backup.exists">
+    <target name="salvador.exist.logging.backup" if="salvador.exist.logging.backup.exists" depends="salvador.exist.logging.backup.exists">
         <copy file="${salvador.exist.logging.config}" tofile="${salvador.exist.logging.config.backup}"/>
     </target>  
 
