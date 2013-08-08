@@ -57,5 +57,20 @@
                 </java>
             </sequential>
         </macrodef>
+        <macrodef name="salvador.saxon.xslt.params">
+            <attribute name="in"/>
+            <attribute name="style"/>
+            <attribute name="destfile"/>
+            <attribute name="params"/>
+            <sequential>
+                <echo>Executing XSLT @{style}, sesult will be safed in @{destfile}</echo>
+                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
+                    <arg value="-o:@{destfile}"/>
+                    <arg value="-s:@{in}"/>
+                    <arg value="-xsl@{style}"/>
+                    <arg line="@{params}"/>
+                </java>
+            </sequential>
+        </macrodef>
     </target>
 </project>
