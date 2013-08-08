@@ -27,6 +27,24 @@
         </copy>
     </target>
     
+    <target name="salvador.groovy.macros" depends="salvador.groovy.install, salvador.base.ant.contrib.install">
+        <macrodef name="salvador.groovy.script">
+            <attribute name="src"/>
+            <attribute name="outputproperty"/>
+            <sequential>
+                <fail messaage="This target isn't finished yet"/>
+                <!-- Import properties, reset them first -->
+                <var name="salvador.groovy.script.src" unset="true"/>
+                <property name="salvador.groovy.script.src" value="@{src}"/>
+                <var name="salvador.groovy.script.outputproperty" unset="true"/>
+                <property name="salvador.groovy.script.outputproperty" value="@{outputproperty}"/>
+                <groovy useGroovyShell="true">
+                    
+                </groovy>
+            </sequential>
+        </macrodef>
+    </target>
+    
     <!-- 
     See: http://groovy.codehaus.org/The+groovy+Ant+Task
     See: http://groovy.codehaus.org/Ant+Task+Troubleshooting
