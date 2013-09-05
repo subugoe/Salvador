@@ -12,3 +12,5 @@
 ## Sonstige Links
 * [CoffeeScript build tools](https://github.com/jashkenas/coffee-script/wiki/Build-tools)
 * [HTML5 Boilerplate](ihttp://html5boilerplate.com/)
+* [Bower](http://bower.io/)
+* [WebJars](http://www.webjars.org/)
