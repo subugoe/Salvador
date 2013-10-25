@@ -11,33 +11,31 @@
     <!-- Directories and files -->
     <property name="salvador.mets.xslt.dir" value="../xslt/"/>
     <property name="salvador.mets.xslt.file" value="METS2ANT.xsl"/>
-    
-    <!-- Internal directories and files -->
-    <property name="salvador.xspec.compiler.dir" value="${salvador.xspec.lib.dir}/${salvador.xspec.dir}/src/compiler"></property>
-    <property name="salvador.xspec.compiler.xslt" value="${salvador.xspec.compiler.dir}/generate-query-tests.xsl"></property>
-    <property name="salvador.xspec.compiler.xquery" value="${salvador.xspec.compiler.dir}/generate-query-tests.xsl"></property>
+    <property name="salvador.mets.xslt" value="${salvador.mets.xslt.dir}${salvador.mets.xslt.file}"/>
+    <property name="salvador.mets.tmp.dir" value="${salvador.base.dir.tmp}/mets"/>
     
     <target name="salvador.mets.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.mets.tmp.dir}"/>
     </target>
     
     <target name="salvador.mets.clean" depends="salvador.base.clean">
+        <delete dir="${salvador.mets.tmp.dir}"/>
     </target>
     
-    <target name="salvador.mets.install">
-        <property name="salvador.mets.xslt" value="${salvador.mets.xslt.dir}${salvador.mets.xslt.file}"/>
+    <target name="salvador.mets.install" depends="salvador.base.ant.contrib.install">
+        
         <macrodef name="salvador.mets.download">
-           
-            <!-- Other attributes aren't supported, see http://code.google.com/p/xspec/wiki/RunningWithAnt -->
-            <attribute name="xspec.xml.xquery"/>
+            <attribute name="mets"/>
+            <attribute name="prefix"/>
+            <attribute name="folder"/>
             <sequential>
-                
-                <xslt in="@{xspec.xml.xquery}" classpathref="salvador.saxon.classpath" basedir="${salvador.xspec.compiler.dir}" style="${salvador.xspec.compiler.xquery}" destdir="">
-                    <factory name="net.sf.saxon.TransformerFactoryImpl" />
-                    
-                </xslt>
-                
-
-                
+                <var name="salvador.mets.in" unset="true"/>
+                <var name="salvador.mets.ant.out" unset="true"/>
+                <basename property="salvador.mets.in" file="@{mets}"/>
+                <property name="salvador.mets.ant.out" value="@{${salvador.mets.tmp.dir}}/${salvador.mets.in}.ant.xml"/>
+                <salvador.saxon.xslt.params in="@{mets}" style="${salvador.mets.xslt}" destfile="${salvador.mets.ant.out}"
+                    params="collection-param=${basedir}/${data.tei-enriched.dir} local-prefix-folder=@{folder} cut-prefix=@{folder}"/>
+                <ant file="${salvador.mets.ant.out}" target="download.all" /> 
             </sequential>
         </macrodef>
     </target>
