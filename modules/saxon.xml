@@ -37,7 +37,7 @@
             <attribute name="query"/>
             <attribute name="destfile"/>
             <sequential>
-                <echo>Executing XQuery @{query}, sesult will be safed in @{destfile}</echo>
+                <echo>Executing XQuery @{query}, result will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Query" classpathref="salvador.saxon.classpath" failonerror="true">
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{query}"/>
@@ -49,7 +49,7 @@
             <attribute name="style"/>
             <attribute name="destfile"/>
             <sequential>
-                <echo>Executing XSLT @{style}, sesult will be safed in @{destfile}</echo>
+                <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{in}"/>
@@ -63,7 +63,7 @@
             <attribute name="destfile"/>
             <attribute name="params"/>
             <sequential>
-                <echo>Executing XSLT @{style}, sesult will be safed in @{destfile}</echo>
+                <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{in}"/>
