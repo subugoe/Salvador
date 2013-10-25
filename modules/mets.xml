@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.METS">
+    <description>METS targets of the SUB Ant library</description>
+    <!-- See http://code.google.com/p/xspec/ -->
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <!-- We also need Saxon for XSLT 2.0 -->
+    <import file="./saxon.xml"/>
+       
+    <!-- Directories and files -->
+    <property name="salvador.mets.xslt.dir" value="../xslt/"/>
+    <property name="salvador.mets.xslt.file" value="METS2ANT.xsl"/>
+    
+    <!-- Internal directories and files -->
+    <property name="salvador.xspec.compiler.dir" value="${salvador.xspec.lib.dir}/${salvador.xspec.dir}/src/compiler"></property>
+    <property name="salvador.xspec.compiler.xslt" value="${salvador.xspec.compiler.dir}/generate-query-tests.xsl"></property>
+    <property name="salvador.xspec.compiler.xquery" value="${salvador.xspec.compiler.dir}/generate-query-tests.xsl"></property>
+    
+    <target name="salvador.mets.init" depends="salvador.base.init">
+    </target>
+    
+    <target name="salvador.mets.clean" depends="salvador.base.clean">
+    </target>
+    
+    <target name="salvador.mets.install">
+        <property name="salvador.mets.xslt" value="${salvador.mets.xslt.dir}${salvador.mets.xslt.file}"/>
+        <macrodef name="salvador.mets.download">
+           
+            <!-- Other attributes aren't supported, see http://code.google.com/p/xspec/wiki/RunningWithAnt -->
+            <attribute name="xspec.xml.xquery"/>
+            <sequential>
+                
+                <xslt in="@{xspec.xml.xquery}" classpathref="salvador.saxon.classpath" basedir="${salvador.xspec.compiler.dir}" style="${salvador.xspec.compiler.xquery}" destdir="">
+                    <factory name="net.sf.saxon.TransformerFactoryImpl" />
+                    
+                </xslt>
+                
+
+                
+            </sequential>
+        </macrodef>
+    </target>
+    
+</project>
