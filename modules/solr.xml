@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.SOLR" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>Solr targets of the SUB Ant library</description>
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <import file="./jetty.xml"/>
+    
+    <!-- Saxon coordinates, since there are so many versions -->
+    <property name="salvador.solr.group.id" value="org.apache.solr"/>
+    <property name="salvador.solr.artifact.id" value="solr-core"/>
+    <property name="salvador.solr.version" value="4.5.1"/>
+    <!-- Data Directory -->
+    <property name="salvador.solr.data.dir" value="${salvador.base.dir.tmp}/solr-data"/>
+    
+    <!-- Directories -->
+    <property name="salvador.solr.lib.dir" value="${salvador.base.lib.dir}/solr"/>
+    
+    <target name="salvador.solr.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.solr.lib.dir}"/>
+        <mkdir dir="${salvador.solr.data.dir}"/>
+    </target>
+    
+    <target name="salvador.solr.clean" depends="salvador.base.clean">
+        <delete dir="${salvador.solr.lib.dir}"/>
+        <delete dir="${salvador.solr.data.dir}"/>
+    </target>
+    
+    <target name="salvador.solr.download" depends="salvador.solr.init, salvador.base.maven.install">
+        <echo>Getting Solr</echo>
+        <artifact:dependencies filesetId="salvador.solr.files" pathId="salvador.solr.classpath">
+            <dependency groupId="${salvador.solr.group.id}" artifactId="${salvador.solr.artifact.id}" version="${salvador.solr.version}"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.solr.lib.dir}">
+            <fileset refid="salvador.solr.files"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+    
+    <target name="salvador.solr.install" depends="salvador.solr.download, salvador.jetty.install">
+        
+        
+    </target>
+    
+</project>
