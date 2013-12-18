@@ -8,7 +8,14 @@
     <!-- Saxon coordinates, since there are so many versions -->
     <property name="salvador.saxon.group.id" value="net.sf.saxon"/>
     <property name="salvador.saxon.artifact.id" value="Saxon-HE"/>
+    <!-- 
+    Current versions can be found here:
+    -->
+    <property name="salvador.saxon.version" value="9.5.1-3"/>
+    <!-- 
+    This is known to work:    
     <property name="salvador.saxon.version" value="9.4.0.7"/>
+    -->
 
     <!-- Directories -->
     <property name="salvador.saxon.lib.dir" value="${salvador.base.lib.dir}/saxon"/>
