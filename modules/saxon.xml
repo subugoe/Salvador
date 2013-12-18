@@ -58,6 +58,7 @@
             <sequential>
                 <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
+                    <arg value="-quit:off"/>
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{in}"/>
                     <arg value="@{style}"/>
@@ -72,6 +73,7 @@
             <sequential>
                 <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
+                    <arg value="-quit:off"/>
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{in}"/>
                     <arg value="@{style}"/>
@@ -79,5 +81,15 @@
                 </java>
             </sequential>
         </macrodef>
+        <!--
+        <macrodef name="salvador.saxon.version">
+            <sequential>
+                <echo>Calling Saxon to get te version number</echo>
+                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
+                    <arg value="-v}"/>
+                </java>
+            </sequential>
+        </macrodef>
+        -->
     </target>
 </project>
