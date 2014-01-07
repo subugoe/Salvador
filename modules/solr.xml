@@ -6,30 +6,38 @@
     <import file="../build.xml"/>
     <import file="./jetty.xml"/>
     
-    <!-- Saxon coordinates, since there are so many versions -->
-    <property name="salvador.solr.group.id" value="org.apache.solr"/>
-    <property name="salvador.solr.artifact.id" value="solr-core"/>
-    <property name="salvador.solr.version" value="4.5.1"/>
+    <!-- Solr coordinates, since there are so many versions -->
+    <property name="salvador.solr.core.group.id" value="org.apache.solr"/>
+    <property name="salvador.solr.core.artifact.id" value="solr-core"/>
+    <property name="salvador.solr.core.version" value="4.5.1"/>
+    <!-- Solr coordinates for the webapp -->
+    <property name="salvador.solr.war.group.id" value="org.apache.solr"/>
+    <property name="salvador.solr.war.artifact.id" value="solr"/>
+    <property name="salvador.solr.war.version" value="4.5.1"/>
+    <property name="salvador.solr.war.type" value="war"/>
     <!-- Data Directory -->
     <property name="salvador.solr.data.dir" value="${salvador.base.dir.tmp}/solr-data"/>
     
     <!-- Directories -->
     <property name="salvador.solr.lib.dir" value="${salvador.base.lib.dir}/solr"/>
+    <property name="salvador.solr.war.dir" value="${salvador.base.lib.dir}/solr-web"/>
     
     <target name="salvador.solr.init" depends="salvador.base.init">
         <mkdir dir="${salvador.solr.lib.dir}"/>
+        <mkdir dir="${salvador.solr.war.dir}"/>
         <mkdir dir="${salvador.solr.data.dir}"/>
     </target>
     
     <target name="salvador.solr.clean" depends="salvador.base.clean">
         <delete dir="${salvador.solr.lib.dir}"/>
+        <delete dir="${salvador.solr.war.dir}"/>
         <delete dir="${salvador.solr.data.dir}"/>
     </target>
     
-    <target name="salvador.solr.download" depends="salvador.solr.init, salvador.base.maven.install">
+    <target name="salvador.solr.core.download" depends="salvador.solr.init, salvador.base.maven.install">
         <echo>Getting Solr</echo>
         <artifact:dependencies filesetId="salvador.solr.files" pathId="salvador.solr.classpath">
-            <dependency groupId="${salvador.solr.group.id}" artifactId="${salvador.solr.artifact.id}" version="${salvador.solr.version}"/>
+            <dependency groupId="${salvador.solr.core.group.id}" artifactId="${salvador.solr.core.artifact.id}" version="${salvador.solr.core.version}"/>
         </artifact:dependencies>
         <copy todir="${salvador.solr.lib.dir}">
             <fileset refid="salvador.solr.files"/>
@@ -37,7 +45,18 @@
         </copy>
     </target>
     
-    <target name="salvador.solr.install" depends="salvador.solr.download, salvador.jetty.install">
+    <target name="salvador.solr.war.download" depends="salvador.solr.init, salvador.base.maven.install">
+        <echo>Getting Solr web app</echo>
+        <artifact:dependencies filesetId="salvador.solr.war" pathId="salvador.solr.classpath">
+            <dependency groupId="${salvador.solr.war.group.id}" artifactId="${salvador.solr.war.artifact.id}" version="${salvador.solr.war.version}" type="${salvador.solr.war.type}"/>
+        </artifact:dependencies>
+        <copy todir="${salvador.solr.war.dir}">
+            <fileset refid="salvador.solr.war"/>
+            <mapper type="flatten"/>
+        </copy>
+    </target>
+    
+    <target name="salvador.solr.install" depends="salvador.solr.war.download, salvador.jetty.install">
         
         
     </target>
