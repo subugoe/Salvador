@@ -88,14 +88,19 @@
             <attribute name="webxml"/>
             <attribute name="port" default="${salvador.jetty.port}"/>
             <attribute name="contextpath" default="/ant"/>
+            <!-- for newer versions of the plugin
             <attribute name="name" default="web app"/>
+            -->
             <sequential>
                 <echo>starting Jetty...</echo>
                 <jetty.run tempDirectory="${salvador.jetty.tmp.dir}" scanIntervalSeconds="5">
                     <connectors>
                         <selectChannelConnector port="@{port}"/>
                     </connectors>
+                    <!-- for newer versions of the plugin
                     <webApp name="@{name}" descriptor="@{webxml}" war="@{path}" contextpath="@{contextpath}"/>
+                    -->
+                    <webApp descriptor="@{webxml}" war="@{path}" contextpath="@{contextpath}"/>
                 </jetty.run>
             </sequential>
         </macrodef>
