@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="SALVADOR.SOLR" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>Solr targets of the SUB Ant library</description>
-    
+
     <!-- Import base lib -->
     <import file="../build.xml"/>
     <import file="./jetty.xml"/>
-    
+
     <!-- Solr coordinates, since there are so many versions -->
     <property name="salvador.solr.core.group.id" value="org.apache.solr"/>
     <property name="salvador.solr.core.artifact.id" value="solr-core"/>
@@ -16,35 +16,49 @@
     <property name="salvador.solr.war.version" value="4.5.1"/>
     <property name="salvador.solr.war.type" value="war"/>
     <!-- Data Directory -->
-    <property name="salvador.solr.data.dir" value="${salvador.base.dir.tmp}/solr-data"/>
-    
+    <property name="salvador.solr.home.dir" value="${salvador.base.dir.tmp}/solr-home"/>
+
     <!-- Directories -->
     <property name="salvador.solr.lib.dir" value="${salvador.base.lib.dir}/solr"/>
     <property name="salvador.solr.war.dir" value="${salvador.base.lib.dir}/solr-web"/>
-    
+
+    <!-- Logging -->
+    <property name="salvador.solr.war.logging" value="${salvador.solr.war.dir}/log4j.properties"/>
+
+    <!-- Generated configuration -->
+    <property name="salvador.solr.conf.jar" value="${salvador.solr.war.dir}/conf.jar"/>
+
+    <!-- Webapp settings -->
+    <property name="salvador.solr.context" value="/solr"/>
+    <property name="salvador.solr.port" value="8983"/>
+
+    <!-- Solr web app dependecies -->
+
     <target name="salvador.solr.init" depends="salvador.base.init">
         <mkdir dir="${salvador.solr.lib.dir}"/>
         <mkdir dir="${salvador.solr.war.dir}"/>
-        <mkdir dir="${salvador.solr.data.dir}"/>
+        <mkdir dir="${salvador.solr.home.dir}"/>
     </target>
-    
+
     <target name="salvador.solr.clean" depends="salvador.base.clean">
         <delete dir="${salvador.solr.lib.dir}"/>
         <delete dir="${salvador.solr.war.dir}"/>
-        <delete dir="${salvador.solr.data.dir}"/>
+        <delete dir="${salvador.solr.home.dir}"/>
     </target>
-    
+
     <target name="salvador.solr.core.download" depends="salvador.solr.init, salvador.base.maven.install">
         <echo>Getting Solr</echo>
         <artifact:dependencies filesetId="salvador.solr.files" pathId="salvador.solr.classpath">
             <dependency groupId="${salvador.solr.core.group.id}" artifactId="${salvador.solr.core.artifact.id}" version="${salvador.solr.core.version}"/>
+            <!-- Common logging might be used in default configuration -->
+            <dependency groupId="commons-logging" artifactId="commons-logging" version="1.1.3"/>
         </artifact:dependencies>
         <copy todir="${salvador.solr.lib.dir}">
             <fileset refid="salvador.solr.files"/>
             <mapper type="flatten"/>
         </copy>
     </target>
-    
+
     <target name="salvador.solr.war.download" depends="salvador.solr.init, salvador.base.maven.install">
         <echo>Getting Solr web app</echo>
         <artifact:dependencies filesetId="salvador.solr.war" pathId="salvador.solr.classpath">
@@ -54,11 +68,151 @@
             <fileset refid="salvador.solr.war"/>
             <mapper type="flatten"/>
         </copy>
+        <property name="salvador.solr.war.file" value="${salvador.solr.war.dir}/${salvador.solr.war.artifact.id}-${salvador.solr.war.version}.${salvador.solr.war.type}"/>
     </target>
-    
-    <target name="salvador.solr.install" depends="salvador.solr.war.download, salvador.jetty.install">
-        
-        
+
+    <!-- Include external libraries not part of the war file like SLF4J -->
+    <target name="salvador.solr.war.dependencies" depends="salvador.solr.core.download, salvador.jetty.install">
+        <!--
+        <taskdef resource="tasks.properties" loaderref="jetty.loader">
+            <classpath id="salvador.solr.combined">
+                <path refid="salvador.jetty.classpath"/>
+                <path refid="salvador.solr.classpath"/>
+            </classpath>
+        </taskdef>
+        -->
+        <echo message="Writting logger configuration to ${salvador.solr.war.logging}"/>
+        <echo file="${salvador.solr.war.logging}"
+            >
+            #  Logging level
+            solr.log=logs/
+            log4j.rootLogger=INFO, file, CONSOLE
+            
+            log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+            
+            log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+            log4j.appender.CONSOLE.layout.ConversionPattern=%-4r [%t] %-5p %c %x \u2013 %m%n
+            
+            #- size rotation with log cleanup.
+            log4j.appender.file=org.apache.log4j.RollingFileAppender
+            log4j.appender.file.MaxFileSize=4MB
+            log4j.appender.file.MaxBackupIndex=9
+            
+            #- File to log to and log format
+            log4j.appender.file.File=${solr.log}/solr.log
+            log4j.appender.file.layout=org.apache.log4j.PatternLayout
+            log4j.appender.file.layout.ConversionPattern=%-5p - %d{yyyy-MM-dd HH:mm:ss.SSS}; %C; %m\n
+            
+            log4j.logger.org.apache.zookeeper=WARN
+            log4j.logger.org.apache.hadoop=WARN
+            
+            # set to INFO to enable infostream log messages
+            log4j.logger.org.apache.solr.update.LoggingInfoStream=OFF
+        </echo>
+        <!-- create a jar file for the class loader -->
+        <jar destfile="${salvador.solr.conf.jar}">
+            <fileset dir="${salvador.solr.war.dir}" includes="**/*.properties"/>
+        </jar>
     </target>
-    
+
+    <target name="salvador.solr.install" depends="salvador.solr.war.download, salvador.solr.war.dependencies, salvador.base.ant.contrib.install">
+        <!-- This sets up a solr instance directory from a  -->
+        <macrodef name="salvador.solr.setup">
+            <attribute name="solrhome"/>
+            <attribute name="core"/>
+            <attribute name="config"/>
+            <sequential>
+                <echo>Setting up Solr core @{core} in @{solrhome}, using @{solrconfig}</echo>
+                <var name="instance.dir" unset="true"/>
+                <property name="instance.dir" value="@{solrhome}/@{core}"/>
+                <mkdir dir="${instance.dir}"/>
+                <mkdir dir="${instance.dir}/conf"/>
+                <mkdir dir="${instance.dir}/data/index"/>
+                <copy todir="${instance.dir}/conf">
+                    <fileset dir="@{config}">
+                        <include name="**/*.*"/>
+                    </fileset>
+                    <filterchain>
+                        <tokenfilter>
+                            <replaceregex pattern="^(.*.data\.dir:).*?/data(}&lt;/.*)$" replace="$1./data$2" flags="g"/>
+                        </tokenfilter>
+                    </filterchain>
+                </copy>
+                <echoxml file="@{solrhome}/solr.xml">
+                    <solr persistent="true" sharedLib="lib">
+                        <cores adminPath="/admin/cores">
+                            <core name="@{core}" instanceDir="@{core}"/>
+                        </cores>
+                    </solr>
+                </echoxml>
+            </sequential>
+        </macrodef>
+
+        <!-- This starts a preconfigured solr instance -->
+        <macrodef name="salvador.solr.run">
+            <attribute name="solrhome" default="${salvador.solr.home.dir}"/>
+            <!-- these have defaults as the demo distiribution of solr -->
+            <attribute name="port" default="${salvador.solr.port}"/>
+            <attribute name="contextpath" default="${salvador.solr.context}"/>
+            <attribute name="jetty-env" default="${salvador.solr.war.dir}/jetty-env.xml"/>
+            <sequential>
+                <echo>Writing environment...</echo>
+                <!-- 
+                    See http://wiki.apache.org/solr/SolrJetty#JNDI_Caveats_Noted_By_Users
+                        https://github.com/kcl-ddh/kiln/blob/master/webapps/solr/conf/jetty-env.xml
+                -->
+                <!-- Use the echo task with a CDATA Section to get the DOCTYPE decleration into the XML file, quite ugly, 
+                     but Jetty 9 need the decleration
+                -->
+                <!-- One can use System Propertties inside the jetty-env.xml like
+                     <SystemProperty name="jetty.home" default="."/>
+                -->
+                <echo file="@{jetty-env}"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+                    <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+                    <Configure id='wac' class="org.eclipse.jetty.webapp.WebAppContext">
+                        <New id="solr" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+                            <Arg><Ref id="wac"/></Arg>
+                            <Arg type="java.lang.String">solr/home</Arg>
+                            <Arg type="java.lang.String">]]>@{solrhome}<![CDATA[</Arg>
+                            <Arg type="java.lang.Boolean">true</Arg>
+                        </New>
+                    </Configure>
+                    ]]>
+                </echo>
+                <echo>Starting Solr (Jetty)...</echo>
+                <!-- 
+                For documentation of jetty look at jetty.xml
+                -->
+                <jetty.run tempDirectory="${salvador.jetty.tmp.dir}" scanIntervalSeconds="5">
+                    <!-- This doesn't work, use JNDI as workaround
+                    <systemProperties>
+                        <systemProperty name="solr.data.dir" value="${salvador.solr.home.dir}"/>
+                        <systemProperty name="SOLR_HOME" value="${salvador.solr.home.dir}"/>
+                        <systemProperty name="/solr/home" value="${salvador.solr.home.dir}"/>
+                    </systemProperties>
+                    -->
+                    <connectors>
+                        <selectChannelConnector port="@{port}"/>
+                    </connectors>
+                    <!-- for newer plugin versions  name="Solr" -->
+                    <webApp war="${salvador.solr.war.file}" contextpath="@{contextpath}" jettyEnvXml="@{jetty-env}">
+                        <lib dir="${salvador.solr.lib.dir}" includes="*.jar"/>
+                        <lib dir="${salvador.solr.war.dir}" includes="*.jar"/>
+                    </webApp>
+                </jetty.run>
+            </sequential>
+        </macrodef>
+        
+        <!-- TODO: finish this
+            See http://www.wallandbinkley.com/quaedam/2007/02_01_posting-xml-from-ant.html
+
+        <macrodef name="salvador.solr.index">
+            <attribute name="endpoint" default="http://localhost:${salvador.solr.port}${salvador.solr.context}/update"/>
+            <sequential>
+                <salvador.http.postfile url="" file="" mimetype=""/>
+            </sequential>
+        </macrodef>
+        -->
+    </target>
+
 </project>
