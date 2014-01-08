@@ -107,6 +107,9 @@
                     HttpPost httppost = new HttpPost(url.toURI())
                     ContentType type = ContentType.create(mimetype)
                     
+                    /*
+                        See http://stackoverflow.com/questions/9848557/how-to-send-xml-post-request-using-apache-httpclient
+                    */
                     HttpEntity entity = new FileEntity(file, type)
                     httppost.setEntity(entity)
                     HttpResponse response = httpclient.execute(httppost)
