@@ -31,6 +31,10 @@
     <!-- Webapp settings -->
     <property name="salvador.solr.context" value="/solr"/>
     <property name="salvador.solr.port" value="8983"/>
+    
+    <!-- Jetty start and stop setting -->
+    <property name="salvador.solr.jetty.stop.key" value="11111"/>
+    <property name="salvador.solr.jetty.stop.port" value="11111"/>
 
     <!-- Solr web app dependecies -->
 
@@ -179,11 +183,11 @@
                     </Configure>
                     ]]>
                 </echo>
-                <echo>Starting Solr (Jetty)...</echo>
+                <echo>Starting Solr in deamon mode (Jetty - use the target salvador.solr.stop or ctrl+c)...</echo>
                 <!-- 
                 For documentation of jetty look at jetty.xml
                 -->
-                <jetty.run tempDirectory="${salvador.jetty.tmp.dir}" scanIntervalSeconds="5">
+                <jetty.run daemon="true" tempDirectory="${salvador.jetty.tmp.dir}" stopPort="${salvador.solr.jetty.stop.port}" stopKey="${salvador.solr.jetty.stop.key}" scanIntervalSeconds="5">
                     <!-- This doesn't work, use JNDI as workaround
                     <systemProperties>
                         <systemProperty name="solr.data.dir" value="${salvador.solr.home.dir}"/>
@@ -202,6 +206,15 @@
                 </jetty.run>
             </sequential>
         </macrodef>
+        
+        <macrodef name="salvador.solr.stop">
+            <attribute name="port" default="${salvador.solr.jetty.stop.port}"/>
+            <attribute name="key" default="${salvador.solr.jetty.stop.key}"/>
+            <sequential>
+                <jetty.stop stopPort="${salvador.solr.jetty.stop.port}" stopKey="${salvador.solr.jetty.stop.key}"/>
+            </sequential>
+        </macrodef>
+        
         
         <!-- TODO: finish this
             See http://www.wallandbinkley.com/quaedam/2007/02_01_posting-xml-from-ant.html
