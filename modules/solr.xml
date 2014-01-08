@@ -131,6 +131,7 @@
                 <property name="instance.dir" value="@{solrhome}/@{core}"/>
                 <mkdir dir="${instance.dir}"/>
                 <mkdir dir="${instance.dir}/conf"/>
+                <mkdir dir="${instance.dir}/conf/xslt"/>
                 <mkdir dir="${instance.dir}/data/index"/>
                 <copy todir="${instance.dir}/conf">
                     <fileset dir="@{config}">
@@ -149,6 +150,12 @@
                         </cores>
                     </solr>
                 </echoxml>
+            </sequential>
+        </macrodef>
+        <macrodef name="salvador.solr.teardown">
+            <attribute name="solrhome"/>
+            <sequential>
+                <delete dir="@{solrhome}"/>
             </sequential>
         </macrodef>
 
