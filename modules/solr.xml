@@ -5,6 +5,7 @@
     <!-- Import base lib -->
     <import file="../build.xml"/>
     <import file="./jetty.xml"/>
+    <import file="./http.xml"/>
 
     <!-- Solr coordinates, since there are so many versions -->
     <property name="salvador.solr.core.group.id" value="org.apache.solr"/>
@@ -31,7 +32,7 @@
     <!-- Webapp settings -->
     <property name="salvador.solr.context" value="/solr"/>
     <property name="salvador.solr.port" value="8983"/>
-    
+
     <!-- Jetty start and stop setting -->
     <property name="salvador.solr.jetty.stop.key" value="11111"/>
     <property name="salvador.solr.jetty.stop.port" value="11111"/>
@@ -213,7 +214,7 @@
                 </jetty.run>
             </sequential>
         </macrodef>
-        
+
         <macrodef name="salvador.solr.stop">
             <attribute name="port" default="${salvador.solr.jetty.stop.port}"/>
             <attribute name="key" default="${salvador.solr.jetty.stop.key}"/>
@@ -221,18 +222,22 @@
                 <jetty.stop stopPort="${salvador.solr.jetty.stop.port}" stopKey="${salvador.solr.jetty.stop.key}"/>
             </sequential>
         </macrodef>
-        
-        
-        <!-- TODO: finish this
-            See http://www.wallandbinkley.com/quaedam/2007/02_01_posting-xml-from-ant.html
 
         <macrodef name="salvador.solr.index">
             <attribute name="endpoint" default="http://localhost:${salvador.solr.port}${salvador.solr.context}/update"/>
+            <element name="files"/>
             <sequential>
-                <salvador.http.postfile url="" file="" mimetype=""/>
+                <for param="file">
+                    <path>
+                        <files/>
+                    </path>
+                    <sequential>
+                        <echo message="Indexing @{file}"/>
+                        <salvador.http.postfile url="${solr.url}" file="@{file}" mimetype="application/xml"/>
+                    </sequential>
+                </for>
             </sequential>
         </macrodef>
-        -->
     </target>
 
 </project>
