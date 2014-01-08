@@ -63,7 +63,10 @@
                 </groovy>
             </sequential>
         </macrodef>
-
+        
+        <!-- 
+        See http://mrhaki.blogspot.de/2009/03/use-restclient-to-post-and-read-xml.html
+        -->
         <macrodef name="salvador.http.postfile">
             <attribute name="url"/>
             <attribute name="file"/>
@@ -76,37 +79,43 @@
                 <groovy useGroovyShell="true"
                     >
                     /* Needed dependencies */
-                    @Grab(group='org.codehaus.groovy', module='http-builder', version='0.5.2')
+                    @Grapes([
+                        @Grab(group='org.apache.httpcomponents', module='httpclient', version='4.3.1'),
+                        @Grab(group='org.apache.httpcomponents', module='httpmime', version='4.3.1')
+                    ])
+                    /*
+                        Grapes seem to use Ivy internaly so this is expected to fail in crude ways.
+                        Try 'grape -debug install org.apache.httpcomponents httpclient 4.3.1'
+                        Or try again with maven, this will work:
+                        mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=org.apache.httpcomponents:httpclient:4.3.1
+                    */
                     
                     /* Needed imports */
                     import org.apache.http.*
                     import org.apache.http.client.*
-                    import org.apache.http.entity.mime.*
-                    import org.apache.http.entity.mime.content.*
-                    import org.apache.http.impl.client.*
+                    import org.apache.http.entity.*
                     import org.apache.http.client.methods.*
+                    import org.apache.http.impl.client.*
+                    import org.apache.http.util.*
                     
                     /* Get variable from ant */
-                    def filePath = new File(properties['fileProp'])
-                    def fileName = properties['nameProp']
-                    def mimetype = new URL(properties['mimetypeProp'])
-                   
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost(url.toURI());
-                   
+                    def url = new URL(properties['urlProp'])
+                    def file = new File(properties['fileProp'])
+                    def mimetype = properties['mimetypeProp']
                     
-                   
-                   
-                    httpclient.getConnectionManager().shutdown();
+                    HttpClient httpclient = new DefaultHttpClient()
+                    HttpPost httppost = new HttpPost(url.toURI())
+                    ContentType type = ContentType.create(mimetype)
+                    
+                    HttpEntity entity = new FileEntity(file, type)
+                    httppost.setEntity(entity)
+                    HttpResponse response = httpclient.execute(httppost)
+                    if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                        HttpEntity respEntity = response.getEntity()
+                        println EntityUtils.toString(respEntity)
+                    }
                 </groovy>
             </sequential>
-            <!--
-                See http://www.wallandbinkley.com/quaedam/2007/02_01_posting-xml-from-ant.html 
-                <postMethod url="@{url}">
-                    <file path="@{file}" contentType="@{mimetype}"/>
-                </postMethod>
-                -->
-
         </macrodef>
     </target>
 
