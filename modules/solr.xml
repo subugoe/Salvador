@@ -140,7 +140,7 @@
                     </fileset>
                     <filterchain>
                         <tokenfilter>
-                            <replaceregex pattern="^(.*.data\.dir:).*?/data(}&lt;/.*)$" replace="$1./data$2" flags="g"/>
+                            <replaceregex pattern="^(.*.data\.dir:).*?/data(}&lt;/.*)$" replace="\1./data\2" flags="g"/>
                         </tokenfilter>
                     </filterchain>
                 </copy>
