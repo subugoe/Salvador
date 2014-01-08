@@ -117,6 +117,7 @@
                         HttpEntity respEntity = response.getEntity()
                         println EntityUtils.toString(respEntity)
                     }
+                    httpclient.getConnectionManager().shutdown()
                 </groovy>
             </sequential>
         </macrodef>
