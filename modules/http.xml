@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="SALVADOR.HTTP" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>HTTP targets of the SUB Ant library</description>
-    
+
     <!-- Import base lib -->
     <import file="../build.xml"/>
     <!-- Import Groovy -->
     <import file="./groovy.xml"/>
-    
+
     <target name="salvador.http.macros" depends="salvador.groovy.install, salvador.base.ant.contrib.install">
-        <macrodef name="salvador.http.postfile">
+        <macrodef name="salvador.http.postfile.multipart">
             <attribute name="url"/>
             <attribute name="file"/>
             <attribute name="name"/>
@@ -18,11 +18,12 @@
                      http://groovy.329449.n5.nabble.com/Accessing-Ant-macrodef-parameters-in-groovy-Ant-task-td358094.html
                 -->
                 <var name="urlProp" value="@{url}"/>
-                <var name="fileProp" value="@{file}" />  
-                <var name="nameProp" value="@{name}" />
-                <var name="param.nameProp" value="@{param.name}" />  
-                
-                <groovy useGroovyShell="true">
+                <var name="fileProp" value="@{file}"/>
+                <var name="nameProp" value="@{name}"/>
+                <var name="param.nameProp" value="@{param.name}"/>
+
+                <groovy useGroovyShell="true"
+                    >
                     /* Needed dependencies */
                     @Grapes([
                         @Grab(group='org.apache.httpcomponents', module='httpclient', version='4.0.1'),
@@ -61,8 +62,52 @@
                     httpclient.getConnectionManager().shutdown();
                 </groovy>
             </sequential>
-            
+        </macrodef>
+
+        <macrodef name="salvador.http.postfile">
+            <attribute name="url"/>
+            <attribute name="file"/>
+            <attribute name="mimetype"/>
+            <sequential>
+                <var name="urlProp" value="@{url}"/>
+                <var name="fileProp" value="@{file}"/>
+                <var name="mimetypeProp" value="@{mimetype}"/>
+
+                <groovy useGroovyShell="true"
+                    >
+                    /* Needed dependencies */
+                    @Grab(group='org.codehaus.groovy', module='http-builder', version='0.5.2')
+                    
+                    /* Needed imports */
+                    import org.apache.http.*
+                    import org.apache.http.client.*
+                    import org.apache.http.entity.mime.*
+                    import org.apache.http.entity.mime.content.*
+                    import org.apache.http.impl.client.*
+                    import org.apache.http.client.methods.*
+                    
+                    /* Get variable from ant */
+                    def filePath = new File(properties['fileProp'])
+                    def fileName = properties['nameProp']
+                    def mimetype = new URL(properties['mimetypeProp'])
+                   
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost(url.toURI());
+                   
+                    
+                   
+                   
+                    httpclient.getConnectionManager().shutdown();
+                </groovy>
+            </sequential>
+            <!--
+                See http://www.wallandbinkley.com/quaedam/2007/02_01_posting-xml-from-ant.html 
+                <postMethod url="@{url}">
+                    <file path="@{file}" contentType="@{mimetype}"/>
+                </postMethod>
+                -->
+
         </macrodef>
     </target>
-    
+
 </project>
