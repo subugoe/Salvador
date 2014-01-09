@@ -57,22 +57,28 @@
         <property name="salvador.base.versions.check.done" value="true"/>
     </target>
 
-    <!-- Warn if Java 5 isn't present -->
+    <!-- Warn if Java 7 isn't present -->
     <target name="salvador.base.java.version.warn" depends="salvador.base.java.version.check" if="salvador.base.java.version.warn">
         <fail message="Your Java runtime is to old!"/>
     </target>
 
-    <!-- Check if Java 5 is present -->
+    <!-- Check if Java 7 is present -->
+    <!-- 
+        TODO: Java 7 is only needed for Jetty, add a check there as well
+    -->
     <target name="salvador.base.java.version.check" unless="salvador.base.versions.check.done">
-        <echo message="checking for Java 1.5 or later"/>
+        <echo message="checking for Java 1.7 or later"/>
         <echo level="info" message="Java version: ${java.version}"/>
         <condition property="salvador.base.java.version.warn">
             <not>
                 <or>
+                    <!--
                     <contains string="${java.version}" substring="1.5"/>
                     <contains string="${java.version}" substring="1.6"/>
+                    -->
                     <contains string="${java.version}" substring="1.7"/>
                     <contains string="${java.version}" substring="1.8"/>
+                    <contains string="${java.version}" substring="1.9"/>
                 </or>
             </not>
         </condition>
