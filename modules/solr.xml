@@ -127,7 +127,7 @@
             <attribute name="core"/>
             <attribute name="config"/>
             <sequential>
-                <echo>Setting up Solr core @{core} in @{solrhome}, using @{solrconfig}</echo>
+                <echo>Setting up Solr core @{core} in @{solrhome}, using @{config}</echo>
                 <var name="instance.dir" unset="true"/>
                 <property name="instance.dir" value="@{solrhome}/@{core}"/>
                 <mkdir dir="${instance.dir}"/>
