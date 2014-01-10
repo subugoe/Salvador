@@ -26,7 +26,7 @@
         <echo>Getting Groovy</echo>
         <artifact:dependencies filesetId="salvador.groovy.files" pathId="salvador.groovy.classpath">
             <dependency groupId="${salvador.groovy.group.id}" artifactId="${salvador.groovy.artifact.id}" version="${salvador.groovy.version}"/>
-            <dependency groupId="${salvador.groovy.ivy.group.id}" artifactId="${salvador.groovy.ivy.artifact.id}" version="${salvador.ivy.groovy.version}"/>
+            <dependency groupId="${salvador.groovy.ivy.group.id}" artifactId="${salvador.groovy.ivy.artifact.id}" version="${salvador.groovy.ivy.version}"/>
         </artifact:dependencies>
         <copy todir="${salvador.groovy.lib.dir}">
             <fileset refid="salvador.groovy.files"/>
