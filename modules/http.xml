@@ -2,12 +2,25 @@
 <project basedir=".." name="SALVADOR.HTTP" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <description>HTTP targets of the SUB Ant library</description>
 
+    <!-- Maven coordinates of apache HTTP client -->
+    <property name="salvador.httpclient.group.id" value="org.apache.httpcomponents"/>
+    <property name="salvador.httpclient.artifact.id" value="httpclient"/>
+    <property name="salvador.httpclient.version" value="4.3.1"/>
+    <property name="salvador.httpmime.group.id" value="org.apache.httpcomponents"/>
+    <property name="salvador.httpmime.artifact.id" value="httpmime"/>
+    <property name="salvador.httpmime.version" value="4.3.1"/>
+
     <!-- Import base lib -->
     <import file="../build.xml"/>
     <!-- Import Groovy -->
     <import file="./groovy.xml"/>
 
     <target name="salvador.http.macros" depends="salvador.groovy.install, salvador.base.ant.contrib.install">
+        <!-- Get required artifacts first, since Grapes don't work always as expected :-( -->
+        <artifact:dependencies filesetId="salvador.httpclient.files" pathId="salvador.httpclient.classpath">
+            <dependency groupId="${salvador.httpclient.group.id}" artifactId="${salvador.httpclient.artifact.id}" version="${salvador.httpclient.version}"/>
+            <dependency groupId="${salvador.httpmime.group.id}" artifactId="${salvador.httpmime.artifact.id}" version="${salvador.httpmime.version}"/>
+        </artifact:dependencies>
         <macrodef name="salvador.http.postfile.multipart">
             <attribute name="url"/>
             <attribute name="file"/>
@@ -26,8 +39,8 @@
                     >
                     /* Needed dependencies */
                     @Grapes([
-                        @Grab(group='org.apache.httpcomponents', module='httpclient', version='4.0.1'),
-                        @Grab(group='org.apache.httpcomponents', module='httpmime', version='4.0.1')
+                        @Grab(group='org.apache.httpcomponents', module='httpclient', version='4.3.1'),
+                        @Grab(group='org.apache.httpcomponents', module='httpmime', version='4.3.1')
                     ])
                     
                     /* Needed imports */
