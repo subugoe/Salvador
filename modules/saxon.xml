@@ -45,7 +45,7 @@
             <attribute name="destfile"/>
             <sequential>
                 <echo>Executing XQuery @{query}, result will be safed in @{destfile}</echo>
-                <java classname="net.sf.saxon.Query" classpathref="salvador.saxon.classpath" failonerror="true">
+                <java classname="net.sf.saxon.Query" classpathref="salvador.saxon.classpath" failonerror="true" fork="true" maxmemory="512m">
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{query}"/>
                 </java>
@@ -57,7 +57,7 @@
             <attribute name="destfile"/>
             <sequential>
                 <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
-                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
+                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true" fork="true" maxmemory="512m">
                     <arg value="-quit:off"/>
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{in}"/>
@@ -72,7 +72,7 @@
             <attribute name="params"/>
             <sequential>
                 <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
-                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true">
+                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true" fork="true" maxmemory="512m">
                     <arg value="-quit:off"/>
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{in}"/>
