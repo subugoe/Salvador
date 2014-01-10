@@ -74,6 +74,7 @@
                 <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true" fork="true" maxmemory="512m">
                     <arg value="-quit:off"/>
+                    <arg value="-warnings:recover"/>
                     <arg value="-o:@{destfile}"/>
                     <arg value="@{in}"/>
                     <arg value="@{style}"/>
