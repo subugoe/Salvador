@@ -250,6 +250,69 @@
         <echo message="${salvador.base.splash.ascii.result}"/>
     </target>
 
+    <!-- 
+    See http://odoepner.wordpress.com/2013/07/19/play-mp3-or-ogg-using-javax-sound-sampled-mp3spi-vorbisspi/
+    -->
+    <!-- Not needed for PCM encoded wave -->
+    <target name="salvador.base.splash.sound.dependencies" depends="salvador.base.maven.install">
+        <artifact:dependencies filesetId="salvador.soundlibs.files" pathId="salvador.soundlibs.classpath">
+            <dependency groupId="com.googlecode.soundlibs" artifactId="tritonus-share" version="0.3.7-2"/>
+            <dependency groupId="com.googlecode.soundlibs" artifactId="mp3spi" version="1.9.5-1"/>
+            <dependency groupId="com.googlecode.soundlibs" artifactId="vorbisspi" version="1.0.3-1"/>
+        </artifact:dependencies>
+    </target>
+
+    <target name="salvador.base.splash.sound" depends="salvador.groovy.install">
+        <!-- Converted to PCM encoded wave
+             ffmpeg -i salvador.mp3 -ar 8000 -ac 1 -acodec pcm_u8 -f wav salvador.wav
+        -->
+        <groovy useGroovyShell="true">
+            /* Needed dependencies
+            @Grapes([
+                @Grab(group='com.googlecode.soundlibs', module='tritonus-share', version='0.3.7-2'),
+                @Grab(group='com.googlecode.soundlibs', module='mp3spi', version='1.9.5-1'),
+                @Grab(group='com.googlecode.soundlibs', module='vorbisspi', version='1.0.3-1')
+            ])
+            */
+            
+            import javax.sound.sampled.AudioInputStream
+            import javax.sound.sampled.AudioFormat
+            import javax.sound.sampled.DataLine.Info
+            import javax.sound.sampled.AudioSystem
+            import javax.sound.sampled.SourceDataLine            
+            
+            import static javax.sound.sampled.AudioSystem.getAudioInputStream
+            import static javax.sound.sampled.AudioFormat.Encoding.PCM_SIGNED
+            
+            def sound = "salvador.wav"
+            def salvador = new File(properties["salvador.base.dir"] + "/" + sound)
+            println  "Playing: " + salvador
+            
+            AudioInputStream ais = getAudioInputStream(salvador)
+            AudioFormat inFormat = ais.getFormat()
+            int ch = inFormat.getChannels()
+            float rate = inFormat.getSampleRate()
+            AudioFormat outFormat = new AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, false)
+            
+            Info info = new Info(SourceDataLine.class, outFormat)
+            SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info)
+            
+            if (line != null) {
+                line.open(outFormat);
+                line.start();
+                
+                byte[] buffer = new byte[4096];
+                for (int n = 0; n != -1; n = getAudioInputStream(outFormat, ais).read(buffer, 0, buffer.length)) {
+                line.write(buffer, 0, n);
+                }
+                
+                line.drain();
+                line.stop();
+            }
+            
+        </groovy>
+    </target>
+
     <!-- Depend on this on your own clean target -->
     <target name="salvador.base.clean">
         <delete dir="${salvador.base.lib.dir}"/>
