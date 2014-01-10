@@ -233,11 +233,11 @@
                     </path>
                     <sequential>
                         <echo message="Indexing @{file}"/>
-                        <salvador.http.postfile url="${solr.url}" file="@{file}" mimetype="application/xml"/>
+                        <salvador.http.postfile url="@{endpoint}" file="@{file}" mimetype="application/xml"/>
                     </sequential>
                 </for>
                 <tempfile property="salvador.solr.index.temp.file" destDir="${salvador.base.dir.tmp}"/>
-                <get src="${endpoint}?softCommit=true" dest="${salvador.solr.index.temp.file}"/>
+                <get src="@{endpoint}?softCommit=true" dest="${salvador.solr.index.temp.file}"/>
                 <delete file="${salvador.solr.index.temp.file}"/>
             </sequential>
         </macrodef>
