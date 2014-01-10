@@ -225,17 +225,10 @@
 
         <macrodef name="salvador.solr.index">
             <attribute name="endpoint" default="http://localhost:${salvador.solr.port}${salvador.solr.context}/update"/>
-            <element name="files"/>
+            <attribute name="file"/>
             <sequential>
-                <for param="file">
-                    <path>
-                        <files/>
-                    </path>
-                    <sequential>
-                        <echo message="Indexing @{file}"/>
-                        <salvador.http.postfile url="@{endpoint}" file="@{file}" mimetype="application/xml"/>
-                    </sequential>
-                </for>
+                <echo message="Indexing @{file}"/>
+                <salvador.http.postfile url="@{endpoint}" file="@{file}" mimetype="application/xml"/>
                 <tempfile property="salvador.solr.index.temp.file" destDir="${salvador.base.dir.tmp}"/>
                 <get src="@{endpoint}?softCommit=true" dest="${salvador.solr.index.temp.file}"/>
                 <delete file="${salvador.solr.index.temp.file}"/>
