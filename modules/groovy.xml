@@ -8,6 +8,12 @@
     <property name="salvador.groovy.version" value="2.1.2"/>
     <property name="salvador.groovy.lib.dir" value="${salvador.base.lib.dir}/groovy"/>
     
+    <!-- Addintional Dependency for Ivy for Grapes-->
+    <!-- Search for the required version in the groovy pom -->
+    <property name="salvador.groovy.ivy.group.id" value="org.apache.ivy"/>
+    <property name="salvador.groovy.ivy.artifact.id" value="ivy"/>
+    <property name="salvador.groovy.ivy.version" value="2.2.0"/>
+    
     <target name="salvador.groovy.init" depends="salvador.base.init">
         <mkdir dir="${salvador.groovy.lib.dir}"/>
     </target>
@@ -20,6 +26,7 @@
         <echo>Getting Groovy</echo>
         <artifact:dependencies filesetId="salvador.groovy.files" pathId="salvador.groovy.classpath">
             <dependency groupId="${salvador.groovy.group.id}" artifactId="${salvador.groovy.artifact.id}" version="${salvador.groovy.version}"/>
+            <dependency groupId="${salvador.groovy.ivy.group.id}" artifactId="${salvador.groovy.ivy.artifact.id}" version="${salvador.ivy.groovy.version}"/>
         </artifact:dependencies>
         <copy todir="${salvador.groovy.lib.dir}">
             <fileset refid="salvador.groovy.files"/>
