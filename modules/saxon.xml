@@ -56,6 +56,9 @@
             <attribute name="style"/>
             <attribute name="destfile"/>
             <sequential>
+                <!-- 
+                    See http://ant.1045680.n5.nabble.com/How-to-increase-memory-used-by-JVM-in-Ant-td1355370.html
+                -->
                 <echo>Executing XSLT @{style}, result will be safed in @{destfile}</echo>
                 <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" failonerror="true" fork="true" maxmemory="512m">
                     <arg value="-quit:off"/>

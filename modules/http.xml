@@ -20,6 +20,9 @@
         <artifact:dependencies filesetId="salvador.httpclient.files" pathId="salvador.httpclient.classpath">
             <dependency groupId="${salvador.httpclient.group.id}" artifactId="${salvador.httpclient.artifact.id}" version="${salvador.httpclient.version}"/>
             <dependency groupId="${salvador.httpmime.group.id}" artifactId="${salvador.httpmime.artifact.id}" version="${salvador.httpmime.version}"/>
+            <!-- Dependencies, that change not so much -->
+            <dependency groupId="commons-codec" artifactId="commons-codec" version="${salvador.httpmime.version}"/>
+            <dependency groupId="commons-logging" artifactId="commons-logging" version="${salvador.httpmime.version}"/>
         </artifact:dependencies>
         <macrodef name="salvador.http.postfile.multipart">
             <attribute name="url"/>
@@ -51,7 +54,7 @@
                     import org.apache.http.impl.client.*
                     import org.apache.http.client.methods.*
                     
-                    /* Get variable from ant */
+                    /* Get variables from ant */
                     def filePath = new File(properties['fileProp'])
                     def fileName = properties['nameProp']
                     def url = new URL(properties['urlProp'])
