@@ -21,8 +21,8 @@
             <dependency groupId="${salvador.httpclient.group.id}" artifactId="${salvador.httpclient.artifact.id}" version="${salvador.httpclient.version}"/>
             <dependency groupId="${salvador.httpmime.group.id}" artifactId="${salvador.httpmime.artifact.id}" version="${salvador.httpmime.version}"/>
             <!-- Dependencies, that change not so much -->
-            <dependency groupId="commons-codec" artifactId="commons-codec" version="${salvador.httpmime.version}"/>
-            <dependency groupId="commons-logging" artifactId="commons-logging" version="${salvador.httpmime.version}"/>
+            <dependency groupId="commons-codec" artifactId="commons-codec" version="1.6"/>
+            <dependency groupId="commons-logging" artifactId="commons-logging" version="1.1.3"/>
         </artifact:dependencies>
         <macrodef name="salvador.http.postfile.multipart">
             <attribute name="url"/>
