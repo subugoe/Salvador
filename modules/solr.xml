@@ -77,7 +77,7 @@
     </target>
 
     <!-- Include external libraries not part of the war file like SLF4J -->
-    <target name="salvador.solr.war.dependencies" depends="salvador.solr.core.download, salvador.jetty.install">
+    <target name="salvador.solr.war.dependencies" depends="salvador.solr.core.download, salvador.jetty.install, salvador.saxon.download">
         <!--
         <taskdef resource="tasks.properties" loaderref="jetty.loader">
             <classpath id="salvador.solr.combined">
@@ -210,6 +210,8 @@
                     <webApp war="${salvador.solr.war.file}" contextpath="@{contextpath}" jettyEnvXml="@{jetty-env}">
                         <lib dir="${salvador.solr.lib.dir}" includes="*.jar"/>
                         <lib dir="${salvador.solr.war.dir}" includes="*.jar"/>
+                        <!-- This is needed for XSLt 2.0 inside Solr -->
+                        <lib dir="${salvador.saxon.lib.dir}" includes="*.jar"/>
                     </webApp>
                 </jetty.run>
             </sequential>
