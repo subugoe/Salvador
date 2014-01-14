@@ -210,7 +210,9 @@
                     <webApp war="${salvador.solr.war.file}" contextpath="@{contextpath}" jettyEnvXml="@{jetty-env}">
                         <lib dir="${salvador.solr.lib.dir}" includes="*.jar"/>
                         <lib dir="${salvador.solr.war.dir}" includes="*.jar"/>
-                        <!-- This is needed for XSLt 2.0 inside Solr -->
+                        <!-- This is needed for XSLt 2.0 inside Solr 
+                             This will fail on Java 8!
+                        -->
                         <lib dir="${salvador.saxon.lib.dir}" includes="*.jar"/>
                     </webApp>
                 </jetty.run>
