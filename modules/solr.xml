@@ -161,6 +161,7 @@
         </macrodef>
 
         <macrodef name="salvador.solr.write.env">
+            <attribute name="solrhome" default="${salvador.solr.home.dir}"/>
             <attribute name="jetty-env" default="${salvador.solr.war.dir}/jetty-env.xml"/>
             <sequential>
                 <echo>Writing environment...</echo>
@@ -198,7 +199,7 @@
             <attribute name="jetty-env" default="${salvador.solr.war.dir}/jetty-env.xml"/>
             <sequential>
                 <echo>This will fail if Solr wasn't configured by the macro salvador.solr.setup</echo>
-                <salvador.solr.write.env jetty-env="@{jetty-env}"/>
+                <salvador.solr.write.env jetty-env="@{jetty-env}" solrhome="@{solrhome}"/>
                 <echo>Starting Solr in deamon mode (Jetty - use the target salvador.solr.stop or ctrl+c)...</echo>
                 <!-- 
                 For documentation of jetty look at jetty.xml
