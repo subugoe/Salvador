@@ -125,6 +125,7 @@
         <macrodef name="salvador.solr.setup">
             <attribute name="solrhome"/>
             <attribute name="core"/>
+            <attribute name="data" default="./data"/>
             <attribute name="config"/>
             <sequential>
                 <echo>Setting up Solr core @{core} in @{solrhome}, using @{config}</echo>
@@ -133,14 +134,19 @@
                 <mkdir dir="${instance.dir}"/>
                 <mkdir dir="${instance.dir}/conf"/>
                 <mkdir dir="${instance.dir}/conf/xslt"/>
-                <mkdir dir="${instance.dir}/data/index"/>
+                <var name="instance.dir.data" unset="true"/>
+                <property name="instance.dir.data" value="@{solrhome}/@{core}/@{data}"/>
+                <mkdir dir="${instance.dir.data}/index"/>
+                <echo level="verbose">Directory of instance: '${instance.dir}'. Data directory '${instance.dir.data}'.</echo>
                 <copy todir="${instance.dir}/conf">
                     <fileset dir="@{config}">
                         <include name="**/*.*"/>
+                        <exclude name="**/*.sh"/>
                     </fileset>
                     <filterchain>
                         <tokenfilter>
-                            <replaceregex pattern="^(.*.data\.dir:).*?/data(}&lt;/.*)$" replace="\1./data\2" flags="g"/>
+                            <!-- TODO: Insert real path here -->
+                            <replaceregex pattern="^(.*.data\.dir:).*?/data(}&lt;/.*)$" replace="\1${instance.dir.data}\2" flags="g"/>
                         </tokenfilter>
                     </filterchain>
                 </copy>
