@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.XSPEC">
+    <description>XSpec targets of the SUB Ant library</description>
+    <!-- See http://code.google.com/p/xspec/ 
+             http://www.oxygenxml.com/xml_editor/xslt_unit_testing.html
+    -->
+
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <!-- We also need Saxon -->
+    <import file="./saxon.xml"/>
+
+    <!-- Saxon coordinates, since there are so many versions -->
+    <property name="salvador.xspec.version" value="0.3.0"/>
+    <property name="salvador.xspec.dir" value="xspec-${salvador.xspec.version}"/>
+    <property name="salvador.xspec.file" value="${salvador.xspec.dir}.zip"/>
+    <property name="salvador.xspec.url" value="http://xspec.googlecode.com/files/${salvador.xspec.file}"/>
+
+    <!-- Directories -->
+    <!-- This is xspec.project.dir in the xspec build file -->
+    <property name="salvador.xspec.lib.dir" value="${salvador.base.lib.dir}/xspec"/>
+    <property name="salvador.xspec.result.dir" value="${target.dir}/xspec"/>
+
+    <!-- Internal directories and files -->
+    <property name="salvador.xspec.compiler.dir" value="${salvador.xspec.lib.dir}/${salvador.xspec.dir}/src/compiler"/>
+    <property name="salvador.xspec.compiler.xslt" value="${salvador.xspec.compiler.dir}/generate-query-tests.xsl"/>
+    <property name="salvador.xspec.compiler.xquery" value="${salvador.xspec.compiler.dir}/generate-query-tests.xsl"/>
+
+    <target name="salvador.xspec.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.xspec.lib.dir}"/>
+        <mkdir dir="${salvador.xspec.result.dir}"/>
+    </target>
+
+    <target name="salvador.xspec.clean" depends="salvador.base.clean">
+        <delete dir="${salvador.xspec.result.dir}"/>
+    </target>
+
+    <target name="salvador.xspec.download" depends="salvador.xspec.init">
+        <get src="${salvador.xspec.url}" dest="${salvador.xspec.lib.dir}/${salvador.xspec.file}" usetimestamp="true"/>
+        <unzip src="${salvador.xspec.lib.dir}/${salvador.xspec.file}" dest="${salvador.xspec.lib.dir}"/>
+    </target>
+
+    <target name="salvador.xspec.install" depends="salvador.xspec.download, salvador.saxon.install, salvador.base.ant.contrib.install">
+        <!-- Other attributes aren't supported, see http://code.google.com/p/xspec/wiki/RunningWithAnt 
+             The distributed Version doesn't ship http://code.google.com/p/xspec/source/browse/trunk/build.xml 
+             The macro is based on Works of Jeni Tennison.
+        -->
+        <macrodef name="salvador.xspec.test" description="Run XSpec tests">
+            <attribute name="xspec.xml" description="XSpec tests file"/>
+            <sequential>
+                <!-- The directory where the XSPEC file lives -->
+                <var name="xspec.base.dir" unset="true"/>
+                <dirname property="xspec.base.dir" file="@{xspec.xml}"/>
+                <!-- The base name of the XSPEC file -->
+                <var name="xspec.base" unset="true"/>
+                <propertyregex property="xspec.base" input="@{xspec.xml}" regexp="/.*/([^\.]*).*" select="\1" casesensitive="false"/>
+                <!-- The Name of the XSLT file to generate -->
+                <var name="xspec.xsl" unset="true"/>
+                <property name="xspec.xsl" value="${salvador.xspec.result.dir}/${xspec.base}.xsl"/>
+                <!-- The Name of the XML result file to generate -->
+                <var name="xspec.result.xml" unset="true"/>
+                <property name="xspec.result.xml" value="${salvador.xspec.result.dir}/${xspec.base}-result.xml"/>
+                <!-- The Name of the report file to generate -->
+                <var name="xspec.result.html" unset="true"/>
+                <property name="xspec.result.html" value="${salvador.xspec.result.dir}/${xspec.base}-result.html"/>
+
+                <!-- XSLT Processing -->
+                <xslt in="@{xspec.xml}" out="${xspec.xsl}" style="${salvador.xspec.lib.dir}/src/compiler/generate-xspec-tests.xsl" classpathref="salvador.saxon.classpath">
+                    <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+                </xslt>
+                <!-- Can't specify initial template with <xslt> task so have to
+                     fall back to running Saxon as Java app. -->
+                <java classname="net.sf.saxon.Transform" classpathref="salvador.saxon.classpath" fork="true">
+                    <arg value="-ext:on"/>
+                    <arg value="-s:@{xspec.xml}"/>
+                    <arg value="-o:${xspec.result.xml}"/>
+                    <arg value="-xsl:${xspec.xsl}"/>
+                    <arg value="-it:{http://www.jenitennison.com/xslt/xspec}main"/>
+                </java>
+                <xslt in="${xspec.result.xml}" out="${xspec.result.html}" style="${salvador.xspec.lib.dir}/src/reporter/format-xspec-report.xsl" classpathref="salvador.saxon.classpath">
+                    <factory name="net.sf.saxon.TransformerFactoryImpl">
+                        <attribute name="http://saxon.sf.net/feature/allow-external-functions" value="true"/>
+                    </factory>
+                </xslt>
+                <loadfile srcfile="${xspec.result.xml}" property="xspec.result"/>
+                <fail message="XSpec tests failed. See ${xspec.result.html} for a report">
+                    <condition>
+                        <contains string="${xspec.result}" substring='successful="false"'/>
+                    </condition>
+                </fail>
+            </sequential>
+        </macrodef>
+
+        <!-- Use Saxon for additional tasks
+        <macrodef name="salvador.xspec.xslt">
+            <attribute name=xslt"/>
+            <sequential>
+                <xslt in="@{xslt}" classpathref="salvador.saxon.classpath" basedir="${salvador.xspec.compiler.dir}" style="${salvador.xspec.compiler.xquery}" destdir="">
+                    <factory name="net.sf.saxon.TransformerFactoryImpl" />
+                </xslt>
+            </sequential>
+        </macrodef>
+        -->
+    </target>
+
+</project>
