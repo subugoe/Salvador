@@ -93,6 +93,31 @@
                 </fail>
             </sequential>
         </macrodef>
+        <!-- Install a Ruby Gem with a specific version -->
+        <macrodef name="salvador.jruby.gem.version">
+            <attribute name="gem"/>
+            <attribute name="version"/>
+            <sequential>
+                <!-- See http://sass-lang.com/tutorial.html -->
+                <!-- See http://kenai.com/projects/jruby/pages/GettingStarted#How_Do_I_Run_rake,_gem,_etc? -->
+                <java classname="org.jruby.Main" fork="true" dir="." classpathref="salvador.jruby.classpath" resultproperty="salvador.jruby.gem.install.return.code" failonerror="true">
+                    <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
+                    <arg value="-S"/>
+                    <arg value="gem"/>
+                    <arg value="install"/>
+                    <arg value="@{gem}"/>
+                    <arg value="-v"/>
+                    <arg value="@{version}"/>
+                </java>
+                <fail message="Installation of Ruby Gem returned error code!">
+                    <condition>
+                        <not>
+                            <equals arg1="${salvador.jruby.gem.install.return.code}" arg2="0"/>
+                        </not>
+                    </condition>
+                </fail>
+            </sequential>
+        </macrodef>
     </target>
 
     <target name="salvador.jruby.install" depends="salvador.jruby.gems"/>
