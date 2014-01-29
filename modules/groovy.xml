@@ -7,21 +7,21 @@
     <property name="salvador.groovy.artifact.id" value="groovy-all"/>
     <property name="salvador.groovy.version" value="2.1.2"/>
     <property name="salvador.groovy.lib.dir" value="${salvador.base.lib.dir}/groovy"/>
-    
+
     <!-- Addintional Dependency for Ivy for Grapes-->
     <!-- Search for the required version in the groovy pom -->
     <property name="salvador.groovy.ivy.group.id" value="org.apache.ivy"/>
     <property name="salvador.groovy.ivy.artifact.id" value="ivy"/>
     <property name="salvador.groovy.ivy.version" value="2.2.0"/>
-    
+
     <target name="salvador.groovy.init" depends="salvador.base.init">
         <mkdir dir="${salvador.groovy.lib.dir}"/>
     </target>
-    
+
     <target name="salvador.groovy.clean">
         <delete dir="${salvador.groovy.lib.dir}"/>
     </target>
-    
+
     <target name="salvador.groovy.download" depends="salvador.groovy.init, salvador.base.maven.install">
         <echo>Getting Groovy</echo>
         <artifact:dependencies filesetId="salvador.groovy.files" pathId="salvador.groovy.classpath">
@@ -33,7 +33,7 @@
             <mapper type="flatten"/>
         </copy>
     </target>
-    
+
     <target name="salvador.groovy.macros" depends="salvador.groovy.install, salvador.base.ant.contrib.install">
         <macrodef name="salvador.groovy.script">
             <attribute name="src"/>
@@ -45,20 +45,20 @@
                 <property name="salvador.groovy.script.src" value="@{src}"/>
                 <var name="salvador.groovy.script.outputproperty" unset="true"/>
                 <property name="salvador.groovy.script.outputproperty" value="@{outputproperty}"/>
-                <groovy useGroovyShell="true">
-                    
-                </groovy>
+                <groovy useGroovyShell="true"> </groovy>
             </sequential>
         </macrodef>
     </target>
-    
+
     <!-- 
     See: http://groovy.codehaus.org/The+groovy+Ant+Task
     See: http://groovy.codehaus.org/Ant+Task+Troubleshooting
+    See: http://groovy.codehaus.org/The+groovyc+Ant+Task
     -->
     <target name="salvador.groovy.install" depends="salvador.groovy.download">
         <echo>Installing Groovy tasks</echo>
         <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="salvador.groovy.classpath"/>
+        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="salvador.groovy.classpath"/>
     </target>
 
 </project>
