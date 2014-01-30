@@ -63,6 +63,7 @@
             <fileset refid="salvador.urlrewritefilter.files"/>
             <mapper type="flatten"/>
         </copy>
+        <taskdef name="urlrewritedoc" classname="org.tuckey.web.filters.urlrewrite.UrlRewriteDocTask" classpathref="salvador.urlrewritefilter.classpath"/>
     </target>
 
     <target name="salvador.jetty.install" depends="salvador.jetty.download">
