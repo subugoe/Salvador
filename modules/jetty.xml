@@ -23,10 +23,14 @@
     <property name="salvador.urlrewritefilter.artifact.id" value="urlrewritefilter"/>
     <property name="salvador.urlrewritefilter.version" value="4.0.3"/>
     <property name="salvador.urlrewritefilter.lib.dir" value="${salvador.base.lib.dir}/urlrewritefilter"/>
-    <!-- Apache Commons HTTP cleint is a dependency of URLRewriteFilter -->
+    <!-- Apache Commons HTTP client is a dependency of URLRewriteFilter for Proxy mode -->
     <property name="salvador.httpclient.group.id" value="commons-httpclient"/>
     <property name="salvador.httpclient.artifact.id" value="commons-httpclient"/>
     <property name="salvador.httpclient.version" value="3.1"/>
+    <!-- SLF4J is a dependency of URLRewriteFilter if you plan to extend it uusing the internal logger-->
+    <property name="salvador.slf4j.group.id" value="org.slf4j"/>
+    <property name="salvador.slf4j.artifact.id" value="slf4j-log4j12"/>
+    <property name="salvador.slf4j.version" value="1.7.5"/>
 
     <target name="salvador.jetty.init" depends="salvador.base.init">
         <mkdir dir="${salvador.jetty.lib.dir}"/>
@@ -58,6 +62,7 @@
         <artifact:dependencies filesetId="salvador.urlrewritefilter.files" pathId="salvador.urlrewritefilter.classpath">
             <dependency groupId="${salvador.urlrewritefilter.group.id}" artifactId="${salvador.urlrewritefilter.artifact.id}" version="${salvador.urlrewritefilter.version}"/>
             <dependency groupId="${salvador.httpclient.group.id}" artifactId="${salvador.httpclient.artifact.id}" version="${salvador.httpclient.version}"/>
+            <dependency groupId="${salvador.slf4j.group.id}" artifactId="${salvador.slf4j.artifact.id}" version="${salvador.slf4j.version}"/>
         </artifact:dependencies>
         <copy todir="${salvador.urlrewritefilter.lib.dir}">
             <fileset refid="salvador.urlrewritefilter.files"/>
