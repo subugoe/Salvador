@@ -14,6 +14,9 @@
     <property name="salvador.groovy.ivy.artifact.id" value="ivy"/>
     <property name="salvador.groovy.ivy.version" value="2.2.0"/>
 
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+
     <target name="salvador.groovy.init" depends="salvador.base.init">
         <mkdir dir="${salvador.groovy.lib.dir}"/>
     </target>
