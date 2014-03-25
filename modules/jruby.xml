@@ -62,6 +62,7 @@
         <macrodef name="salvador.jruby.gem.check">
             <attribute name="gem"/>
             <sequential>
+                <echo>Checking for Ruby gem @{gem}, If this fails, it's not an error, it just indicated the the gem is missing!</echo>
                 <java classname="org.jruby.Main" fork="true" dir="." failonerror="false" resultproperty="salvador.jruby.gem.check.return.code" classpathref="salvador.jruby.classpath">
                     <sysproperty key="jruby.home" value="${salvador.jruby.home}"/>
                     <arg value="-e"/>
