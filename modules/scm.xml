@@ -7,7 +7,7 @@
 
     <!-- JGit integration -->
     <property name="salvador.scm.jgit.lib.dir" value="${salvador.base.lib.dir}/jgit"/>
-    <property name="salvador.scm.jgit.version" value="2.1.0.201209190230-r"/>
+    <property name="salvador.scm.jgit.version" value="3.3.0.201403021825-r"/>
 
     <!-- SVN Integration -->
     <property name="salvador.scm.svn.lib.dir" value="${salvador.base.lib.dir}/svn"/>
@@ -19,12 +19,79 @@
     </target>
 
     <!-- see http://wiki.eclipse.org/JGit/User_Guide#Ant_Tasks -->
-    <target name="salvador.scm.jgit.install" depends="salvador.scm.init, salvador.base.maven.install">
+    <target name="salvador.scm.jgit.install" depends="salvador.scm.init, salvador.base.maven.install, salvador.groovy.install, salvador.base.ant.contrib.install">
         <echo>Getting and installing Git tasks</echo>
         <artifact:dependencies pathId="salvador.scm.jgit.classpath">
             <dependency groupId="org.eclipse.jgit" artifactId="org.eclipse.jgit.ant" version="${salvador.scm.jgit.version}"/>
+            <dependency groupId="org.eclipse.jgit" artifactId="org.eclipse.jgit.pgm" version="${salvador.scm.jgit.version}"/>
         </artifact:dependencies>
         <taskdef resource="org/eclipse/jgit/ant/ant-tasks.properties" classpathref="salvador.scm.jgit.classpath"/>
+        
+        <!-- A macro for executing a sing command within a given Git repository -->
+        <!-- This doesn't work reliabily, since the JGit CLI frontend is quite bad in parsing and error reporting, don't use this -->
+        <macrodef name="salvador.scm.git.command">
+            <attribute name="command"/>
+            <!-- Param name inspired by https://github.com/SergeyBoguckiy/jgit-ant-tasks-->
+            <attribute name="repository"/>
+            <sequential>
+                <java classname="org.eclipse.jgit.pgm.Main" fork="true" dir="@{repository}" classpathref="salvador.scm.jgit.classpath" failonerror="false" outputproperty="salvador.scm.jgit.error">
+                    <arg line="@{command}"/>
+                    <!--
+                    This doesn't work, no idea why 
+                    <arg value="- -show-stack-trace"/>
+                    <arg value="- -git-dir"/>
+                    <arg value="@{repository}"/>
+                    -->
+                </java>
+                <echo level="verbose" message="Output for operation @{command} is ${salvador.scm.jgit.error}"></echo>
+            </sequential>
+        </macrodef>
+        <!-- A git pull task implemented in groovy, JGit Ant and CLI suck, try to avoid them -->
+        <macrodef name="salvador.scm.git.pull">
+            <attribute name="repository"/>
+            <sequential>
+                <!-- This is a ugly hack, see:
+                     http://groovy.329449.n5.nabble.com/Accessing-Ant-macrodef-parameters-in-groovy-Ant-task-td358094.html
+                -->
+                <var name="repositoryProp" value="@{repository}"/>
+                <groovy useGroovyShell="true">
+                    /* Needed dependencies */
+                    @Grapes([
+                    @Grab(group='org.eclipse.jgit', module='org.eclipse.jgit', version='3.3.0.201403021825-r')
+                    ])
+                    
+                    /* Needed imports */
+                    import org.eclipse.jgit.api.Git
+                    import org.eclipse.jgit.api.PullCommand
+                    
+                    /* Get variables from ant */
+                    def repository = new File(properties['repositoryProp'])
+                    Git git = Git.open(repository)
+                    PullCommand pullCommand = git.pull()
+                    
+                    pullCommand.call()
+                </groovy>
+            </sequential>
+        </macrodef>
+        
+        <!-- This macro either clones a git repository ore pulls changes if it's already present -->
+        <macrodef name="salvador.scm.git.clone-or-pull">
+            <attribute name="uri"/>
+            <attribute name="dest"/>
+            <sequential>
+                <if>
+                    <available file="@{dest}/.git"/>
+                    <then>
+                        <echo message="Repository already exists, pulling updates"/>
+                        <salvador.scm.git.pull repository="@{dest}"/>
+                    </then>
+                    <else>
+                        <echo message="Repository will be cloned"/>
+                        <git-clone uri="@{uri}" dest="@{dest}"/>
+                    </else>
+                </if>
+            </sequential>
+        </macrodef>
     </target>
     
     <target name="salvador.scm.git.macros">
