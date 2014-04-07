@@ -9,12 +9,14 @@
     <property name="salvador.saxon.group.id" value="net.sf.saxon"/>
     <property name="salvador.saxon.artifact.id" value="Saxon-HE"/>
     <!-- 
-    Current versions can be found here:
+    Current versions can be found here: http://mvnrepository.com/artifact/net.sf.saxon/Saxon-HE
     -->
-    <property name="salvador.saxon.version" value="9.5.1-3"/>
+    <property name="salvador.saxon.version" value="9.5.1-5"/>
     <!-- 
     This is known to work:    
     <property name="salvador.saxon.version" value="9.4.0.7"/>
+    this one has issues with Java 8, see https://saxonica.plan.io/issues/1944:
+    <property name="salvador.saxon.version" value="9.5.1-3"/>
     -->
 
     <!-- Directories -->
