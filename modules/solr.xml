@@ -4,8 +4,11 @@
 
     <!-- Import base lib -->
     <import file="../build.xml"/>
+    <!-- Dependencies -->
     <import file="./jetty.xml"/>
     <import file="./http.xml"/>
+    <import file="./saxon.xml"/>
+    
 
     <!-- Solr coordinates, since there are so many versions -->
     <property name="salvador.solr.core.group.id" value="org.apache.solr"/>
@@ -120,7 +123,7 @@
         </jar>
     </target>
 
-    <target name="salvador.solr.install" depends="salvador.solr.war.download, salvador.solr.war.dependencies, salvador.base.ant.contrib.install">
+    <target name="salvador.solr.install" depends="salvador.saxon.install, salvador.solr.war.download, salvador.solr.war.dependencies, salvador.base.ant.contrib.install">
         <!-- This sets up a solr instance directory from a  -->
         <macrodef name="salvador.solr.setup">
             <attribute name="solrhome"/>
