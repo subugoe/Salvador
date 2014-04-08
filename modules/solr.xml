@@ -207,6 +207,7 @@
                 <echo>This will fail if Solr wasn't configured by the macro salvador.solr.setup</echo>
                 <salvador.solr.write.env jetty-env="@{jetty-env}" solrhome="@{solrhome}"/>
                 <echo>Starting Solr in deamon mode (Jetty - use the target salvador.solr.stop or ctrl+c)...</echo>
+                <echo level="warn">This will fail on Java 8 with a Saxon older then version 9.5.1-5!</echo>
                 <!-- 
                 For documentation of jetty look at jetty.xml
                 -->
@@ -225,8 +226,8 @@
                     <webApp war="${salvador.solr.war.file}" contextpath="@{contextpath}" jettyEnvXml="@{jetty-env}">
                         <lib dir="${salvador.solr.lib.dir}" includes="*.jar"/>
                         <lib dir="${salvador.solr.war.dir}" includes="*.jar"/>
-                        <!-- This is needed for XSLt 2.0 inside Solr 
-                             This will fail on Java 8!
+                        <!-- This is needed for XSLT 2.0 inside Solr 
+                             This will fail on Java 8 with a Saxon older then version 9.5.1-5!
                         -->
                         <lib dir="${salvador.saxon.lib.dir}" includes="*.jar"/>
                     </webApp>
