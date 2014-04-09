@@ -70,7 +70,7 @@
    </sequential>
   </macrodef>
   <macrodef name="salvador.servlet.merge">
-   <element name="files"/>
+   <element name="files" implicit="yes"/>
    <attribute name="out"/>
    <sequential/>
   </macrodef>
