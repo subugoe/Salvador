@@ -7,7 +7,7 @@
  <!-- Dependencies -->
  <import file="./saxon.xml"/>
 
- <target name="salvador.servlet.install" depends="salvador.saxon.install">
+ <target name="salvador.servlet.install" depends="salvador.saxon.install, salvador.base.ant.contrib.install">
   <macrodef name="salvador.servlet.merge.single">
    <!-- Input files -->
    <attribute name="in1"/>
@@ -20,7 +20,7 @@
       <!-- This inline stylesheet removes all references to URL rewriting -->
       <!-- See https://issues.apache.org/bugzilla/show_bug.cgi?id=32461 -->
       <string>
-      <![CDATA[
+       <![CDATA[
        <xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:j2ee="http://java.sun.com/xml/ns/j2ee" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         exclude-result-prefixes="j2ee" version="1.0">
         <!-- Taken from https://scm.mmbase.org/didactor/trunk/old-ant-build/merge-web.xml.xslt -->
@@ -70,9 +70,21 @@
    </sequential>
   </macrodef>
   <macrodef name="salvador.servlet.merge">
+   <!-- 
    <element name="files" implicit="yes"/>
+   -->
+   <attribute name="refid"/>
    <attribute name="out"/>
-   <sequential/>
+   <sequential>
+    <for param="png.file">
+     <path>
+      <fileset refid="@{refid}"/>
+     </path>
+     <sequential>
+      <salvador.servlet.merge.single/>
+     </sequential>
+    </for>
+   </sequential>
   </macrodef>
 
  </target>
