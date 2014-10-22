@@ -57,6 +57,11 @@
     <target name="salvador.solr.core.download" depends="salvador.solr.init, salvador.base.maven.install">
         <echo>Getting Solr</echo>
         <artifact:dependencies filesetId="salvador.solr.files" pathId="salvador.solr.classpath">
+            <!-- This is needed, because sonatype swiched from http to https, this change hasn't made it do all external repository definitions yet. -->
+            <remoteRepository id="solr.dependencies.repository.snapshots" url="https://oss.sonatype.org/content/repositories/snapshots/">
+                <snapshots enabled="true"/>
+            </remoteRepository>
+            <remoteRepository id="solr.dependencies.repository.releases" url="https://oss.sonatype.org/content/repositories/releases/"/>           
             <dependency groupId="${salvador.solr.core.group.id}" artifactId="${salvador.solr.core.artifact.id}" version="${salvador.solr.core.version}"/>
             <!-- Common logging might be used in default configuration -->
             <dependency groupId="commons-logging" artifactId="commons-logging" version="1.1.3"/>
