@@ -13,11 +13,11 @@
     <!-- Solr coordinates, since there are so many versions -->
     <property name="salvador.solr.core.group.id" value="org.apache.solr"/>
     <property name="salvador.solr.core.artifact.id" value="solr-core"/>
-    <property name="salvador.solr.core.version" value="4.5.1"/>
+    <property name="salvador.solr.core.version" value="4.7.2"/>
     <!-- Solr coordinates for the webapp -->
     <property name="salvador.solr.war.group.id" value="org.apache.solr"/>
     <property name="salvador.solr.war.artifact.id" value="solr"/>
-    <property name="salvador.solr.war.version" value="4.5.1"/>
+    <property name="salvador.solr.war.version" value="4.7.2"/>
     <property name="salvador.solr.war.type" value="war"/>
     <!-- Data Directory -->
     <property name="salvador.solr.home.dir" value="${salvador.base.dir.tmp}/solr-home"/>
