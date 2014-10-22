@@ -71,6 +71,7 @@
 
             <!-- Common logging might be used in default configuration -->
             <dependency groupId="commons-logging" artifactId="commons-logging" version="1.1.3"/>
+            <dependency groupId="org.slf4j" artifactId="slf4j-log4j12" version="1.6.6"/>
         </artifact:dependencies>
         <copy todir="${salvador.solr.lib.dir}">
             <fileset refid="salvador.solr.files"/>
@@ -197,8 +198,11 @@
                 -->
                 <echo file="@{jetty-env}"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
                     <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+                    <!--
                     <Configure id='wac' class="org.eclipse.jetty.webapp.WebAppContext">
-                        <New id="solr" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+                    -->
+                    <Configure id='wac' class="org.eclipse.jetty.ant.AntWebAppContext">
+                    <New id="solr" class="org.eclipse.jetty.plus.jndi.EnvEntry">
                             <Arg><Ref id="wac"/></Arg>
                             <Arg type="java.lang.String">solr/home</Arg>
                             <Arg type="java.lang.String">]]>@{solrhome}<![CDATA[</Arg>
