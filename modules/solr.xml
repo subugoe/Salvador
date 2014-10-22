@@ -13,11 +13,11 @@
     <!-- Solr coordinates, since there are so many versions -->
     <property name="salvador.solr.core.group.id" value="org.apache.solr"/>
     <property name="salvador.solr.core.artifact.id" value="solr-core"/>
-    <property name="salvador.solr.core.version" value="4.5.1"/>
+    <property name="salvador.solr.core.version" value="4.7.2"/>
     <!-- Solr coordinates for the webapp -->
     <property name="salvador.solr.war.group.id" value="org.apache.solr"/>
     <property name="salvador.solr.war.artifact.id" value="solr"/>
-    <property name="salvador.solr.war.version" value="4.5.1"/>
+    <property name="salvador.solr.war.version" value="4.7.2"/>
     <property name="salvador.solr.war.type" value="war"/>
     <!-- Data Directory -->
     <property name="salvador.solr.home.dir" value="${salvador.base.dir.tmp}/solr-home"/>
@@ -57,9 +57,21 @@
     <target name="salvador.solr.core.download" depends="salvador.solr.init, salvador.base.maven.install">
         <echo>Getting Solr</echo>
         <artifact:dependencies filesetId="salvador.solr.files" pathId="salvador.solr.classpath">
-            <dependency groupId="${salvador.solr.core.group.id}" artifactId="${salvador.solr.core.artifact.id}" version="${salvador.solr.core.version}"/>
+            <!-- This is needed, because sonatype swiched from http to https, this change hasn't made it do all external repository definitions yet. -->
+            <!--
+            <remoteRepository id="solr.dependencies.repository.snapshots" url="https://oss.sonatype.org/content/repositories/snapshots/">
+                <snapshots enabled="true"/>
+            </remoteRepository>
+            <remoteRepository id="solr.dependencies.repository.releases" url="https://oss.sonatype.org/content/repositories/releases/"/>
+            -->
+            <dependency groupId="${salvador.solr.core.group.id}" artifactId="${salvador.solr.core.artifact.id}" version="${salvador.solr.core.version}">
+                <exclusion groupId="com.googlecode.concurrentlinkedhashmap" artifactId="concurrentlinkedhashmap-lru"/>
+            </dependency>
+            <dependency groupId="com.googlecode.concurrentlinkedhashmap" artifactId="concurrentlinkedhashmap-lru" version="1.4"/>
+
             <!-- Common logging might be used in default configuration -->
             <dependency groupId="commons-logging" artifactId="commons-logging" version="1.1.3"/>
+            <dependency groupId="org.slf4j" artifactId="slf4j-log4j12" version="1.6.6"/>
         </artifact:dependencies>
         <copy todir="${salvador.solr.lib.dir}">
             <fileset refid="salvador.solr.files"/>
@@ -186,8 +198,11 @@
                 -->
                 <echo file="@{jetty-env}"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
                     <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+                    <!--
                     <Configure id='wac' class="org.eclipse.jetty.webapp.WebAppContext">
-                        <New id="solr" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+                    -->
+                    <Configure id='wac' class="org.eclipse.jetty.ant.AntWebAppContext">
+                    <New id="solr" class="org.eclipse.jetty.plus.jndi.EnvEntry">
                             <Arg><Ref id="wac"/></Arg>
                             <Arg type="java.lang.String">solr/home</Arg>
                             <Arg type="java.lang.String">]]>@{solrhome}<![CDATA[</Arg>

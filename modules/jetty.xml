@@ -8,11 +8,11 @@
     <!-- Jetty coordinates, since there are so many versions -->
     <property name="salvador.jetty.group.id" value="org.eclipse.jetty"/>
     <property name="salvador.jetty.artifact.id" value="jetty-ant"/>
-    <property name="salvador.jetty.version" value="9.0.0.v20130308"/>
+    <property name="salvador.jetty.version" value="9.3.0.M0"/>
     <!-- Additional Jetty modules, mainly used for eXist -->
     <property name="salvador.jetty-jsp.group.id" value="org.eclipse.jetty"/>
     <property name="salvador.jetty-jsp.artifact.id" value="jetty-jsp"/>
-    <property name="salvador.jetty-jsp.version" value="9.0.0.v20130308"/>
+    <property name="salvador.jetty-jsp.version" value="9.3.0.M0"/>
 
     <!-- Directories -->
     <property name="salvador.jetty.lib.dir" value="${salvador.base.lib.dir}/jetty"/>
