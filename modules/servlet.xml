@@ -6,8 +6,10 @@
  <import file="../build.xml"/>
  <!-- Dependencies -->
  <import file="./saxon.xml"/>
+ <!-- Import Groovy -->
+ <import file="./groovy.xml"/>
 
- <target name="salvador.servlet.install" depends="salvador.saxon.install, salvador.base.ant.contrib.install">
+ <target name="salvador.servlet.install" depends="salvador.saxon.install, salvador.base.ant.contrib.install, salvador.groovy.install">
   <macrodef name="salvador.servlet.merge.single">
    <!-- Input files -->
    <attribute name="in1"/>
@@ -70,22 +72,53 @@
    </sequential>
   </macrodef>
   <macrodef name="salvador.servlet.merge">
-   <!-- 
-   <element name="files" implicit="yes"/>
-   -->
-   <attribute name="refid"/>
+   <attribute name="indir"/>
+   <attribute name="pattern"/>
    <attribute name="out"/>
    <sequential>
-    <for param="png.file">
-     <path>
-      <fileset refid="@{refid}"/>
-     </path>
-     <sequential>
-      <salvador.servlet.merge.single/>
-     </sequential>
-    </for>
+    <!-- Needed to import variables -->
+    <var name="indir" value="@{indir}"/>
+    <var name="pattern" value="@{pattern}"/>
+    <var name="out" value="@{out}"/>
+    <groovy useGroovyShell="true"
+     >
+     /* A Groovy wrapper for the ant macro above */
+     def merge (in1, in2, out) {
+        macro = project.createTask("salvador.servlet.merge.single")
+        macro.setDynamicAttribute("in1", in1.toString())
+        macro.setDynamicAttribute("in2", in2.toString())
+        macro.setDynamicAttribute("out", out.toString())
+        macro.perform()
+     }
+     
+     /* Get variables from ant */
+     def indir = properties['indir']
+     def pattern = properties['pattern']
+     def out = properties['out']
+     /* Collect the files to be merged */
+     def candidates = ant.fileScanner {
+        fileset(dir: indir) {
+           include(name: pattern)
+        }
+     }
+     
+     def prev = null
+     candidates.eachWithIndex() { cur, i ->
+        if( prev != null ) println "$prev $cur"
+                
+        if (i == 1) {
+           prev = cur
+        } else if (i == 2) {
+           println "merging ${cur} and ${prev} to ${out}"
+           merge(prev, cur, out)
+        } else if (i > 2) {
+           println "merging ${cur} and ${out} to ${out}"
+           merge(cur, out, out)
+        }
+     };
+
+    </groovy>
    </sequential>
   </macrodef>
-
  </target>
 </project>
