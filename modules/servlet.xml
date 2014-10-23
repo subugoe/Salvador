@@ -9,6 +9,9 @@
  <!-- Import Groovy -->
  <import file="./groovy.xml"/>
 
+ <!-- Set the tranformation for the merge -->
+ <property name="salvador.servlet.merge.xslt" value="${salvador.base.dir}/xslt/web.xml-merger.xsl"/>
+
  <target name="salvador.servlet.install" depends="salvador.saxon.install, salvador.base.ant.contrib.install, salvador.groovy.install">
   <macrodef name="salvador.servlet.merge.single">
    <!-- Input files -->
@@ -17,60 +20,15 @@
    <!-- Output file -->
    <attribute name="out"/>
    <sequential>
-    <xslt in="@{in1}" out="@{out}">
-     <style>
-      <!-- This inline stylesheet removes all references to URL rewriting -->
-      <!-- See https://issues.apache.org/bugzilla/show_bug.cgi?id=32461 -->
-      <string>
-       <![CDATA[
-       <xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:j2ee="http://java.sun.com/xml/ns/j2ee" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-        exclude-result-prefixes="j2ee" version="1.0">
-        <!-- Taken from https://scm.mmbase.org/didactor/trunk/old-ant-build/merge-web.xml.xslt -->
-        <xsl:output method="xml" standalone="yes" indent="yes"/>
-        <xsl:param name="mergeXmlFile"/>
-        <xsl:variable name="mergeXml" select="document($mergeXmlFile)"/>
-        <xsl:template match="/j2ee:web-app">
-         <web-app xmlns="http://java.sun.com/xml/ns/j2ee">
-          <xsl:copy-of select="@*"/>
-          <xsl:apply-templates select="j2ee:description"/>
-          <xsl:apply-templates select="j2ee:display-name"/>
-          <xsl:apply-templates select="j2ee:context-param"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:context-param"/>
-          <xsl:apply-templates select="j2ee:filter"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:filter"/>
-          <xsl:apply-templates select="j2ee:filter-mapping"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:filter-mapping"/>
-          <xsl:apply-templates select="j2ee:listener"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:listener"/>
-          <xsl:apply-templates select="j2ee:servlet"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:servlet"/>
-          <xsl:apply-templates select="j2ee:servlet-mapping"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:servlet-mapping"/>
-          <xsl:apply-templates select="j2ee:mime-mapping"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:mime-mapping"/>
-          <xsl:apply-templates select="j2ee:welcome-file-list"/>
-          <xsl:apply-templates select="j2ee:taglib"/>
-          <xsl:apply-templates select="$mergeXml/j2ee:web-app/j2ee:taglib"/>
-          <xsl:apply-templates select="j2ee:error-page"/>
-         </web-app>
-        </xsl:template>
-        <xsl:template match="text()">
-         <xsl:copy-of select="."/>
-        </xsl:template>
-        <xsl:template match="j2ee:*">
-         <xsl:element name="{name()}">
-          <xsl:copy-of select="@*"/>
-          <xsl:apply-templates select="text()|*"/>
-         </xsl:element>
-        </xsl:template>
-       </xsl:stylesheet>
-      ]]>
-      </string>
-     </style>
-     <param name="mergeXmlFile" expression="@{in2}" type="STRING"/>
+    <salvador.saxon.xslt.params in="@{in1}" style="${salvador.servlet.merge.xslt}" destfile="@{out}" params="merge-xml-file=@{in2}"/>
+    <!--
+    <xslt in="@{in1}" out="@{out}" style="${salvador.servlet.merge.xslt}">
+     <param name="merge-xml-file" expression="@{in2}" type="STRING"/>
     </xslt>
+    -->
    </sequential>
   </macrodef>
+
   <macrodef name="salvador.servlet.merge">
    <attribute name="indir"/>
    <attribute name="pattern"/>
@@ -94,7 +52,7 @@
      /* Get variables from ant */
      def indir = properties['indir']
      def pattern = properties['pattern']
-     def out = properties['out']
+     File out = new File(properties['out']).getAbsoluteFile()
      /* Collect the files to be merged */
      def candidates = ant.fileScanner {
         fileset(dir: indir) {
@@ -102,18 +60,27 @@
         }
      }
      
+     print "Processing "
+     candidates.each() {
+         print it.toString() + ", "
+     }
+     println ""
+     
      def prev = null
      candidates.eachWithIndex() { cur, i ->
         if( prev != null ) println "$prev $cur"
                 
-        if (i == 1) {
+        if (i == 0) {
            prev = cur
-        } else if (i == 2) {
-           println "merging ${cur} and ${prev} to ${out}"
+        } else if (i == 1) {
+           println "Merging ${cur} and ${prev} to ${out}"
            merge(prev, cur, out)
-        } else if (i > 2) {
-           println "merging ${cur} and ${out} to ${out}"
-           merge(cur, out, out)
+        } else if (i > 1) {
+           def temp = File.createTempFile('web', '.xml') 
+           println "Merging ${cur} and ${out} to ${temp}"
+           merge(cur, out, temp)
+           println "Renaming ${temp} to ${out}"
+           temp.renameTo(out)
         }
      };
 
