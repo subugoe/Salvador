@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="SALVADOR.XMLTASK" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <description>XMLTask targets of the SUB Ant library</description>
+    
+    <!-- See https://today.java.net/pub/a/today/2006/11/01/xml-manipulation-using-xmltask.html#xmltask-basics -->
+    
+    <!-- Import base lib -->
+    <import file="../build.xml"/>
+    <!-- Dependencies -->
+    <!--
+    <import file="./http.xml"/>
+    -->
+    
+    <!-- Directories -->
+    <property name="salvador.xmltask.lib.dir" value="${salvador.base.lib.dir}/xmltask"/>
+    
+    <!--See http://sourceforge.net/projects/xmltask/files/xmltask/1.16/xmltask.jar/download for other download locations -->
+    <property name="salvador.xmltask.filename" value="xmltask.jar"/>
+    <property name="salvador.xmltask.url" value="http://sourceforge.net/projects/xmltask/files/xmltask/1.16/${salvador.xmltask.filename}"/>
+    <property name="salvador.xmltask.file" value="${salvador.xmltask.lib.dir}/${salvador.xmltask.filename}"/>
+    
+    <target name="salvador.xmltask.init" depends="salvador.base.init">
+        <mkdir dir="${salvador.xmltask.lib.dir}"/>
+    </target>
+    
+    <target name="salvador.xmltask.clean" depends="salvador.base.clean">
+        <delete dir="${salvador.xmltask.lib.dir}"/>
+    </target>
+    
+    <target name="salvador.xmltask.download" unless="skip.download" depends="salvador.xmltask.init">
+        <echo>Getting XMLTask</echo>
+        <get src="${salvador.xmltask.url}" dest="${salvador.xmltask.file}" usetimestamp="true"/>
+        <!--
+        <salvador.http.get src="${salvador.xmltask.url}" dest="${salvador.xmltask.file}"/>
+        -->
+        <path id="salvador.xmltask.classpath">
+            <fileset dir="${salvador.xmltask.lib.dir}" includes="*.jar"/>
+        </path>
+    </target>
+    
+    <!-- See http://maven.apache.org/ant-tasks/ -->
+    <target name="salvador.xmltask.install" depends="salvador.xmltask.download">
+        <echo>Installing XMLTask</echo>
+        <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="salvador.xmltask.classpath"/>
+    </target>
+    
+</project>
