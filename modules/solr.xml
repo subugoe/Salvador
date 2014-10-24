@@ -303,13 +303,13 @@
                 <var name="web.xml.tmp" unset="true"/>
                 <property name="web.xml.tmp" value="@{web.xml}.tmp"/>
                 <copy file="@{web.xml}" tofile="${web.xml.tmp}"/>
-                <xmltask source="${web.xml.tmp}" dest="@{web.xml}"> 
-                    <insert path="/web-app" 
-                        position="after"> 
+                <xmltask source="${web.xml.tmp}" dest="@{web.xml}" report="true" failWithoutMatch="true"> 
+                    <insert path="/:web-app/child::*[1]" 
+                        position="before"> 
                         <![CDATA[ 
-                        <env-entry>
+                        <env-entry xmlns="http://java.sun.com/xml/ns/j2ee">
                             <env-entry-name>solr/home</env-entry-name>
-                            <env-entry-value>${solr.home}</env-entry-value>
+                            <env-entry-value>@{solr.home}</env-entry-value>
                             <env-entry-type>java.lang.String</env-entry-type>
                         </env-entry>
                         ]]> 
