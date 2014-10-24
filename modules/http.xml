@@ -137,6 +137,28 @@
                 </groovy>
             </sequential>
         </macrodef>
+        
+        <!-- Our own Get Task since Ant is to stupid to handle redirects fo example those done by Sourceforge, see:
+             https://issues.apache.org/bugzilla/show_bug.cgi?id=47433
+        -->
+        <macrodef name="salvador.http.get">
+            <attribute name="src"/>
+            <attribute name="dest"/>
+            <sequential>
+                <var name="srcProp" value="@{src}"/>
+                <var name="destProp" value="@{dest}"/>
+                <groovy useGroovyShell="true">
+                    /* Get variable from ant */
+                    def src = properties['srcProp']
+                    def dest = new File(properties['destProp'])
+                    def mimetype = properties['mimetypeProp']
+                    
+                    def out = new BufferedOutputStream(new FileOutputStream(dest))
+                    out &lt;&lt; new URL(src).openStream()
+                    out.close()
+                </groovy>
+            </sequential>
+        </macrodef>
     </target>
 
 </project>
