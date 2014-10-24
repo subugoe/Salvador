@@ -8,6 +8,7 @@
     <import file="./jetty.xml"/>
     <import file="./http.xml"/>
     <import file="./saxon.xml"/>
+    <import file="./xmltask.xml"/>
     
 
     <!-- Solr coordinates, since there are so many versions -->
@@ -289,6 +290,32 @@
                 <tempfile property="salvador.solr.index.temp.file" destDir="${salvador.base.dir.tmp}"/>
                 <get src="@{endpoint}?softCommit=true" dest="${salvador.solr.index.temp.file}"/>
                 <delete file="${salvador.solr.index.temp.file}"/>
+            </sequential>
+        </macrodef>     
+    </target>
+    
+    <target name="salvador.solr.util.install" depends="salvador.base.ant.contrib.install, salvador.xmltask.install">
+        <!-- This is used to set a index location within a web.xml file -->
+        <macrodef name="salvador.solr.web.xml.solr.home">
+            <attribute name="web.xml"/>
+            <attribute name="solr.home"/>
+            <sequential>
+                <var name="web.xml.tmp" unset="true"/>
+                <property name="web.xml.tmp" value="@{web.xml}.tmp"/>
+                <copy file="@{web.xml}" tofile="${web.xml.tmp}"/>
+                <xmltask source="${web.xml.tmp}" dest="@{web.xml}"> 
+                    <insert path="/web-app" 
+                        position="after"> 
+                        <![CDATA[ 
+                        <env-entry>
+                            <env-entry-name>solr/home</env-entry-name>
+                            <env-entry-value>${solr.home}</env-entry-value>
+                            <env-entry-type>java.lang.String</env-entry-type>
+                        </env-entry>
+                        ]]> 
+                    </insert> 
+                </xmltask>
+                <delete file="${web.xml.tmp}"/>
             </sequential>
         </macrodef>
     </target>
