@@ -140,6 +140,8 @@
         
         <!-- Our own Get Task since Ant is to stupid to handle redirects fo example those done by Sourceforge, see:
              https://issues.apache.org/bugzilla/show_bug.cgi?id=47433
+             See here if you want to reassamble the bahavoir of Ant:
+             https://git-wip-us.apache.org/repos/asf?p=ant.git;a=blob;f=src/main/org/apache/tools/ant/taskdefs/Get.java;h=0f6cd689fc20f5cf5df72978fbd06fba5f63d032;hb=HEAD
         -->
         <macrodef name="salvador.http.get">
             <attribute name="src"/>
