@@ -69,13 +69,15 @@
                 <exclusion groupId="com.googlecode.concurrentlinkedhashmap" artifactId="concurrentlinkedhashmap-lru"/>
             </dependency>
             <dependency groupId="com.googlecode.concurrentlinkedhashmap" artifactId="concurrentlinkedhashmap-lru" version="1.4"/>
-
+        </artifact:dependencies>
+        <artifact:dependencies filesetId="salvador.solr.logging.files" pathId="salvador.solr.logging.classpath">
             <!-- Common logging might be used in default configuration -->
             <dependency groupId="commons-logging" artifactId="commons-logging" version="1.1.3"/>
             <dependency groupId="org.slf4j" artifactId="slf4j-log4j12" version="1.6.6"/>
         </artifact:dependencies>
         <copy todir="${salvador.solr.lib.dir}">
             <fileset refid="salvador.solr.files"/>
+            <fileset refid="salvador.solr.logging.files"/>
             <mapper type="flatten"/>
         </copy>
     </target>
